@@ -1,5 +1,5 @@
 import { Book } from '../types/book';
-import { BookOpen, User } from 'lucide-react';
+import { BookOpen, User, Loader } from 'lucide-react';
 
 interface BookCardProps {
   book: Book;
@@ -10,7 +10,15 @@ interface BookCardProps {
 
 export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCardProps) {
   return (
-    <div className={`bg-white rounded-lg shadow-md overflow-hidden ${isRequested ? 'opacity-60' : ''}`}>
+    <div
+      className={`bg-white rounded-lg shadow-md overflow-hidden border transition-all duration-300 ${
+        isRequested
+          ? 'opacity-70 border-green-500'
+          : isRequesting
+          ? 'border-blue-500 loading-pulse'
+          : 'border-gray-300'
+      }`}
+    >
       {book.image_url ? (
         <img
           src={book.image_url}
@@ -46,11 +54,18 @@ export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCar
               disabled={isRequesting}
               className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              {isRequesting ? 'Requesting...' : 'Request Book'}
+              {isRequesting ? (
+                <span className="flex items-center">
+                  <Loader className="w-4 h-4 mr-2 animate-spin" />
+                  Requesting...
+                </span>
+              ) : (
+                'Request Book'
+              )}
             </button>
           )}
           {isRequested && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-green-500 font-semibold">
               Request Pending
             </span>
           )}
