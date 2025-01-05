@@ -1,8 +1,20 @@
-/** @type {import('tailwindcss').Config} */
+=/** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Rubik', 'system-ui', 'sans-serif'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      addUtilities({
+        '.dir-rtl': {
+          direction: 'rtl',
+        },
+      });
+    },
+  ],
 };

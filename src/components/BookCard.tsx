@@ -1,4 +1,3 @@
-import React from 'react';
 import { Book } from '../types/book';
 import { BookOpen, User } from 'lucide-react';
 
@@ -22,21 +21,21 @@ export function BookCard({ book, onRequest }: BookCardProps) {
         </div>
       )}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900">{book.title}</h3>
-        <p className="text-sm text-gray-600">by {book.author}</p>
-        <div className="mt-2">
+        <h3 className="text-lg font-semibold text-gray-900 text-right">{book.title}</h3>
+        <p className="text-sm text-gray-600 text-right">by {book.author}</p>
+        <div className="mt-2 text-right">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             {book.condition}
           </span>
         </div>
         {book.description && (
-          <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-2 text-sm text-gray-500 line-clamp-2 text-right">
             {book.description}
           </p>
         )}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex flex-row-reverse items-center justify-between">
           <div className="flex items-center text-sm text-gray-500">
-            <User className="w-4 h-4 mr-1" />
+            <User className="w-4 h-4 ml-1" />
             <span>Posted by Student</span>
           </div>
           {book.is_available && onRequest && (

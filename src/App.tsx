@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { BookOpen, PlusCircle, Library } from 'lucide-react';
 import { BookForm } from './components/BookForm';
@@ -17,7 +16,7 @@ function App() {
                   className="flex items-center px-2 py-2 text-gray-900 hover:text-blue-600"
                 >
                   <BookOpen className="h-6 w-6 mr-2" />
-                  <span className="font-bold text-xl">Scaffold</span>
+                  <span className="font-bold text-xl">BookXchange</span>
                 </Link>
               </div>
               <div className="flex items-center">
