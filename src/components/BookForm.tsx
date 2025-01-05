@@ -6,9 +6,9 @@ export function BookForm() {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    author: 'The Open University Of Israel', // Default author
+    author: 'האוניברסיטה הפתוחה',
     description: '',
-    condition: 'Like New',
+    condition: 'כמו חדש',
     image_url: '',
   });
 
@@ -22,7 +22,7 @@ export function BookForm() {
         title: '',
         author: 'The Open University Of Israel',
         description: '',
-        condition: 'Like New',
+        condition: 'כמו חדש',
         image_url: '',
       });
     } finally {
@@ -38,7 +38,7 @@ export function BookForm() {
       <div className="grid grid-cols-1 gap-6">
         <div>
           <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-            Book Title
+            שם הספר
           </label>
           <input
             type="text"
@@ -47,13 +47,13 @@ export function BookForm() {
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
             className="mt-1 block w-full p-3 border rounded-lg shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            placeholder="Enter book title"
+            placeholder="רשמו את שם הספר כאן"
           />
         </div>
 
         <div>
           <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
-            Author
+            הוצאה
           </label>
           <input
             type="text"
@@ -61,13 +61,13 @@ export function BookForm() {
             value={formData.author}
             onChange={(e) => setFormData({ ...formData, author: e.target.value })}
             className="mt-1 block w-full p-3 border rounded-lg shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            placeholder="Enter author's name"
+            placeholder="רשמו את שם ההוצאה כאן"
           />
         </div>
 
         <div>
           <label htmlFor="condition" className="block text-sm font-medium text-gray-700 mb-2">
-            Condition
+            מצב
           </label>
           <select
             id="condition"
@@ -75,16 +75,16 @@ export function BookForm() {
             onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
             className="mt-1 block w-full p-3 border rounded-lg shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           >
-            <option>Like New</option>
-            <option>Very Good</option>
-            <option>Good</option>
-            <option>Fair</option>
+            <option>כמעט חדש</option>
+            <option>ממש טוב</option>
+            <option>אחלה</option>
+            <option>סביר</option>
           </select>
         </div>
 
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-            Description
+            הערות
           </label>
           <input
             type="text"
@@ -92,13 +92,13 @@ export function BookForm() {
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             className="mt-1 block w-full p-3 border rounded-lg shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            placeholder="Enter a brief description"
+            placeholder="אם יש הערות מסוימות (לא חובה)"
           />
         </div>
 
         <div>
           <label htmlFor="image_url" className="block text-sm font-medium text-gray-700 mb-2">
-            Image URL (Optional)
+            לינק לתמונה של הכריכה
           </label>
           <input
             type="url"
@@ -106,7 +106,7 @@ export function BookForm() {
             value={formData.image_url}
             onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
             className="mt-1 block w-full p-3 border rounded-lg shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            placeholder="Enter an image URL for the book cover"
+            placeholder="קישור לתמונת הכריכה של הספר"
           />
         </div>
 
@@ -115,7 +115,7 @@ export function BookForm() {
           disabled={loading}
           className="w-full py-3 px-4 mt-6 border border-transparent rounded-lg shadow-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {loading ? 'Adding Book...' : 'Add Book'}
+          {loading ? 'מוסיף את הספר למאגר שלנו' : 'להוספת הספר'}
         </button>
       </div>
     </form>

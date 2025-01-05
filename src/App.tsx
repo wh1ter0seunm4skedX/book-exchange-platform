@@ -53,6 +53,11 @@ function App() {
             />
           </Routes>
         </main>
+        <footer className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center">
+        <p dir="rtl" className="text-sm text-gray-500">
+           האתר עדיין בבנייה - תודה על הסבלנות 🚧
+        </p>
+        </footer>
       </div>
     </Router>
   );

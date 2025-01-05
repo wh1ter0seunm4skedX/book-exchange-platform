@@ -32,7 +32,7 @@ export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCar
       )}
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-900 text-right">{book.title}</h3>
-        <p className="text-sm text-gray-600 text-right">by {book.author}</p>
+        <p className="text-sm text-gray-600 text-right">ע"י {book.author}</p>
         <div className="mt-2 text-right">
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
             {book.condition}
@@ -46,7 +46,7 @@ export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCar
         <div className="mt-4 flex flex-row-reverse items-center justify-between">
           <div className="flex items-center text-sm text-gray-500">
             <User className="w-4 h-4 ml-1" />
-            <span>Posted by Student</span>
+            <span>פורסם ע"י סטודנט כלשהו</span>
           </div>
           {book.is_available && onRequest && !isRequested && (
             <button
@@ -57,10 +57,10 @@ export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCar
               {isRequesting ? (
                 <span className="flex items-center">
                   <Loader className="w-4 h-4 mr-2 animate-spin" />
-                  Requesting...
+                  ...אוקיי, כמה רגעים
                 </span>
               ) : (
-                'Request Book'
+                '!אני רוצה את הספר'
               )}
             </button>
           )}
