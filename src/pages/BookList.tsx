@@ -2,16 +2,26 @@ import React, { useState } from 'react';
 import { BookCard } from '../components/BookCard';
 import { SearchBar } from '../components/SearchBar';
 import { useBooks } from '../hooks/useBooks';
+import { useBookRequests } from '../hooks/useBookRequests';
 
 export function BookList() {
   const { books, loading } = useBooks();
   const [searchQuery, setSearchQuery] = useState('');
+  const { requestBook, isRequesting } = useBookRequests();
 
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.author.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleRequestBook = async (bookId: string) => {
+    const success = await requestBook(bookId);
+    if (success) {
+      // TODO: Show success message
+      console.log('Book requested successfully');
+    }
+  };
 
   return (
     <div>
@@ -27,9 +37,8 @@ export function BookList() {
             <BookCard
               key={book.id}
               book={book}
-              onRequest={(bookId) => {
-                console.log('Requesting book:', bookId);
-              }}
+              onRequest={handleRequestBook}
+              isRequesting={isRequesting(book.id)}
             />
           ))}
         </div>

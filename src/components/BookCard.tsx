@@ -4,9 +4,10 @@ import { BookOpen, User } from 'lucide-react';
 interface BookCardProps {
   book: Book;
   onRequest?: (bookId: string) => void;
+  isRequesting?: boolean;
 }
 
-export function BookCard({ book, onRequest }: BookCardProps) {
+export function BookCard({ book, onRequest, isRequesting }: BookCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {book.image_url ? (
@@ -41,9 +42,10 @@ export function BookCard({ book, onRequest }: BookCardProps) {
           {book.is_available && onRequest && (
             <button
               onClick={() => onRequest(book.id)}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              disabled={isRequesting}
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              Request Book
+              {isRequesting ? 'Requesting...' : 'Request Book'}
             </button>
           )}
         </div>
