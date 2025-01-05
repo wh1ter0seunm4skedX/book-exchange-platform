@@ -5,11 +5,12 @@ interface BookCardProps {
   book: Book;
   onRequest?: (bookId: string) => void;
   isRequesting?: boolean;
+  isRequested?: boolean;
 }
 
-export function BookCard({ book, onRequest, isRequesting }: BookCardProps) {
+export function BookCard({ book, onRequest, isRequesting, isRequested }: BookCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+    <div className={`bg-white rounded-lg shadow-md overflow-hidden ${isRequested ? 'opacity-60' : ''}`}>
       {book.image_url ? (
         <img
           src={book.image_url}
@@ -39,7 +40,7 @@ export function BookCard({ book, onRequest, isRequesting }: BookCardProps) {
             <User className="w-4 h-4 ml-1" />
             <span>Posted by Student</span>
           </div>
-          {book.is_available && onRequest && (
+          {book.is_available && onRequest && !isRequested && (
             <button
               onClick={() => onRequest(book.id)}
               disabled={isRequesting}
@@ -47,6 +48,11 @@ export function BookCard({ book, onRequest, isRequesting }: BookCardProps) {
             >
               {isRequesting ? 'Requesting...' : 'Request Book'}
             </button>
+          )}
+          {isRequested && (
+            <span className="text-sm text-gray-500">
+              Request Pending
+            </span>
           )}
         </div>
       </div>

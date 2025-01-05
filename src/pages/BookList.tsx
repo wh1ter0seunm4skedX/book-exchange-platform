@@ -5,7 +5,7 @@ import { useBooks } from '../hooks/useBooks';
 import { useBookRequests } from '../hooks/useBookRequests';
 
 export function BookList() {
-  const { books, loading } = useBooks();
+  const { books, loading, markBookAsRequested, isBookRequested } = useBooks();
   const [searchQuery, setSearchQuery] = useState('');
   const { requestBook, isRequesting } = useBookRequests();
 
@@ -18,7 +18,7 @@ export function BookList() {
   const handleRequestBook = async (bookId: string) => {
     const success = await requestBook(bookId);
     if (success) {
-      // TODO: Show success message
+      markBookAsRequested(bookId);
       console.log('Book requested successfully');
     }
   };
@@ -39,6 +39,7 @@ export function BookList() {
               book={book}
               onRequest={handleRequestBook}
               isRequesting={isRequesting(book.id)}
+              isRequested={isBookRequested(book.id)}
             />
           ))}
         </div>

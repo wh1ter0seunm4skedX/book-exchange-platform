@@ -5,6 +5,7 @@ import { mockBooks } from '../data/mockBooks';
 export function useBooks() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
+  const [requestedBooks, setRequestedBooks] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // Simulate API delay
@@ -28,5 +29,15 @@ export function useBooks() {
     setBooks(prev => [newBook, ...prev]);
   };
 
-  return { books, loading, addBook };
+  const markBookAsRequested = (bookId: string) => {
+    setRequestedBooks(prev => new Set(prev).add(bookId));
+  };
+
+  return { 
+    books, 
+    loading, 
+    addBook, 
+    markBookAsRequested, 
+    isBookRequested: (bookId: string) => requestedBooks.has(bookId) 
+  };
 }
