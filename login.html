@@ -9,48 +9,59 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body class="bg-gray-50 font-inter">
-  <div class="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
-  <div class="min-h-screen flex flex-col justify-between">
-    <!-- Header -->
-    <header class="p-6 bg-white shadow-sm">
-      <h1 class="text-xl font-bold text-center text-gray-800">BookXChange</h1>
-    </header>
+  <div class="min-h-screen flex items-center justify-center px-6">
+    <!-- Mobile-Friendly Container -->
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
+      <div class="flex flex-col justify-center">
+        <!-- Header -->
+        <header class="p-4 bg-white shadow-sm">
+          <h1 class="text-4xl font-bold text-center text-gray-800">BookXChange</h1>
+        </header>
 
-    <!-- Content -->
-    <main class="flex flex-col items-center justify-center px-4 py-10">
-      <div class="w-300 h-300 rounded-full overflow-hidden flex-shrink-0" style="position: relative; top: -20px;">
-        <img src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4NzE4MzAzLWltYWdlLWt3dnhqNDhyLmpwZw.jpg" alt="Picture" class="w-full h-full object-cover">
+        <!-- Content -->
+        <main class="flex flex-col items-center justify-center px-4 py-6">
+          <!-- Image -->
+          <div class="w-400 h-400 rounded-full overflow-hidden">
+            <img src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4NzE4MzAzLWltYWdlLWt3dnhqNDhyLmpwZw.jpg" 
+                 alt="Picture" class="w-full h-full object-cover">
+          </div>
+
+          <!-- Title -->
+          <h2 class="text-2xl font-bold text-center text-gray-800 mt-4">
+            Join OpenU's Largest Book Club
+          </h2>
+
+          <!-- Buttons -->
+          <div class="w-full max-w-md space-y-4 mt-6">
+            <!-- Google Login Button -->
+            <button
+              class="w-full flex items-center justify-center h-12 bg-gray-100 text-gray-800 rounded-lg font-medium shadow-sm hover:bg-gray-200 transition line-through">
+              <span>Continue with Google (Not working in MVP)</span>
+            </button>
+
+            <!-- Email Signup Button -->
+            <button
+              class="w-full flex items-center justify-center h-12 bg-gray-100 text-gray-800 rounded-lg font-medium shadow-sm hover:bg-gray-200 transition">
+              <span>Sign up with Email</span>
+            </button>
+
+            <!-- Login Button -->
+            <button
+              class="w-full flex items-center justify-center h-12 bg-blue-600 text-white rounded-lg font-medium shadow-sm hover:bg-blue-700 transition">
+              <span>Log in</span>
+            </button>
+          </div>
+
+          <!-- Terms and Privacy -->
+          <p class="text-center text-sm text-gray-600 mt-6">
+            By continuing, you agree to BookXChange's 
+            <a href="#" class="text-blue-500 hover:underline">Terms of Service</a> and 
+            acknowledge you have read and understood our 
+            <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>.
+          </p>
+        </main>
       </div>
-      <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-        Join OpenU's Largest Book Club
-      </h2>
-      <div class="w-full max-w-md space-y-4">
-        <!-- Google Login Button -->
-        <button
-          class="w-full flex items-center justify-center h-12 bg-gray-100 text-gray-800 rounded-lg font-medium shadow-sm hover:bg-gray-200 transition">
-          <span>Continue with Google (Not working in MVP)</span>
-        </button>
-
-        <!-- Email Signup Button -->
-        <button
-          class="w-full flex items-center justify-center h-12 bg-gray-100 text-gray-800 rounded-lg font-medium shadow-sm hover:bg-gray-200 transition">
-          <span>Sign up with Email</span>
-        </button>
-
-        <!-- Login Button -->
-        <button
-          class="w-full flex items-center justify-center h-12 bg-blue-600 text-white rounded-lg font-medium shadow-sm hover:bg-blue-700 transition">
-          <span>Log in</span>
-        </button>
-      </div>
-      <p class="text-center text-sm text-gray-600 mt-6">
-        By continuing, you agree to BookXChange's 
-        <a href="#" class="text-blue-500 hover:underline">Terms of Service</a> and 
-        acknowledge you have read and understood our 
-        <a href="#" class="text-blue-500 hover:underline">Privacy Policy</a>.
-      </p>
-    </main>
+    </div>
   </div>
-</div>
 </body>
 </html>
