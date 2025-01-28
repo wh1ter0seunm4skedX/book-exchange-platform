@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+  <div class="max-w-sm mx-auto bg-white rounded-xl shadow-md p-6 mt-10">
+    <!-- Profile Section -->
+    <div class="flex items-start space-x-6">
+      <div class="w-24 h-24 rounded-full overflow-hidden flex-shrink-0">
+        <img src="https://t3.ftcdn.net/jpg/06/17/13/26/360_F_617132669_YptvM7fIuczaUbYYpMe3VTLimwZwzlWf.jpg" alt="Profile Picture" class="w-full h-full object-cover">
+      </div>
+      <div class="flex flex-col">
+        <h2 class="text-lg font-bold text-gray-800 mt-4">Jane Smith</h2>
+        <p class="text-sm text-gray-500">Joined in 2025</p>
+        <button class="mt-4 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200">
+          Edit profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="mt-6">
+      <h3 class="text-gray-700 font-medium mb-4">Your stats</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-gray-100 rounded-lg p-4 text-center">
+          <p class="text-gray-700 text-sm">Books that  I've Published</p>
+          <p class="text-xl font-bold text-gray-800">34</p>
+        </div>
+        <div class="bg-gray-100 rounded-lg p-4 text-center">
+          <p class="text-gray-700 text-sm">Books that I've Requested</p>
+          <p class="text-xl font-bold text-gray-800">15</p>
+        </div>
+      </div>
+    </div>
+
+<!-- Menu Section -->
+<div class="mt-6 space-y-4">
+  <div class="flex items-center justify-between">
+    <button class="flex items-center space-x-3 w-full px-4 py-2 text-left bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+      <div class="bg-gray-200 p-2 rounded-lg">
+        <!-- Text for Wish List -->
+        <span class="text-gray-700 text-lg">❤️</span>
+      </div>
+      <p class="text-gray-700 text-sm font-medium">My Requested List</p>
+    </button>
+  </div>
+
+  <div class="flex items-center space-x-3">
+    <button class="flex items-center space-x-3 w-full px-4 py-2 text-left bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+      <div class="bg-gray-200 p-2 rounded-lg">
+        <!-- Text for Publication List -->
+        <span class="text-gray-700 text-lg">📚</span>
+      </div>
+      <p class="text-gray-700 text-sm font-medium">My Publication List</p>
+    </button>
+  </div>
+
+  <div class="flex items-center justify-between">
+    <button class="flex items-center space-x-3 w-full px-4 py-2 text-left bg-gray-100 rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300">
+      <div class="bg-gray-200 p-2 rounded-lg">
+        <!-- Text for Settings -->
+        <span class="text-gray-700 text-lg">⚙</span>
+      </div>
+      <p class="text-gray-700 text-sm font-medium">Settings</p>
+    </button>
+  </div>
+</div>
+
+    <!-- Action Buttons -->
+    <div class="mt-6 flex justify-between">
+      <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200">
+        Log out
+      </button>
+      <button class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600">
+        Delete account
+      </button>
+    </div>
+  </div>
+</body>
+</html>

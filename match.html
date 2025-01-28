@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Match Found - BookXChange</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+<body class="bg-gray-50 font-inter">
+  <!-- Match Modal -->
+  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white rounded-2xl shadow-lg max-w-md w-full p-6">
+      <!-- Header -->
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">You've Got a Match!</h2>
+        <button class="text-gray-400 hover:text-gray-600 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <!-- Content -->
+      <div class="space-y-4">
+        <!-- Book Details -->
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuIJXBpqowTWUbrUnKHn9bJgHsZxXhonhtg&s');"></div>
+          <div>
+            <p class="text-lg font-medium text-gray-800">אינפי 2</p>
+            <p class="text-sm text-gray-500">Requested by: John Doe</p>
+          </div>
+        </div>
+        <!-- Matched User Details -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-800">Matched User</h3>
+          <p class="text-sm text-gray-600">Name: <span class="font-medium text-gray-800">Jane Smith</span></p>
+          <p class="text-sm text-gray-600">Phone: <span class="font-medium text-gray-800">+972-50-123-4567</span></p>
+        </div>
+      </div>
+      <!-- Actions -->
+      <div class="mt-6 flex justify-between gap-4">
+        <button class="w-full py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition">
+          Accept Match
+        </button>
+        <button class="w-full py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition">
+          Decline Match
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
