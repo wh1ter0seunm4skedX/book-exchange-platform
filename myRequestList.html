@@ -7,19 +7,21 @@
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body class="bg-gray-50 font-inter">
-  <div class="min-h-screen flex flex-col items-center py-8">
-    <!-- Header -->
-    <header class="w-full max-w-4xl px-6 mb-6">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-blue-900 ">My Requested List</h1>
-        <button onclick="goBack()" class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg shadow hover:bg-gray-300 transition">
-          Back to Profile
-        </button>
-      </div>
-    </header>
+  <div class="min-h-screen flex items-center justify-center px-6">
+    <!-- Mobile-Friendly Container -->
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
+      <!-- Header -->
+      <header class="w-full mb-6">
+        <div class="flex justify-between items-center">
+          <h1 class="text-2xl font-bold text-blue-900">My Requested List</h1>
+          <button onclick="goBack()" class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg shadow hover:bg-gray-300 transition">
+            Back to Profile
+          </button>
+        </div>
+      </header>
 
-    <!-- Publish Button Section -->
-    <div class="w-full max-w-4xl px-6">
+      <!-- Publish Button Section -->
+      <div class="w-full">
         <div class="flex justify-center gap-4 my-4">
           <button class="w-full py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-green-600 transition">
             Request a Book
@@ -27,53 +29,94 @@
         </div>
       </div>
 
-    <!-- Requested Books List -->
-    <main class="w-full max-w-4xl px-6">
-      <!-- Empty State -->
-      <div class="flex flex-col items-center text-gray-500" id="empty-state" style="display: none;">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15l4 4m0 0l4-4m-4 4V4M21 10H7m0 0l4-4m-4 4v6" />
-        </svg>
-        <p class="text-lg">Your requested list is empty.</p>
-        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
-          Request a Book
-        </button>
-      </div>
-
-      <!-- Requested Books Items -->
-      <div class="space-y-4" id="requested-items">
-        <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuIJXBpqowTWUbrUnKHn9bJgHsZxXhonhtg&s');"></div>
-            <div>
-              <p class="text-lg font-medium text-gray-800">אינפי 2</p>
-              <p class="text-sm text-gray-500">Requested on: Jan 20, 2025</p>
-            </div>
-          </div>
-          <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
-            Cancel Request
+      <!-- Requested Books List -->
+      <main class="w-full">
+        <!-- Empty State -->
+        <div class="flex flex-col items-center text-gray-500" id="empty-state" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15l4 4m0 0l4-4m-4 4V4M21 10H7m0 0l4-4m-4 4v6" />
+          </svg>
+          <p class="text-lg">Your requested list is empty.</p>
+          <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
+            Request a Book
           </button>
         </div>
 
-        <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
-          <div class="flex items-center gap-4">
-            <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8NzFqBvOHPk5bIQw8vwkDk6_0_bJtsjTj6g&s');"></div>
-            <div>
-              <p class="text-lg font-medium text-gray-800">אלגוריתמים</p>
-              <p class="text-sm text-gray-500">Requested on: Jan 18, 2025</p>
+        <!-- Requested Books Items -->
+        <div class="space-y-4" id="requested-items">
+          <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuIJXBpqowTWUbrUnKHn9bJgHsZxXhonhtg&s');"></div>
+              <div>
+                <p class="text-lg font-medium text-gray-800">אינפי 2</p>
+                <p class="text-sm text-gray-500">Requested on: Jan 20, 2025</p>
+              </div>
             </div>
+            <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
+              Cancel Request
+            </button>
           </div>
-          <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
-            Cancel Request
-          </button>
-        </div>
-      </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-4xl mt-8 text-center text-sm text-gray-500">
-      &copy; 2025 BookXChange. All rights reserved.
-    </footer>
+          <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8NzFqBvOHPk5bIQw8vwkDk6_0_bJtsjTj6g&s');"></div>
+              <div>
+                <p class="text-lg font-medium text-gray-800">אלגוריתמים</p>
+                <p class="text-sm text-gray-500">Requested on: Jan 18, 2025</p>
+              </div>
+            </div>
+            <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
+              Cancel Request
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-Ao0bNTZr62u349K62Y67drGBVC1Vxt3iag&s');"></div>
+              <div>
+                <p class="text-lg font-medium text-gray-800">לוגיקה למדעי המחשב</p>
+                <p class="text-sm text-gray-500">Requested on: Jan 15, 2025</p>
+              </div>
+            </div>
+            <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
+              Cancel Request
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://www.oreilly.com/library/cover/9781803241432/1200w630h/');"></div>
+              <div>
+                <p class="text-lg font-medium text-c text-gray-800">מבוא למדעי המחשב</p>
+                <p class="text-sm text-gray-500">Requested on: Jan 12, 2025</p>
+              </div>
+            </div>
+            <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
+              Cancel Request
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between bg-white rounded-lg shadow p-4">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-20 bg-center bg-cover rounded-md" style="background-image: url('https://www.findabook.co.il/assets/images/detail/413173_1_det.jpg');"></div>
+              <div>
+                <p class="text-lg font-medium text-gray-800">אינפי 1</p>
+                <p class="text-sm text-gray-500">Requested on: Jan 10, 2025</p>
+              </div>
+            </div>
+            <button class="px-3 py-1 bg-red-500 text-white text-sm rounded-lg shadow hover:bg-red-600 transition">
+              Cancel Request
+            </button>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="w-full mt-8 text-center text-sm text-gray-500">
+        &copy; 2025 BookXChange. All rights reserved.
+      </footer>
+    </div>
   </div>
 </body>
 </html>
