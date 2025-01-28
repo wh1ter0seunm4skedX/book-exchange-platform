@@ -4,118 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - BookXChange</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" />
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 </head>
 <body class="bg-gray-50 font-inter">
-<div class="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
-  <div class="min-h-screen flex flex-col">
-    <!-- Header -->
-    <header class="bg-white shadow-sm">
-      <div class="flex justify-between items-center px-4 py-3">
-        <h1 class="text-lg font-bold text-gray-800">Dashboard</h1>
-        <div class="flex space-x-4 items-center">
-          <button class="text-sm font-medium text-blue-500 hover:text-blue-600 transition">My Profile</button>
-          <button class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
-            </svg>
-          </button>
+  <div class="min-h-screen flex items-center justify-center px-6">
+    <!-- Mobile-Friendly Container -->
+    <div class="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
+      <!-- Header -->
+      <header class="bg-white shadow-sm">
+        <div class="flex justify-between items-center px-4 py-3">
+          <h1 class="text-lg font-bold text-gray-800">Dashboard</h1>
+          <div class="flex space-x-4 items-center">
+            <button class="text-sm font-medium text-blue-500 hover:text-blue-600 transition">My Profile</button>
+            <button class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16l-4-4m0 0l4-4m-4 4h16" />
+              </svg>
+            </button>
+          </div>
         </div>
+      </header>
+
+      <!-- Publish/Request Buttons -->
+      <div class="flex justify-center gap-4 my-4">
+        <button class="w-full py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition">
+          Publish a Book
+        </button>
+        <button class="w-full py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition">
+          Request a Book
+        </button>
       </div>
-    </header>
 
-    <!-- Add this new section here -->
-<div class="flex justify-center gap-4 my-4 px-4">
-  <button class="w-full py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition">
-    Publish a Book
-  </button>
-  <button class="w-full py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition">
-    Request a Book
-  </button>
-</div>
+      <!-- Main Content -->
+      <main class="flex-grow px-4 py-6 space-y-6">
+        <!-- Matched Books Section -->
+        <section>
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 class="text-lg font-medium text-gray-800">Matched Books</h2>
+              <p class="text-sm text-gray-600">2 books available to swap</p>
+            </div>
+            <button
+              class="flex items-center text-blue-500 hover:text-blue-600 font-medium transition">
+              View All
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex overflow-x-auto space-x-4 scrollbar-hide">
+            <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
+              <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
+                style='background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuIJXBpqowTWUbrUnKHn9bJgHsZxXhonhtg&s");'></div>
+              <div class="p-3">
+                <p class="text-sm font-medium text-gray-800">אינפי 2</p>
+              </div>
+            </div>
+            <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
+              <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
+                style='background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8NzFqBvOHPk5bIQw8vwkDk6_0_bJtsjTj6g&s");'></div>
+              <div class="p-3">
+                <p class="text-sm font-medium text-gray-800">אלגוריתמים</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <!-- Content -->
-    <main class="flex-grow px-4 py-6 space-y-6">
-      <!-- Matched Books Section -->
-      <section>
-        <div class="flex justify-between items-center mb-4">
-          <div>
-            <h2 class="text-lg font-medium text-gray-800">Matched Books</h2>
-            <p class="text-sm text-gray-600">2 books available to swap</p>
+        <!-- Requested Books Section -->
+        <section>
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <h2 class="text-lg font-medium text-gray-800">Requested Books</h2>
+              <p class="text-sm text-gray-600">3 requests pending</p>
+            </div>
+            <button
+              class="flex items-center text-blue-500 hover:text-blue-600 font-medium transition">
+              View All
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
-          <button
-            class="flex items-center text-blue-500 hover:text-blue-600 font-medium transition">
-            View All
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-        <!-- Book Cards -->
-        <div class="flex overflow-x-auto space-x-4 scrollbar-hide">
-          <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
-            <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
-              style='background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuIJXBpqowTWUbrUnKHn9bJgHsZxXhonhtg&s");'>
+          <div class="flex overflow-x-auto space-x-4 scrollbar-hide">
+            <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
+              <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
+                style='background-image: url("https://master.library.org.il/ext_image.php?q=http://www.icl-catalog.org.il/multimedia/2015/8/5/15-2086f.JPG");'></div>
+              <div class="p-3">
+                <p class="text-sm font-medium text-gray-800">לוגיקה למדמ"ח</p>
+              </div>
             </div>
-            <div class="p-3">
-              <p class="text-sm font-medium text-gray-800">אינפי 2</p>
-            </div>
-          </div>
-          <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
-            <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
-              style='background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8NzFqBvOHPk5bIQw8vwkDk6_0_bJtsjTj6g&s");'>
-            </div>
-            <div class="p-3">
-              <p class="text-sm font-medium text-gray-800">אלגוריתמים</p>
+            <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
+              <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
+                style='background-image: url("https://www.sphera-ac.co.il/wp-content/uploads/2022/03/%D7%90%D7%9C%D7%92%D7%91%D7%A8%D7%94-%D7%9C%D7%99%D7%A0%D7%90%D7%A8%D7%99%D7%AA-1-%D7%9B%D7%A8%D7%9A-%D7%90.jpg");'></div>
+              <div class="p-3">
+                <p class="text-sm font-medium text-gray-800">אלגברה לינארית 1</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <!-- Requested Books Section -->
-      <section>
-        <div class="flex justify-between items-center mb-4">
-          <div>
-            <h2 class="text-lg font-medium text-gray-800">Requested Books</h2>
-            <p class="text-sm text-gray-600">3 requests pending</p>
-          </div>
-          <button
-            class="flex items-center text-blue-500 hover:text-blue-600 font-medium transition">
-            View All
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-        <!-- Book Cards -->
-        <div class="flex overflow-x-auto space-x-4 scrollbar-hide">
-          <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
-            <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
-              style='background-image: url("https://master.library.org.il/ext_image.php?q=http://www.icl-catalog.org.il/multimedia/2015/8/5/15-2086f.JPG");'>
-            </div>
-            <div class="p-3">
-              <p class="text-sm font-medium text-gray-800">לוגיקה למדמ"ח</p>
-            </div>
-          </div>
-          <div class="min-w-[140px] flex-shrink-0 bg-white rounded-lg shadow">
-            <div class="w-full aspect-[3/4] bg-center bg-cover rounded-t-lg"
-              style='background-image: url("https://www.sphera-ac.co.il/wp-content/uploads/2022/03/%D7%90%D7%9C%D7%92%D7%91%D7%A8%D7%94-%D7%9C%D7%99%D7%A0%D7%90%D7%A8%D7%99%D7%AA-1-%D7%9B%D7%A8%D7%9A-%D7%90.jpg");'>
-            </div>
-            <div class="p-3">
-              <p class="text-sm font-medium text-gray-800">אלגברה לינארית 1</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-white py-4 text-center text-sm text-gray-500 shadow-t">
-      &copy; 2025 BookXChange. All rights reserved.
-    </footer>
+      <!-- Footer -->
+      <footer class="bg-white py-4 text-center text-sm text-gray-500 shadow-t">
+        &copy; 2025 BookXChange. All rights reserved.
+      </footer>
+    </div>
   </div>
-</div>
 </body>
 </html>
