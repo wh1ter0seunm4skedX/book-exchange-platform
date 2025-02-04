@@ -1,6 +1,6 @@
 # 📚 BookXChange
 
-BookXChange is a **smart textbook exchange platform** designed for students at the Open University. The platform automates the matching process between users who want to **give away books** and those looking to **receive books**, streamlining the process with **real-time matching algorithms**.
+BookXChange is a **smart textbook exchange platform** designed for students at the Open University (Of Israel). The platform automates the matching process between users who want to **give away books** and those looking to **receive books**, streamlining the process with **real-time matching algorithms**.
 
 ## 🚀 Features
 - **User Authentication**: Register and log in securely.
@@ -47,9 +47,9 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 - 🚀 **MVP Development** (March 2025)
   - Implement book listing functionality
   - Develop initial matching algorithm
-- 🔄 **Feature Expansion** (April 2025)
+- 🔄 **Feature Expansion** (March-April 2025)
   - Improve UX/UI
-  - Add notifications and real-time updates
+  - Add more things that we will think about along the way
 - 🎯 **Final Testing & Deployment** (April 2025)
   - Perform system-wide testing
   - Prepare for deployment and documentation finalization
