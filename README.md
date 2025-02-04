@@ -1,54 +1,58 @@
-# BookXChange
+# 📚 BookXChange
 
-BookXChange is a platform that enables students to easily share and search for books they no longer need or are looking for. By offering a free book exchange system, the platform promotes sustainability and collaboration among students.
+BookXChange is a **smart textbook exchange platform** designed for students at the Open University. The platform automates the matching process between users who want to **give away books** and those looking to **receive books**, streamlining the process with **real-time matching algorithms**.
+
+## 🚀 Features
+- **User Authentication**: Register and log in securely.
+- **Book Listings**: Users can list books for exchange.
+- **Matching Algorithm**: Automatically finds matches between book donors and seekers.
+- **Notifications**: Alerts users when a match is found.
+- **Profile Management**: Users can update their book lists and contact preferences.
+
+## 🛠️ Tech Stack
+**Frontend**:
+- React (Vite)
+- TailwindCSS
+- React Router
+
+**Backend**:
+- Java (Spring Boot)
+- RESTful API
+- MySQL (JDBC for database connection)
+- Tomcat Server
+
+**Tools & Infrastructure**:
+- Postman (API Testing)
+- GitHub (Version Control & CI/CD)
+
+## 📂 Project Structure
+```
+📁 book-exchange-platform/
+ ├── 📁 frontend/         
+ ├── 📁 backend/          
+ ├── 📁 database/        
+ ├── 📁 docs/             
+ ├── 📄 README.md        
+ ├── 📄 .gitignore        
+```
+
+## 📅 Roadmap
+- ✅ **Completion of Design Document** (January 2025)
+- 🔄 **Initial Backend Setup** (February 2025)
+  - Implement foundational backend structure
+  - Setup database schema and basic queries
+- 🔄 **Initial Frontend Setup** (February 2025)
+  - Create basic UI components
+  - Implement routing and basic state management
+- 🚀 **MVP Development** (March 2025)
+  - Implement book listing functionality
+  - Develop initial matching algorithm
+- 🔄 **Feature Expansion** (April 2025)
+  - Improve UX/UI
+  - Add notifications and real-time updates
+- 🎯 **Final Testing & Deployment** (April 2025)
+  - Perform system-wide testing
+  - Prepare for deployment and documentation finalization
 
 ---
-
-## **Features (MVP)**
-
-1. **Book Donation**: Students can list books they no longer need and make them available to others.
-2. **Book Search**: Students can search for books based on title, author, or category.
-3. **User Dashboard**: A personalized dashboard for tracking donated and requested books.
-4. **Authentication**: Secure login and signup system using JWT.
-
----
-
-## **Technology Stack**
-
-### **Frontend**
-- Framework: React
-- Styling: TailwindCSS
-
-### **Backend**
-- Framework: Spring Boot
-- Database: MySQL
-- Connectivity: JDBC
-- Authentication: JWT
-
----
-
-## **Database Structure**
-### **Core Tables**
-1. **Users**: Manages student accounts.
-2. **Books**: Stores book details.
-3. **User_Books**: Tracks book donations and requests.
-
-**Example Relationships**:
-- Users can donate or request multiple books (`Users` → `User_Books` → `Books`).
-
----
-
-## **Project Status**
-- **Current Stage**: MVP Development
-- **Focus**: Book donation and search functionalities.
-
----
-
-## **License**
-This project is open-source and available under the MIT License.
-
----
-
-## **Contributors**
-- Michael: Lead Developer (Frontend and Backend)
-- Guy: Lead Developer (Database and Backend)
+Made with ❤️ by **Michael & Guy**
