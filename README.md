@@ -1,3 +1,17 @@
+```
+                  ___                   _____          ___                  
+    ___          /__/\                 /  /::\        /  /\          ___    
+   /  /\         \  \:\               /  /:/\:\      /  /:/_        /__/\   
+  /  /:/          \  \:\             /  /:/  \:\    /  /:/ /\       \  \:\  
+ /__/::\      _____\__\:\           /__/:/ \__\:|  /  /:/ /:/_       \  \:\ 
+ \__\/\:\__  /__/::::::::\          \  \:\ /  /:/ /__/:/ /:/ /\  ___  \__\:\
+    \  \:\/\ \  \:\~~\~~\/           \  \:\  /:/  \  \:\/:/ /:/ /__/\ |  |:|
+     \__\::/  \  \:\  ~~~             \  \:\/:/    \  \::/ /:/  \  \:\|  |:|
+     /__/:/    \  \:\                  \  \::/      \  \:\/:/    \  \:\__|:|
+     \__\/      \  \:\                  \__\/        \  \::/      \__\::::/ 
+                 \__\/                                \__\/           ~~~~
+```
+
 # 📚 BookXChange
 
 BookXChange is a **smart textbook exchange platform** designed for students at the Open University (Of Israel). The platform automates the matching process between users who want to **give away books** and those looking to **receive books**, streamlining the process with **real-time matching algorithms**.
@@ -5,7 +19,7 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 ## 🚀 Features
 - **User Authentication**: Register and log in securely.
 - **Book Listings**: Users can list books for exchange.
-- **Matching Algorithm**: Automatically finds matches between book donors and seekers.
+- **Matching Algorithm**: Automatically finds matches between book publishers and seekers (and vice versa).
 - **Notifications**: Alerts users when a match is found.
 - **Profile Management**: Users can update their book lists and contact preferences.
 
@@ -19,11 +33,11 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 - Java (Spring Boot)
 - RESTful API
 - MySQL (JDBC for database connection)
-- Tomcat Server
 
 **Tools & Infrastructure**:
 - Postman (API Testing)
 - GitHub (Version Control & CI/CD)
+- Docker Compose (Probably) 
 
 ## 📂 Project Structure
 ```
@@ -53,6 +67,3 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 - 🎯 **Final Testing & Deployment** (April 2025)
   - Perform system-wide testing
   - Prepare for deployment and documentation finalization
-
----
-Made with ❤️ by **Michael & Guy**
