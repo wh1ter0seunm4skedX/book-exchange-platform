@@ -1,3 +1,5 @@
+USE book_exchange;
+
 -- Predefined list of available books
 INSERT INTO books (id, title, author, isbn) VALUES
                                                 (1, 'Introduction to Algorithms', 'Thomas H. Cormen', '9780262033848'),

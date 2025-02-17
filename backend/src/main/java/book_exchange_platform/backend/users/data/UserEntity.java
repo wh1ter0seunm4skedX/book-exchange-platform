@@ -1,15 +1,15 @@
-package users.data;
+package book_exchange_platform.backend.users.data;
 
-import books.data.Book;
+import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.*;
-import matches.data.Match;
+import book_exchange_platform.backend.matches.data.MatchEntity;
 
 
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Book> booksForShare;
+    private List<BookEntity> booksForShare;
 
     @ManyToMany
     @JoinTable(
@@ -35,10 +35,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    private List<Book> requiredBooks;
+    private List<BookEntity> requiredBooks;
 
-    @OneToMany(mappedBy = "user")
-    private List<Match> matches;
+    @OneToMany(mappedBy = "provider")
+    private List<MatchEntity> matches;
 
 // Getters and Setters
 

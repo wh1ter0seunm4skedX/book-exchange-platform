@@ -1,3 +1,5 @@
+USE book_exchange;
+
 -- Create 'users' table
 CREATE TABLE users (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,

@@ -1,13 +1,13 @@
-package matches.data;
+package book_exchange_platform.backend.matches.data;
 
-import books.data.Book;
+import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.*;
-import users.data.User;
+import book_exchange_platform.backend.users.data.UserEntity;
 
 
 @Entity
 @Table(name = "matches")
-public class Match {
+public class MatchEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,16 +16,16 @@ public class Match {
     // User who has the book
     @ManyToOne
     @JoinColumn(name = "provider_id")
-    private User provider;
+    private UserEntity provider;
 
     // User who wants the book
     @ManyToOne
     @JoinColumn(name = "requester_id")
-    private User requester;
+    private UserEntity requester;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
-    private Book book;
+    private BookEntity book;
 
     // Status of the match (e.g., Pending, Completed)
     private String status;

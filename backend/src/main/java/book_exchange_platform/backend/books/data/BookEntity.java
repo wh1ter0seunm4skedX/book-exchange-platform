@@ -1,13 +1,13 @@
-package books.data;
+package book_exchange_platform.backend.books.data;
 
 import jakarta.persistence.*;
-import users.data.User;
+import book_exchange_platform.backend.users.data.UserEntity;
 
 import java.util.List;
 
 @Entity
 @Table(name = "books")
-public class Book {
+public class BookEntity {
 
     @Id
     private Long id; // Assume ID corresponds to predefined list
@@ -17,10 +17,10 @@ public class Book {
     private String isbn;
 
     @ManyToMany(mappedBy = "booksForShare")
-    private List<User> sharedByUsers;
+    private List<UserEntity> sharedByUsers;
 
     @ManyToMany(mappedBy = "requiredBooks")
-    private List<User> requestedByUsers;
+    private List<UserEntity> requestedByUsers;
 
 // Getters and Setters
 
