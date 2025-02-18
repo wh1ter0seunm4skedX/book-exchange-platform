@@ -5,13 +5,3 @@ This folder contains the **MySQL database setup** and related scripts for BookXC
 ## 🛠️ Tech Stack
 - **MySQL** - Relational database management system
 - **JDBC** - Database connection in the backend
-
-## 📂 Folder Structure
-```
-📁 database/
- ├── 📄 schema.sql       
- ├── 📄 seed.sql         
- ├── 📄 queries.sql     
- ├── 📄 config.env       
- ├── 📄 README.md        
-```
