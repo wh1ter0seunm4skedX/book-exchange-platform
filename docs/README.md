@@ -11,4 +11,3 @@ This folder contains all design, planning, and reference documents related to th
  ├── 📄 user_stories.md
  ├── 📄 roadmap.md
  ├── 📄 README.md
-```
