@@ -16,11 +16,13 @@ public class BooksController {
     private BooksRepository bookRepository;
 
     @GetMapping("/")
+    @ResponseBody
     public String home() {
         return "Welcome to the Books API!";
     }
 
     @GetMapping("/available")
+    @ResponseBody
     public List<BookEntity> getAvailableBooks() {
         return bookRepository.findAll();
     }

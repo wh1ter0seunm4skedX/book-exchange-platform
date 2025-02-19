@@ -4,7 +4,9 @@ package book_exchange_platform.backend.books.repository;
 import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +18,10 @@ public class BooksRepository extends SimpleJpaRepository<BookEntity, Long> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public BooksRepository(JpaEntityInformation<BookEntity, ?> entityInformation, EntityManager entityManager) {
-        super(entityInformation, entityManager);
+    @Autowired
+    public BooksRepository(EntityManager entityManager) {
+        super(JpaEntityInformationSupport.getEntityInformation(BookEntity.class, entityManager), entityManager);
+        this.entityManager = entityManager;
     }
 
     public List<BookEntity> getAllBooks() {

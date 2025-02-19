@@ -1,10 +1,13 @@
 package book_exchange_platform.backend.matches.repository;
 
 
+import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import book_exchange_platform.backend.matches.data.MatchEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +19,10 @@ public class MatchRepository extends SimpleJpaRepository<MatchEntity, Long> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public MatchRepository(JpaEntityInformation<MatchEntity, ?> entityInformation, EntityManager entityManager) {
-        super(entityInformation, entityManager);
+    @Autowired
+    public MatchRepository(EntityManager entityManager) {
+        super(JpaEntityInformationSupport.getEntityInformation(MatchEntity.class, entityManager), entityManager);
+        this.entityManager = entityManager;
     }
 
     public List<MatchEntity> getAllUserMatches(Long userId) {

@@ -1,11 +1,19 @@
 package book_exchange_platform.backend.books.data;
 
+import book_exchange_platform.backend.matches.data.PublicationEntity;
+import book_exchange_platform.backend.matches.data.RequestEntity;
 import jakarta.persistence.*;
 import book_exchange_platform.backend.users.data.UserEntity;
+import lombok.Builder;
+import lombok.Getter;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity
+//@Builder
+@Getter
 @Table(name = "books")
 public class BookEntity {
 
@@ -16,13 +24,9 @@ public class BookEntity {
     private String author;
     private String isbn;
 
-    @ManyToMany(mappedBy = "booksForShare")
-    private List<UserEntity> sharedByUsers;
+    @OneToMany(mappedBy = "book")
+    private List<PublicationEntity> sharedByUsers;
 
-    @ManyToMany(mappedBy = "requiredBooks")
-    private List<UserEntity> requestedByUsers;
-
-// Getters and Setters
-
-// Constructors
+    @OneToMany(mappedBy = "book")
+    private List<RequestEntity> requestedByUsers;
 }

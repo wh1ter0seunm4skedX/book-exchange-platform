@@ -2,9 +2,12 @@ package book_exchange_platform.backend.users.repository;
 
 
 import book_exchange_platform.backend.books.data.BookEntity;
+import book_exchange_platform.backend.matches.data.MatchEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
+import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import book_exchange_platform.backend.users.data.UserEntity;
@@ -17,8 +20,10 @@ public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public UserRepository(JpaEntityInformation<UserEntity, ?> entityInformation, EntityManager entityManager) {
-        super(entityInformation, entityManager);
+    @Autowired
+    public UserRepository(EntityManager entityManager) {
+        super(JpaEntityInformationSupport.getEntityInformation(UserEntity.class, entityManager), entityManager);
+        this.entityManager = entityManager;
     }
 
     public List<UserEntity> getAllUsers() {

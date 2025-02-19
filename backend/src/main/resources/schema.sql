@@ -6,7 +6,7 @@ CREATE TABLE users (
                        full_name VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
-                       phone_number VARCHAR(20),
+                       phone_number BIGINT,
                        preferred_contact_method ENUM('email', 'phone') NOT NULL,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -22,22 +22,24 @@ CREATE TABLE books (
 
 -- Create 'user_books_shared' join table
 CREATE TABLE user_books_shared (
-                                   user_id BIGINT NOT NULL,
-                                   book_id BIGINT NOT NULL,
-                                   shared_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                   PRIMARY KEY (user_id, book_id),
-                                   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                                   FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+                                id BIGINT,
+                                user_id BIGINT NOT NULL,
+                                book_id BIGINT NOT NULL,
+                                shared_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                PRIMARY KEY (user_id, book_id),
+                                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
 
 -- Create 'user_books_requested' join table
 CREATE TABLE user_books_requested (
-                                      user_id BIGINT NOT NULL,
-                                      book_id BIGINT NOT NULL,
-                                      requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                      PRIMARY KEY (user_id, book_id),
-                                      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                                      FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+                                    id BIGINT,
+                                    user_id BIGINT NOT NULL,
+                                    book_id BIGINT NOT NULL,
+                                    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                    PRIMARY KEY (user_id, book_id),
+                                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
 
 -- Create 'matches' table

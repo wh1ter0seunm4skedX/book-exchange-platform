@@ -3,9 +3,13 @@ package book_exchange_platform.backend.matches.data;
 import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.*;
 import book_exchange_platform.backend.users.data.UserEntity;
+import lombok.Builder;
+import lombok.Getter;
 
 
 @Entity
+//@Builder
+@Getter
 @Table(name = "matches")
 public class MatchEntity {
 
@@ -28,9 +32,6 @@ public class MatchEntity {
     private BookEntity book;
 
     // Status of the match (e.g., Pending, Completed)
-    private String status;
-
-// Getters and Setters
-
-// Constructors
+    @Enumerated(EnumType.STRING)
+    private MatchStatus status;
 }
