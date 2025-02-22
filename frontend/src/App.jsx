@@ -17,6 +17,7 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>

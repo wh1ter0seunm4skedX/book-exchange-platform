@@ -123,7 +123,7 @@ const Profile = () => {
 
       {/* Your Books Section */}
       <section className="mb-12">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Your Books</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">My Published Books</h2>
         {userBooks.length === 0 ? (
           <div className="bg-gray-50 rounded-lg p-8 text-center">
             <p className="text-gray-500">You haven't published any books yet.</p>
@@ -143,7 +143,7 @@ const Profile = () => {
 
       {/* Requested Books Section */}
       <section>
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Requested Books</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">My Requested Books</h2>
         {requestedBooks.length === 0 ? (
           <div className="bg-gray-50 rounded-lg p-8 text-center">
             <p className="text-gray-500">You haven't requested any books yet.</p>
