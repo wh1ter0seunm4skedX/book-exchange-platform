@@ -1,30 +1,8 @@
-# 📂 Frontend - BookXChange
+# React + Vite
 
-This folder contains the **React-based frontend** for BookXChange, the platform designed to facilitate textbook exchanges between students at the Open University.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🛠️ Tech Stack
-- **React (Vite)** - Fast and optimized development environment
-- **TailwindCSS** - Utility-first styling framework
-- **React Router** - Client-side routing management
-- **Axios** - HTTP client for API interactions
-- **Context API** - Global state management
+Currently, two official plugins are available:
 
-## 📂 Folder Structure
-```
-📁 frontend/
- ├── 📁 src/               
- │   ├── 📁 components/      
- │   ├── 📁 pages/        
- │   ├── 📁 hooks/            
- │   ├── 📁 context/          
- │   ├── 📁 utils/            
- │   ├── 📁 assets/          
- │   ├── 📄 main.jsx          
- │   ├── 📄 App.jsx           
- │   └── 📄 index.css         
- ├── 📄 package.json         
- ├── 📄 vite.config.js       
- ├── 📄 tailwind.config.js   
- ├── 📄 .gitignore           
-└── 📄 README.md            
-```
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
