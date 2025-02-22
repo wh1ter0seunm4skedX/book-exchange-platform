@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import book_exchange_platform.backend.matches.data.MatchEntity;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.Formula;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Builder
+//@Builder
 @Getter
+@Setter
 @Table(name = "users")
 public class UserEntity {
 
@@ -44,4 +45,5 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "requester")
     private List<MatchEntity> matchesToRequest;
+
 }

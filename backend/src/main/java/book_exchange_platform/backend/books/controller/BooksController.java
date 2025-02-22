@@ -3,6 +3,8 @@ package book_exchange_platform.backend.books.controller;
 
 import book_exchange_platform.backend.books.data.BookEntity;
 import book_exchange_platform.backend.books.repository.BooksRepository;
+import book_exchange_platform.backend.users.data.UserEntity;
+import book_exchange_platform.backend.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +17,9 @@ public class BooksController {
     @Autowired
     private BooksRepository bookRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
     @ResponseBody
     public String home() {
@@ -23,8 +28,8 @@ public class BooksController {
 
     @GetMapping("/available")
     @ResponseBody
-    public List<BookEntity> getAvailableBooks() {
-        return bookRepository.findAll();
+    public List<UserEntity> getAvailableBooks() {
+        return userRepository.findAll();
     }
 
     @GetMapping("/all")
