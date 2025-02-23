@@ -139,36 +139,29 @@ const Dashboard = () => {
             ) : (
               matches.map(match => (
                 <div key={match.id} className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className={`text-xs px-2 py-1 rounded ${
-                      match.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      match.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                      'bg-gray-100 text-gray-800'
-                    }`}>
-                      {match.status.charAt(0).toUpperCase() + match.status.slice(1)}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(match.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
                   <div onClick={() => {
                     setSelectedMatch(match);
                     setIsMatchModalOpen(true);
-                  }} className="cursor-pointer hover:opacity-75 transition-opacity">
+                  }}>
                     <BookCard
                       book={match.book}
                       showRequestButton={false}
+                      status={match.status}
+                      date={match.createdAt}
+                      actionButton={
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedMatch(match);
+                            setIsMatchModalOpen(true);
+                          }}
+                          className="w-full text-sm font-medium text-blue-600 hover:text-blue-700 py-2 border border-blue-200 rounded-md hover:border-blue-300 transition-colors"
+                        >
+                          View Match Details
+                        </button>
+                      }
                     />
                   </div>
-                  <button
-                    onClick={() => {
-                      setSelectedMatch(match);
-                      setIsMatchModalOpen(true);
-                    }}
-                    className="mt-3 w-full text-sm font-medium text-blue-600 hover:text-blue-700 py-2 border border-blue-200 rounded-md hover:border-blue-300 transition-colors"
-                  >
-                    View Match Details
-                  </button>
                 </div>
               ))
             )}
@@ -193,24 +186,21 @@ const Dashboard = () => {
             ) : (
               mostWantedBooks.map(book => (
                 <div key={book.id} className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800">
-                      {book.requestCount} requests
-                    </span>
-                  </div>
                   <BookCard
                     book={book}
                     showRequestButton={false}
+                    actionButton={
+                      <button
+                        onClick={() => {
+                          setSelectedBook(book);
+                          setIsRequestModalOpen(true);
+                        }}
+                        className="w-full text-sm font-medium text-green-600 hover:text-green-700 py-2 border border-green-200 rounded-md hover:border-green-300 transition-colors"
+                      >
+                        I Have This Book
+                      </button>
+                    }
                   />
-                  <button
-                    onClick={() => {
-                      setSelectedBook(book);
-                      setIsPublishModalOpen(true);
-                    }}
-                    className="mt-3 w-full text-sm font-medium text-green-600 hover:text-green-700 py-2 border border-green-200 rounded-md hover:border-green-300 transition-colors"
-                  >
-                    I Have This Book
-                  </button>
                 </div>
               ))
             )}
