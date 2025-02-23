@@ -48,7 +48,7 @@ const BookCard = ({
                 {book.title}
               </h3>
               <p className="text-xs text-gray-500 mt-1">
-                {book.courseNumber} • {book.author}
+              Course: {book.courseNumber}
               </p>
               {book.publication?.condition && (
                 <p className="text-xs text-gray-600 mt-1">
