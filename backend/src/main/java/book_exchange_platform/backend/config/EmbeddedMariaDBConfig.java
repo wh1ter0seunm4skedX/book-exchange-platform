@@ -26,9 +26,6 @@ class EmbeddedMariaDbConfig {
                           @Value("${spring.datasource.password}") String datasourcePassword,
                           @Value("${spring.datasource.driver-class-name}") String datasourceDriver,
                           @Value("${mariaDB4j.port}") int port) throws ManagedProcessException {
-        //Create our database with default root user and no password
-        //mariaDB4jSpringService.getConfiguration().addArg("--character-set-server=utf8");
-        //mariaDB4jSpringService.getConfiguration().addArg("--collation-server=utf8_general_ci");
         mariaDB4jSpringService.start();
         mariaDB4jSpringService.getDB().createDB(databaseName);
         mariaDB4jSpringService.getDB().source("schema.sql");
@@ -45,34 +42,3 @@ class EmbeddedMariaDbConfig {
                 .build();
     }
 }
-
-
-
-//@Bean
-//MariaDB4jSpringService mariaDB4jSpringService() {
-//    MariaDB4jSpringService mariaDB4jSpringService = new MariaDB4jSpringService();
-//    mariaDB4jSpringService.start();
-//    return mariaDB4jSpringService;
-//}
-//
-//@Bean
-//DataSource dataSource(MariaDB4jSpringService mariaDB4jSpringService,
-//                      @Value("${app.mariaDB4j.databaseName}") String databaseName,
-//                      @Value("${spring.datasource.username}") String datasourceUsername,
-//                      @Value("${spring.datasource.password}") String datasourcePassword,
-//                      @Value("${spring.datasource.driver-class-name}") String datasourceDriver) throws ManagedProcessException {
-//    //Create our database with default root user and no password
-//    DBConfigurationBuilder config = mariaDB4jSpringService.getConfiguration();
-//    config.setPort(3307);
-//
-//    mariaDB4jSpringService.getDB().createDB(databaseName);
-//
-//
-//    return DataSourceBuilder
-//            .create()
-//            .username(datasourceUsername)
-//            .password(datasourcePassword)
-//            .url(config.getURL(databaseName))
-//            .driverClassName(datasourceDriver)
-//            .build();
-//}

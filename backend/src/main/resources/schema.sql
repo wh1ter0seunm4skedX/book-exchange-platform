@@ -1,7 +1,7 @@
 USE book_exchange;
 
 -- Create 'users' table
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        full_name VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 -- Create 'books' table
-CREATE TABLE books (
+CREATE TABLE IF NOT EXISTS books (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        title VARCHAR(255) NOT NULL,
                        author VARCHAR(255),
@@ -21,7 +21,7 @@ CREATE TABLE books (
 );
 
 -- Create 'user_books_shared' join table
-CREATE TABLE user_books_shared (
+CREATE TABLE IF NOT EXISTS user_books_shared (
                                 id BIGINT,
                                 user_id BIGINT NOT NULL,
                                 book_id BIGINT NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE user_books_shared (
 );
 
 -- Create 'user_books_requested' join table
-CREATE TABLE user_books_requested (
+CREATE TABLE IF NOT EXISTS user_books_requested (
                                     id BIGINT,
                                     user_id BIGINT NOT NULL,
                                     book_id BIGINT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE user_books_requested (
 );
 
 -- Create 'matches' table
-CREATE TABLE matches (
+CREATE TABLE IF NOT EXISTS matches (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
                          provider_id BIGINT NOT NULL,
                          requester_id BIGINT NOT NULL,

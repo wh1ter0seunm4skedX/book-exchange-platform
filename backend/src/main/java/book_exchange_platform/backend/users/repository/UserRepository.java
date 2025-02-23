@@ -55,5 +55,12 @@ public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
     }
 
 
+    public UserEntity findByEmail(String email) {
+        String query = "SELECT u FROM UserEntity u WHERE u.email = :email";
+        return entityManager.createQuery(query, UserEntity.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
+
 }
 
