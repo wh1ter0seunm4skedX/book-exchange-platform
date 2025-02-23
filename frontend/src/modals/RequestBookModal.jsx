@@ -75,8 +75,6 @@ const RequestBookModal = ({ isOpen, onClose, onConfirm }) => {
           <div className="bg-gray-50 rounded-lg p-4 space-y-3">
             <div>
               <h4 className="text-sm font-medium text-gray-900">{selectedBook.title}</h4>
-              <p className="text-sm text-gray-600">Author: {selectedBook.author}</p>
-              <p className="text-sm text-gray-600">Edition: {selectedBook.edition}</p>
               <p className="text-sm text-gray-600">Course: {selectedBook.courseNumber}</p>
             </div>
             

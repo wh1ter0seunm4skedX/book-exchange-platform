@@ -2,33 +2,21 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import { mockBooks } from '../mockData';
 
-const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook }) => {
+const PublishBookModal = ({ isOpen, onClose, onPublish }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    courseNumber: '',
-    author: '',
-    edition: '',
+    bookId: '',
     condition: 'Like New',
     notes: ''
   });
 
-  useEffect(() => {
-    if (selectedBook) {
-      setFormData({
-        ...formData,
-        title: selectedBook.title,
-        courseNumber: selectedBook.courseNumber,
-        author: selectedBook.author,
-        edition: selectedBook.edition,
-        condition: 'Like New', // Default to Like New
-        notes: '' // Clear notes for new entry
-      });
-    }
-  }, [selectedBook]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    onPublish(formData);
+    const selectedBook = mockBooks.find(book => book.id === formData.bookId);
+    onPublish({
+      ...formData,
+      title: selectedBook.title,
+      courseNumber: selectedBook.courseNumber,
+    });
   };
 
   const handleChange = (e) => {
@@ -39,73 +27,43 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook }) => {
     }));
   };
 
+  const selectedBook = formData.bookId ? mockBooks.find(book => book.id === formData.bookId) : null;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
         <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-          {selectedBook ? 'Publish Selected Book' : 'Publish a Book'}
+          Publish a Book
         </h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Title
+            <label htmlFor="bookId" className="block text-sm font-medium text-gray-700">
+              Select Book
             </label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              value={formData.title}
+            <select
+              name="bookId"
+              id="bookId"
+              value={formData.bookId}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
               required
-              readOnly={!!selectedBook}
-            />
+            >
+              <option value="">Choose a book</option>
+              {mockBooks.map(book => (
+                <option key={book.id} value={book.id}>
+                  {book.title} - {book.courseNumber}
+                </option>
+              ))}
+            </select>
           </div>
-          <div>
-            <label htmlFor="courseNumber" className="block text-sm font-medium text-gray-700">
-              Course Number
-            </label>
-            <input
-              type="text"
-              name="courseNumber"
-              id="courseNumber"
-              value={formData.courseNumber}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              required
-              readOnly={!!selectedBook}
-            />
-          </div>
-          <div>
-            <label htmlFor="author" className="block text-sm font-medium text-gray-700">
-              Author
-            </label>
-            <input
-              type="text"
-              name="author"
-              id="author"
-              value={formData.author}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              required
-              readOnly={!!selectedBook}
-            />
-          </div>
-          <div>
-            <label htmlFor="edition" className="block text-sm font-medium text-gray-700">
-              Edition
-            </label>
-            <input
-              type="text"
-              name="edition"
-              id="edition"
-              value={formData.edition}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              required
-              readOnly={!!selectedBook}
-            />
-          </div>
+
+          {selectedBook && (
+            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <h4 className="text-sm font-medium text-gray-900">{selectedBook.title}</h4>
+              <p className="text-sm text-gray-600">Course Number: {selectedBook.courseNumber}</p>
+            </div>
+          )}
+
           <div>
             <label htmlFor="condition" className="block text-sm font-medium text-gray-700">
               Condition
