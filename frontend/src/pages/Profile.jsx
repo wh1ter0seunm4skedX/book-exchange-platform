@@ -3,17 +3,18 @@ import BookCard from '../components/BookCard';
 import EditProfileModal from '../modals/EditProfileModal';
 import { booksApi } from '../api/books';
 import { usersApi } from '../api/users';
+import { mockUsers } from '../mockData';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
-  const [userBooks, setUserBooks] = useState([]);
+  const [publishedBooks, setPublishedBooks] = useState([]);
   const [requestedBooks, setRequestedBooks] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Mock user ID - in a real app, this would come from auth context
-  const userId = '1';
+  // For demo purposes, we'll use the first user from mockUsers
+  const userId = mockUsers[0].id;
 
   useEffect(() => {
     fetchProfileData();
@@ -23,14 +24,14 @@ const Profile = () => {
     try {
       setLoading(true);
       setError(null);
-      const [userData, ownedBooks, userRequests] = await Promise.all([
+      const [userData, userPublished, userRequests] = await Promise.all([
         usersApi.getUserProfile(userId),
-        booksApi.getUserBooks(userId),
-        booksApi.getRequestedBooks(userId)
+        booksApi.getUserPublishedBooks(userId),
+        booksApi.getUserRequestedBooks(userId)
       ]);
 
       setUser(userData);
-      setUserBooks(ownedBooks);
+      setPublishedBooks(userPublished);
       setRequestedBooks(userRequests);
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -44,6 +45,7 @@ const Profile = () => {
     try {
       const updatedUser = await usersApi.updateUserProfile(userId, userData);
       setUser(updatedUser);
+      setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating profile:', error);
     }
@@ -76,97 +78,97 @@ const Profile = () => {
   if (!user) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container mx-auto px-4 py-8">
       {/* Profile Header */}
-      <div className="bg-white shadow rounded-lg p-6 mb-8">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
-            <p className="mt-1 text-sm text-gray-500">{user.email}</p>
-            {user.phone && (
-              <p className="mt-1 text-sm text-gray-500">{user.phone}</p>
-            )}
-            {user.bio && (
-              <p className="mt-4 text-gray-700">{user.bio}</p>
-            )}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+              {user.name.charAt(0)}
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
+              <p className="text-gray-600">{user.email}</p>
+            </div>
           </div>
           <button
             onClick={() => setIsEditModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:shadow-sm transition-all duration-200"
           >
             Edit Profile
           </button>
         </div>
-
-        {/* Statistics */}
-        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <div className="bg-gray-50 px-4 py-5 rounded-lg">
-            <dt className="text-sm font-medium text-gray-500">Books Owned</dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">
-              {userBooks.length}
-            </dd>
-          </div>
-          <div className="bg-gray-50 px-4 py-5 rounded-lg">
-            <dt className="text-sm font-medium text-gray-500">Books Requested</dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">
-              {requestedBooks.length}
-            </dd>
-          </div>
-          <div className="bg-gray-50 px-4 py-5 rounded-lg">
-            <dt className="text-sm font-medium text-gray-500">Active Exchanges</dt>
-            <dd className="mt-1 text-3xl font-semibold text-gray-900">
-              {requestedBooks.filter(book => !book.available).length}
-            </dd>
-          </div>
-        </div>
       </div>
 
-      {/* Your Books Section */}
-      <section className="mb-12">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">My Published Books</h2>
-        {userBooks.length === 0 ? (
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-500">You haven't published any books yet.</p>
+      {/* Books Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Published Books Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+              My Published Books
+            </h2>
+            <span className="text-sm text-gray-500">
+              {publishedBooks.length} books
+            </span>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {userBooks.map(book => (
-              <BookCard
-                key={book.id}
-                book={book}
-                showRequestButton={false}
-              />
-            ))}
+          <div className="space-y-4">
+            {publishedBooks.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border-2 border-dashed border-gray-200">
+                <p className="text-gray-500 mb-4">Ready to share your knowledge?</p>
+                <button className="text-blue-600 hover:text-blue-700 font-medium">
+                  + Publish your first book
+                </button>
+              </div>
+            ) : (
+              publishedBooks.map(book => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  showRequestButton={false}
+                />
+              ))
+            )}
           </div>
-        )}
-      </section>
+        </section>
 
-      {/* Requested Books Section */}
-      <section>
-        <h2 className="text-xl font-bold text-gray-900 mb-6">My Requested Books</h2>
-        {requestedBooks.length === 0 ? (
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-500">You haven't requested any books yet.</p>
+        {/* Requested Books Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              My Requested Books
+            </h2>
+            <span className="text-sm text-gray-500">
+              {requestedBooks.length} books
+            </span>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {requestedBooks.map(book => (
-              <BookCard
-                key={book.id}
-                book={book}
-                showRequestButton={false}
-              />
-            ))}
+          <div className="space-y-4">
+            {requestedBooks.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border-2 border-dashed border-gray-200">
+                <p className="text-gray-500 mb-4">Looking for study materials?</p>
+                <button className="text-blue-600 hover:text-blue-700 font-medium">
+                  + Request your first book
+                </button>
+              </div>
+            ) : (
+              requestedBooks.map(book => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  showRequestButton={false}
+                />
+              ))
+            )}
           </div>
-        )}
-      </section>
+        </section>
+      </div>
 
       {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        user={user}
         onSave={handleUpdateProfile}
+        user={user}
       />
     </div>
   );

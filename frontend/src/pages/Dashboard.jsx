@@ -5,11 +5,11 @@ import RequestBookModal from '../modals/RequestBookModal';
 import MatchNotificationModal from '../modals/MatchNotificationModal';
 import { booksApi } from '../api/books';
 import { usersApi } from '../api/users';
+import { mockUsers } from '../mockData';
 
 const Dashboard = () => {
-  const [books, setBooks] = useState([]);
-  const [userBooks, setUserBooks] = useState([]);
   const [matches, setMatches] = useState([]);
+  const [mostWantedBooks, setMostWantedBooks] = useState([]);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [isMatchModalOpen, setIsMatchModalOpen] = useState(false);
@@ -18,8 +18,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Mock user ID - in a real app, this would come from auth context
-  const userId = '1';
+  // For demo purposes, we'll use the first user
+  const userId = mockUsers[0].id;
+  const userName = mockUsers[0].name;
 
   useEffect(() => {
     fetchDashboardData();
@@ -29,15 +30,13 @@ const Dashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      const [allBooks, ownedBooks, userMatches] = await Promise.all([
-        booksApi.getAllBooks(),
-        booksApi.getUserBooks(userId),
-        usersApi.getUserMatches(userId)
+      const [userMatches, wantedBooks] = await Promise.all([
+        usersApi.getUserMatches(userId),
+        booksApi.getMostWantedBooks()
       ]);
 
-      setBooks(allBooks.filter(book => book.owner.id !== userId));
-      setUserBooks(ownedBooks);
       setMatches(userMatches);
+      setMostWantedBooks(wantedBooks);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       setError('Failed to load dashboard data. Please try again later.');
@@ -48,32 +47,22 @@ const Dashboard = () => {
 
   const handlePublishBook = async (bookData) => {
     try {
-      await booksApi.publishBook({
-        ...bookData,
-        owner: { id: userId }
-      });
+      await booksApi.publishBook({ ...bookData, userId });
+      setIsPublishModalOpen(false);
       fetchDashboardData();
     } catch (error) {
       console.error('Error publishing book:', error);
     }
   };
 
-  const handleRequestBook = async (bookId) => {
+  const handleRequestBook = async (bookData) => {
     try {
-      const match = await booksApi.requestBook(bookId, userId);
-      setSelectedMatch(match);
-      setIsMatchModalOpen(true);
-    } catch (error) {
-      console.error('Error requesting book:', error);
-    }
-  };
-
-  const handleMatchResponse = async (matchId, accepted) => {
-    try {
-      await usersApi.updateMatchStatus(matchId, accepted ? 'accepted' : 'declined');
+      await booksApi.requestBook({ ...bookData, userId });
+      setIsRequestModalOpen(false);
+      setSelectedBook(null);
       fetchDashboardData();
     } catch (error) {
-      console.error('Error updating match status:', error);
+      console.error('Error requesting book:', error);
     }
   };
 
@@ -102,88 +91,159 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Action Buttons */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">My Dashboard 🙃</h1>
-        <button
-          onClick={() => setIsPublishModalOpen(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Publish Book
-        </button>
+    <div className="container mx-auto px-4 py-8">
+      {/* Welcome Section */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+          Welcome, {userName}!
+        </h1>
+        <p className="text-gray-600 mb-6">
+          Find and exchange books with other students.
+        </p>
+        <div className="flex justify-center gap-4">
+          <button
+            onClick={() => setIsPublishModalOpen(true)}
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200 hover:shadow-lg transform hover:-translate-y-1"
+          >
+            Publish a Book
+          </button>
+          <button
+            onClick={() => setIsRequestModalOpen(true)}
+            className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200 hover:shadow-lg transform hover:-translate-y-1"
+          >
+            Request a Book
+          </button>
+        </div>
       </div>
 
-      {/* Your Books Section */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Your Books</h2>
-        {userBooks.length === 0 ? (
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-500">You haven't published any books yet.</p>
-            <button
-              onClick={() => setIsPublishModalOpen(true)}
-              className="mt-4 inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200"
-            >
-              Publish Your First Book
-            </button>
+      {/* Books Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Matches Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+              Your Matches
+            </h2>
+            <span className="text-sm text-gray-500">
+              {matches.length} matches
+            </span>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {userBooks.map(book => (
-              <BookCard
-                key={book.id}
-                book={book}
-                showRequestButton={false}
-              />
-            ))}
+          <div className="space-y-4">
+            {matches.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border-2 border-dashed border-gray-200">
+                <p className="text-gray-500">No matches found yet.</p>
+                <p className="text-sm text-gray-400 mt-2">
+                  Keep publishing and requesting books to find matches!
+                </p>
+              </div>
+            ) : (
+              matches.map(match => (
+                <div key={match.id} className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className={`text-xs px-2 py-1 rounded ${
+                      match.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      match.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {match.status.charAt(0).toUpperCase() + match.status.slice(1)}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(match.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div onClick={() => {
+                    setSelectedMatch(match);
+                    setIsMatchModalOpen(true);
+                  }} className="cursor-pointer hover:opacity-75 transition-opacity">
+                    <BookCard
+                      book={match.book}
+                      showRequestButton={false}
+                    />
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSelectedMatch(match);
+                      setIsMatchModalOpen(true);
+                    }}
+                    className="mt-3 w-full text-sm font-medium text-blue-600 hover:text-blue-700 py-2 border border-blue-200 rounded-md hover:border-blue-300 transition-colors"
+                  >
+                    View Match Details
+                  </button>
+                </div>
+              ))
+            )}
           </div>
-        )}
-      </section>
+        </section>
 
-      {/* Available Books Section */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Available Books</h2>
-        {books.length === 0 ? (
-          <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <p className="text-gray-500">No books available for exchange at the moment.</p>
+        {/* Most Wanted Books Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              Most Wanted Books
+            </h2>
+            <span className="text-sm text-gray-500">
+              {mostWantedBooks.length} books
+            </span>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {books.map(book => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onRequest={() => {
-                  setSelectedBook(book);
-                  setIsRequestModalOpen(true);
-                }}
-              />
-            ))}
+          <div className="space-y-4">
+            {mostWantedBooks.length === 0 ? (
+              <div className="bg-white rounded-lg p-8 text-center border-2 border-dashed border-gray-200">
+                <p className="text-gray-500">No books in high demand at the moment.</p>
+              </div>
+            ) : (
+              mostWantedBooks.map(book => (
+                <div key={book.id} className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800">
+                      {book.requestCount} requests
+                    </span>
+                  </div>
+                  <BookCard
+                    book={book}
+                    showRequestButton={false}
+                  />
+                  <button
+                    onClick={() => {
+                      setSelectedBook(book);
+                      setIsPublishModalOpen(true);
+                    }}
+                    className="mt-3 w-full text-sm font-medium text-green-600 hover:text-green-700 py-2 border border-green-200 rounded-md hover:border-green-300 transition-colors"
+                  >
+                    I Have This Book
+                  </button>
+                </div>
+              ))
+            )}
           </div>
-        )}
-      </section>
+        </section>
+      </div>
 
       {/* Modals */}
       <PublishBookModal
         isOpen={isPublishModalOpen}
-        onClose={() => setIsPublishModalOpen(false)}
+        onClose={() => {
+          setIsPublishModalOpen(false);
+          setSelectedBook(null);
+        }}
         onPublish={handlePublishBook}
+        selectedBook={selectedBook}
       />
-
       <RequestBookModal
         isOpen={isRequestModalOpen}
-        onClose={() => setIsRequestModalOpen(false)}
-        book={selectedBook}
-        onConfirm={handleRequestBook}
+        onClose={() => {
+          setIsRequestModalOpen(false);
+          setSelectedBook(null);
+        }}
+        onRequest={handleRequestBook}
+        selectedBook={selectedBook}
       />
-
       <MatchNotificationModal
         isOpen={isMatchModalOpen}
-        onClose={() => setIsMatchModalOpen(false)}
+        onClose={() => {
+          setIsMatchModalOpen(false);
+          setSelectedMatch(null);
+        }}
         match={selectedMatch}
-        book={selectedBook}
-        onAccept={(matchId) => handleMatchResponse(matchId, true)}
-        onDecline={(matchId) => handleMatchResponse(matchId, false)}
       />
     </div>
   );
