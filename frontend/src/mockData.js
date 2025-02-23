@@ -86,19 +86,19 @@ export const mockUsers = [
     id: "user1",
     name: "John Doe",
     email: "john.doe@university.edu",
-    preferredLocation: "Main Library"
+    preferredLocation: "Tel Aviv"
   },
   {
     id: "user2",
     name: "Jane Smith",
     email: "jane.smith@university.edu",
-    preferredLocation: "Science Building"
+    preferredLocation: "Rehovot"
   },
   {
     id: "user3",
     name: "Mike Johnson",
     email: "mike.johnson@university.edu",
-    preferredLocation: "Student Center"
+    preferredLocation: "Haifa"
   }
 ];
 
@@ -182,14 +182,14 @@ export const mockMatches = [
       id: "user2",
       name: "Jane Smith",
       email: "jane.smith@university.edu",
-      preferredLocation: "Science Building"
+      preferredLocation: "Rehovot"
     }
   },
   {
     id: "match2",
     requestId: "request1",
     publishId: "pub2",
-    status: "accepted",
+    status: "pending",
     createdAt: "2025-02-21T16:00:00.000Z",
     book: {
       id: "book3",
@@ -201,7 +201,7 @@ export const mockMatches = [
       id: "user3",
       name: "Mike Johnson",
       email: "mike.johnson@university.edu",
-      preferredLocation: "Student Center"
+      preferredLocation: "Tel Aviv"
     }
   }
 ];

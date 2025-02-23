@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import BookCard from '../components/BookCard';
+import RequestedBookCard from '../components/RequestedBookCard';
 import EditProfileModal from '../modals/EditProfileModal';
 import { booksApi } from '../api/books';
 import { usersApi } from '../api/users';
@@ -152,10 +153,10 @@ const Profile = () => {
               </div>
             ) : (
               requestedBooks.map(book => (
-                <BookCard
+                <RequestedBookCard
                   key={book.id}
                   book={book}
-                  showRequestButton={false}
+                  requestDate={book.requestDate}
                 />
               ))
             )}

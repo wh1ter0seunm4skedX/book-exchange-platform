@@ -36,7 +36,8 @@ const Dashboard = () => {
       ]);
 
       setMatches(userMatches);
-      setMostWantedBooks(wantedBooks);
+      // Only show top 3 most requested books
+      setMostWantedBooks(wantedBooks.slice(0, 3));
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       setError('Failed to load dashboard data. Please try again later.');
@@ -64,6 +65,11 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error requesting book:', error);
     }
+  };
+
+  const handleIHaveThisBook = (book) => {
+    setSelectedBook(book);
+    setIsPublishModalOpen(true);
   };
 
   if (loading) {
@@ -186,15 +192,17 @@ const Dashboard = () => {
             ) : (
               mostWantedBooks.map(book => (
                 <div key={book.id} className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800">
+                      {book.requestCount} {book.requestCount === 1 ? 'student needs' : 'students need'} this book
+                    </span>
+                  </div>
                   <BookCard
                     book={book}
                     showRequestButton={false}
                     actionButton={
                       <button
-                        onClick={() => {
-                          setSelectedBook(book);
-                          setIsRequestModalOpen(true);
-                        }}
+                        onClick={() => handleIHaveThisBook(book)}
                         className="w-full text-sm font-medium text-green-600 hover:text-green-700 py-2 border border-green-200 rounded-md hover:border-green-300 transition-colors"
                       >
                         I Have This Book
@@ -224,8 +232,8 @@ const Dashboard = () => {
           setIsRequestModalOpen(false);
           setSelectedBook(null);
         }}
-        onRequest={handleRequestBook}
-        selectedBook={selectedBook}
+        onConfirm={handleRequestBook}
+        preselectedBookId={selectedBook?.id}
       />
       <MatchNotificationModal
         isOpen={isMatchModalOpen}

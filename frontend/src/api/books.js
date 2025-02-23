@@ -42,7 +42,14 @@ export const booksApi = {
       .map(req => {
         const book = mockBooks.find(b => b.id === req.bookId);
         const publication = mockPublishedBooks.find(pub => pub.bookId === req.bookId);
-        return { ...book, urgency: req.urgency, notes: req.notes, request: req, publication };
+        return {
+          ...book,
+          urgency: req.urgency,
+          notes: req.notes,
+          request: req,
+          publication,
+          requestDate: req.createdAt
+        };
       });
     return userRequests;
   },

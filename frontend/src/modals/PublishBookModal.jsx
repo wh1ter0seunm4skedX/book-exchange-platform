@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import { mockBooks } from '../mockData';
 
-const PublishBookModal = ({ isOpen, onClose, onPublish }) => {
+const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook = null }) => {
   const [formData, setFormData] = useState({
     bookId: '',
     condition: 'Like New',
     notes: ''
   });
+
+  // Update form when selectedBook changes
+  useEffect(() => {
+    if (selectedBook) {
+      setFormData(prev => ({
+        ...prev,
+        bookId: selectedBook.id
+      }));
+    }
+  }, [selectedBook]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +37,7 @@ const PublishBookModal = ({ isOpen, onClose, onPublish }) => {
     }));
   };
 
-  const selectedBook = formData.bookId ? mockBooks.find(book => book.id === formData.bookId) : null;
+  const currentBook = formData.bookId ? mockBooks.find(book => book.id === formData.bookId) : null;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -57,10 +67,10 @@ const PublishBookModal = ({ isOpen, onClose, onPublish }) => {
             </select>
           </div>
 
-          {selectedBook && (
+          {currentBook && (
             <div className="bg-gray-50 rounded-lg p-4 mb-4">
-              <h4 className="text-sm font-medium text-gray-900">{selectedBook.title}</h4>
-              <p className="text-sm text-gray-600">Course Number: {selectedBook.courseNumber}</p>
+              <h4 className="text-sm font-medium text-gray-900">{currentBook.title}</h4>
+              <p className="text-sm text-gray-600">Course Number: {currentBook.courseNumber}</p>
             </div>
           )}
 
