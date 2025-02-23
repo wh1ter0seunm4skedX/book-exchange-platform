@@ -2,43 +2,81 @@
 export const mockBooks = [
   {
     id: "book1",
-    title: "Introduction to Computer Science",
-    courseNumber: "CS101",
-    coverImage: "https://placehold.co/400x600?text=CS101",
-    author: "John Smith",
-    edition: "3rd"
+    title: "Discrete Mathematics: Set Theory, Combinatorics and Graph Theory",
+    courseNumber: "20476",
+    coverImage: "https://placehold.co/400x600?text=Discrete+Mathematics:+Set+Theory,+Combinatorics+and+Graph+Theory"
   },
   {
     id: "book2",
-    title: "Data Structures and Algorithms",
-    courseNumber: "CS201",
-    coverImage: "https://placehold.co/400x600?text=CS201",
-    author: "Jane Wilson",
-    edition: "4th"
+    title: "Linear Algebra I",
+    courseNumber: "20109",
+    coverImage: "https://placehold.co/400x600?text=Linear+Algebra+I"
   },
   {
     id: "book3",
-    title: "Calculus for Engineers",
-    courseNumber: "MATH201",
-    coverImage: "https://placehold.co/400x600?text=MATH201",
-    author: "Robert Johnson",
-    edition: "2nd"
+    title: "Infinitesimal Calculus I",
+    courseNumber: "20106",
+    coverImage: "https://placehold.co/400x600?text=Infinitesimal+Calculus+I"
   },
   {
     id: "book4",
-    title: "Physics for Scientists",
-    courseNumber: "PHYS101",
-    coverImage: "https://placehold.co/400x600?text=PHYS101",
-    author: "Maria Garcia",
-    edition: "5th"
+    title: "Differential and Integral Calculus II",
+    courseNumber: "20423",
+    coverImage: "https://placehold.co/400x600?text=Differential+and+Integral+Calculus+II"
   },
   {
     id: "book5",
-    title: "Organic Chemistry",
-    courseNumber: "CHEM201",
-    coverImage: "https://placehold.co/400x600?text=CHEM201",
-    author: "David Brown",
-    edition: "6th"
+    title: "Probability for Computer Science Students",
+    courseNumber: "20425",
+    coverImage: "https://placehold.co/400x600?text=Probability+for+Computer+Science+Students"
+  },
+  {
+    id: "book6",
+    title: "Logic for Computer Science",
+    courseNumber: "20466",
+    coverImage: "https://placehold.co/400x600?text=Logic+for+Computer+Science"
+  },
+  {
+    id: "book7",
+    title: "Introduction to Computer Science Using Java",
+    courseNumber: "20441",
+    coverImage: "https://placehold.co/400x600?text=Introduction+to+Computer+Science+Using+Java"
+  },
+  {
+    id: "book8",
+    title: "Data Structures and Introduction to Algorithms",
+    courseNumber: "20407",
+    coverImage: "https://placehold.co/400x600?text=Data+Structures+and+Introduction+to+Algorithms"
+  },
+  {
+    id: "book9",
+    title: "Algorithms",
+    courseNumber: "20417",
+    coverImage: "https://placehold.co/400x600?text=Algorithms"
+  },
+  {
+    id: "book10",
+    title: "Automata Theory and Formal Languages",
+    courseNumber: "20440",
+    coverImage: "https://placehold.co/400x600?text=Automata+Theory+and+Formal+Languages"
+  },
+  {
+    id: "book11",
+    title: "System Programming Laboratory",
+    courseNumber: "20465",
+    coverImage: "https://placehold.co/400x600?text=System+Programming+Laboratory"
+  },
+  {
+    id: "book12",
+    title: "Introduction to the Theory of Computation and Complexity",
+    courseNumber: "20585",
+    coverImage: "https://placehold.co/400x600?text=Introduction+to+the+Theory+of+Computation+and+Complexity"
+  },
+  {
+    id: "book13",
+    title: "Operating Systems",
+    courseNumber: "20594",
+    coverImage: "https://placehold.co/400x600?text=Operating+Systems"
   }
 ];
 
@@ -69,7 +107,7 @@ export const mockPublishedBooks = [
   {
     id: "pub1",
     userId: "user2",
-    bookId: "book2",
+    bookId: "book8",
     status: "active",
     createdAt: "2025-02-23T09:00:00+02:00",
     condition: "Like New",
@@ -87,7 +125,7 @@ export const mockPublishedBooks = [
   {
     id: "pub3",
     userId: "user1",
-    bookId: "book4",
+    bookId: "book7",
     status: "active",
     createdAt: "2025-02-22T14:15:00.000Z",
     condition: "Excellent",
@@ -100,7 +138,7 @@ export const mockBookRequests = [
   {
     id: "request1",
     userId: "user1",
-    bookId: "book2",
+    bookId: "book8",
     status: "active",
     createdAt: "2025-02-23T08:00:00+02:00",
     urgency: "high",
@@ -109,7 +147,7 @@ export const mockBookRequests = [
   {
     id: "request2",
     userId: "user2",
-    bookId: "book5",
+    bookId: "book9",
     status: "active",
     createdAt: "2025-02-21T15:30:00+02:00",
     urgency: "medium",
@@ -118,7 +156,7 @@ export const mockBookRequests = [
   {
     id: "request3",
     userId: "user3",
-    bookId: "book5",
+    bookId: "book9",
     status: "active",
     createdAt: "2025-02-23T08:45:00+02:00",
     urgency: "low",
@@ -135,12 +173,10 @@ export const mockMatches = [
     status: "pending",
     createdAt: "2025-02-23T10:22:07+02:00",
     book: {
-      id: "book2",
-      title: "Data Structures and Algorithms",
-      courseNumber: "CS201",
-      coverImage: "https://placehold.co/400x600?text=CS201",
-      author: "Jane Wilson",
-      edition: "4th"
+      id: "book8",
+      title: "Data Structures and Introduction to Algorithms",
+      courseNumber: "20407",
+      coverImage: "https://placehold.co/400x600?text=Data+Structures+and+Introduction+to+Algorithms"
     },
     matchedUser: {
       id: "user2",
@@ -157,11 +193,15 @@ export const mockMatches = [
     createdAt: "2025-02-21T16:00:00.000Z",
     book: {
       id: "book3",
-      title: "Calculus for Engineers",
-      courseNumber: "MATH201",
-      coverImage: "https://placehold.co/400x600?text=MATH201",
-      author: "Robert Johnson",
-      edition: "2nd"
+      title: "Infinitesimal Calculus I",
+      courseNumber: "20106",
+      coverImage: "https://placehold.co/400x600?text=Infinitesimal+Calculus+I"
+    },
+    matchedUser: {
+      id: "user3",
+      name: "Mike Johnson",
+      email: "mike.johnson@university.edu",
+      preferredLocation: "Student Center"
     }
   }
 ];
