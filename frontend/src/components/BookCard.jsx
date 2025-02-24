@@ -1,64 +1,83 @@
 import React from 'react';
 
-const BookCard = ({ book, onRequest, showRequestButton = true }) => {
-  const { title, author, description, coverImage, condition, available, owner } = book;
-
-  const conditionColors = {
-    New: 'bg-green-100 text-green-800',
-    Good: 'bg-blue-100 text-blue-800',
-    Used: 'bg-yellow-100 text-yellow-800'
-  };
-
+const BookCard = ({ 
+  book, 
+  showRequestButton = true, 
+  onRequestClick,
+  actionButton = null,
+  status = null,
+  date = null
+}) => {
   return (
-    <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-200 hover:shadow-lg hover:-translate-y-1">
-      <div className="relative pb-[150%]">
-        <img
-          src={coverImage}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex flex-col flex-grow p-4">
-        <div className="flex-grow">
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-900 line-clamp-2">{title}</h3>
-          </div>
-          <p className="text-sm text-gray-600 mb-2 line-clamp-1">{author}</p>
-          <p className="text-sm text-gray-500 mb-4 line-clamp-2">{description}</p>
+    <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden transform transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:scale-[1.02]">
+      <div className="flex h-32">
+        {/* Book Cover */}
+        <div className="flex-shrink-0 w-24 bg-gray-200 overflow-hidden">
+          <img
+            src={book.coverImage}
+            alt={book.title}
+            className="w-full h-full object-cover transition-transform duration-200 hover:scale-110"
+          />
         </div>
 
-        <div className="mt-auto">
-          <div className="flex flex-wrap gap-2 mb-3">
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              conditionColors[condition] || 'bg-gray-100 text-gray-800'
-            }`}>
-              {condition}
-            </span>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}>
-              {available ? 'Available' : 'Unavailable'}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="text-sm text-gray-500">
-                <span className="block">Owner:</span>
-                <span className="font-medium text-gray-900">{owner.name}</span>
+        {/* Book Info */}
+        <div className="flex-1 p-3 min-w-0">
+          <div className="flex flex-col h-full justify-between">
+            {/* Status and Date */}
+            {(status || date) && (
+              <div className="flex items-center justify-between mb-2">
+                {status && (
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                    status === 'accepted' ? 'bg-green-100 text-green-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </span>
+                )}
+                {date && (
+                  <span className="text-xs text-gray-500">
+                    {new Date(date).toLocaleDateString()}
+                  </span>
+                )}
               </div>
+            )}
+
+            <div>
+              <h3 className="text-sm font-medium text-gray-900 truncate group-hover:text-blue-600">
+                {book.title}
+              </h3>
+              <p className="text-xs text-gray-500 mt-1">
+              Course: {book.courseNumber}
+              </p>
+              {book.publication?.condition && (
+                <p className="text-xs text-gray-600 mt-1">
+                  Condition: {book.publication.condition}
+                </p>
+              )}
             </div>
-            {showRequestButton && available && (
+
+            {showRequestButton && (
               <button
-                onClick={() => onRequest(book)}
-                className="ml-2 inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRequestClick?.(book);
+                }}
+                className="mt-2 text-xs px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors transform hover:scale-105"
               >
-                Request
+                Request Book
               </button>
             )}
           </div>
         </div>
       </div>
+
+      {/* Action Button */}
+      {actionButton && (
+        <div className="px-4 pb-4 pt-2">
+          {actionButton}
+        </div>
+      )}
     </div>
   );
 };
