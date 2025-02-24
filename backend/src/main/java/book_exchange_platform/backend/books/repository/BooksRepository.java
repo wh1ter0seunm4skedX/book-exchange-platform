@@ -16,9 +16,8 @@ import java.util.List;
 public class BooksRepository extends SimpleJpaRepository<BookEntity, Long> {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    @Autowired
     public BooksRepository(EntityManager entityManager) {
         super(JpaEntityInformationSupport.getEntityInformation(BookEntity.class, entityManager), entityManager);
         this.entityManager = entityManager;

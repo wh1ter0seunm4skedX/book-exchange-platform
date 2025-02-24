@@ -18,9 +18,8 @@ import java.util.List;
 public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    @Autowired
     public UserRepository(EntityManager entityManager) {
         super(JpaEntityInformationSupport.getEntityInformation(UserEntity.class, entityManager), entityManager);
         this.entityManager = entityManager;

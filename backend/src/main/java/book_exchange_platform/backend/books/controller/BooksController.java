@@ -5,31 +5,27 @@ import book_exchange_platform.backend.books.data.BookEntity;
 import book_exchange_platform.backend.books.repository.BooksRepository;
 import book_exchange_platform.backend.users.data.UserEntity;
 import book_exchange_platform.backend.users.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/book_exchange_platform/books")
 public class BooksController {
 
-    @Autowired
-    private BooksRepository bookRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final BooksRepository bookRepository;
+    private final UserRepository userRepository;
+
+    public BooksController(BooksRepository bookRepository, UserRepository userRepository) {
+        this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/")
     @ResponseBody
     public String home() {
         return "Welcome to the Books API!";
-    }
-
-    @GetMapping("/available")
-    @ResponseBody
-    public List<UserEntity> getAvailableBooks() {
-        return userRepository.findAll();
     }
 
     @GetMapping("/all")

@@ -17,9 +17,8 @@ import java.util.List;
 public class MatchRepository extends SimpleJpaRepository<MatchEntity, Long> {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    @Autowired
     public MatchRepository(EntityManager entityManager) {
         super(JpaEntityInformationSupport.getEntityInformation(MatchEntity.class, entityManager), entityManager);
         this.entityManager = entityManager;
