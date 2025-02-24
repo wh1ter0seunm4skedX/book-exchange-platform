@@ -8,7 +8,7 @@ import lombok.Getter;
 
 
 @Entity
-//@Builder
+@Builder
 @Getter
 @Table(name = "matches")
 public class MatchEntity {
@@ -34,4 +34,20 @@ public class MatchEntity {
     // Status of the match (e.g., Pending, Completed)
     @Enumerated(EnumType.STRING)
     private MatchStatus status;
+
+    public MatchEntity() {
+        this.id = null;
+        this.provider = null;
+        this.requester = null;
+        this.book = null;
+        this.status = null;
+    }
+
+    public MatchEntity(Long id, UserEntity provider, UserEntity requester, BookEntity book, MatchStatus status) {
+        this.id = id;
+        this.provider = provider;
+        this.requester = requester;
+        this.book = book;
+        this.status = status;
+    }
 }

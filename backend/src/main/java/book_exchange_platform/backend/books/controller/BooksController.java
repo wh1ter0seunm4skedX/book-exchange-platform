@@ -3,7 +3,6 @@ package book_exchange_platform.backend.books.controller;
 
 import book_exchange_platform.backend.books.data.BookEntity;
 import book_exchange_platform.backend.books.repository.BooksRepository;
-import book_exchange_platform.backend.users.data.UserEntity;
 import book_exchange_platform.backend.users.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
 

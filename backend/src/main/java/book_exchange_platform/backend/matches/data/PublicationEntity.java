@@ -3,15 +3,17 @@ package book_exchange_platform.backend.matches.data;
 import book_exchange_platform.backend.books.data.BookEntity;
 import book_exchange_platform.backend.users.data.UserEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "user_books_shared")
 @Getter
 @Setter
+@Builder
+@Table(name = "user_books_shared")
 public class PublicationEntity {
 
     @Id
@@ -28,4 +30,18 @@ public class PublicationEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "shared_at")
     private Date sharedAt;
+
+    public PublicationEntity() {
+        this.id = null;
+        this.book = null;
+        this.user = null;
+        this.sharedAt = null;
+    }
+
+    public PublicationEntity(Long id, BookEntity book, UserEntity user, Date sharedAt) {
+        this.id = id;
+        this.book = book;
+        this.user = user;
+        this.sharedAt = sharedAt;
+    }
 }

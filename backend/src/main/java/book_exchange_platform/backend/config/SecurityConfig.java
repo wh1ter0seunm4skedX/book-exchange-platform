@@ -25,9 +25,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/api/users/register", "/api/users/login"))
+                        .ignoringRequestMatchers("/book_exchange_platform/register", "/book_exchange_platform/login"))
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                                .requestMatchers("/book_exchange_platform/register", "/book_exchange_platform/login").permitAll()
                                 //.requestMatchers("/api/users/register", "/api/users/login").permitAll()
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session

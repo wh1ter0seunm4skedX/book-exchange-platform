@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/book_exchange_platform/")
+@RequestMapping("/book_exchange_platform/users")
 public class UsersController {
 
     private final UserRepository userRepository;
