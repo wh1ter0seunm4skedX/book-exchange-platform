@@ -32,20 +32,17 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 **Backend**:
 - Java (Spring Boot)
 - RESTful API
-- MySQL (JDBC for database connection)
+- MariaDB (JDBC for database connection)
 
 **Tools & Infrastructure**:
 - Postman (API Testing)
 - GitHub (Version Control & CI/CD)
-- Docker Compose (Probably) 
 
 ## 📂 Project Structure
 ```
 📁 book-exchange-platform/
  ├── 📁 frontend/         
  ├── 📁 backend/          
- ├── 📁 database/        
- ├── 📁 docs/             
  ├── 📄 README.md        
  ├── 📄 .gitignore        
 ```
