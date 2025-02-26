@@ -1,21 +1,23 @@
-const API_BASE_URL = 'http://localhost:8080/book_exchange_platform';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 export const booksApi = {
-
-    getAllBooks: async () => {
-        const response = await fetch(`${API_BASE_URL}/books/all`.{
+  getAllBooks: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/books/all`, {
         headers: {
-            'Autorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-    });
-    if (!response.ok) {
+      });
+      
+      if (!response.ok) {
         throw new Error('Failed to fetch books');
-    }
-
-    return await response.json();
+      }
+      
+      return await response.json();
     } catch (error) {
-        console.error('Error fetching all books:', error);
-        throw error;
+      console.error('Error fetching books:', error);
+      throw error;
     }
-
-}
+  },
+  
+};
