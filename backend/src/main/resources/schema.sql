@@ -59,6 +59,10 @@ CREATE TABLE IF NOT EXISTS matches (
 
 DELIMITER //
 
+-- Drop the trigger if it exists
+DROP TRIGGER IF EXISTS set_expiration_date;
+
+-- Create the trigger
 CREATE TRIGGER set_expiration_date
     BEFORE INSERT ON matches
     FOR EACH ROW
