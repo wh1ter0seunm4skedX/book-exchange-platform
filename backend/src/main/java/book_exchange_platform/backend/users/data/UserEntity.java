@@ -24,9 +24,7 @@ public class UserEntity {
     private String email;
     private String password;
     private Long phoneNumber;
-
-    @Enumerated(EnumType.STRING)
-    private ContactMethod preferredContactMethod;
+    private String preferredExchangeLocation;
 
     @ManyToMany
     @JoinTable( name = "user_books_shared",
@@ -52,20 +50,20 @@ public class UserEntity {
         this.email = null;
         this.password = null;
         this.phoneNumber = null;
-        this.preferredContactMethod = null;
+        this.preferredExchangeLocation = null;
         this.booksForShare = null;
         this.requiredBooks = null;
         this.matchesToProvide = null;
         this.matchesToRequest = null;
     }
 
-    public UserEntity(Long id, String fullName, String email, String password, Long phoneNumber, ContactMethod preferredContactMethod, List<BookEntity> booksForShare, List<BookEntity> requiredBooks, List<MatchEntity> matchesToProvide, List<MatchEntity> matchesToRequest) {
+    public UserEntity(Long id, String fullName, String email, String password, Long phoneNumber, String preferredExchangeLocation, List<BookEntity> booksForShare, List<BookEntity> requiredBooks, List<MatchEntity> matchesToProvide, List<MatchEntity> matchesToRequest) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.preferredContactMethod = preferredContactMethod;
+        this.preferredExchangeLocation = preferredExchangeLocation;
         this.booksForShare = booksForShare;
         this.requiredBooks = requiredBooks;
         this.matchesToProvide = matchesToProvide;

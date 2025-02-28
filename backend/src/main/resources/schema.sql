@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
                        email VARCHAR(255) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
                        phone_number BIGINT,
-                       preferred_contact_method ENUM('email', 'phone') NOT NULL,
+                       preferred_exchange_location VARCHAR(255) NOT NULL,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS books (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        title VARCHAR(255) NOT NULL,
-                       author VARCHAR(255),
-                       isbn VARCHAR(20) UNIQUE,
+                       course_number BIGINT,
+                       cover_image_url VARCHAR(255) NOT NULL,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS user_books_shared (
                                 id BIGINT,
                                 user_id BIGINT NOT NULL,
                                 book_id BIGINT NOT NULL,
+                                `condition` ENUM('likeNew', 'good', 'fair') NOT NULL,
                                 shared_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 PRIMARY KEY (user_id, book_id),
                                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -44,13 +45,25 @@ CREATE TABLE IF NOT EXISTS user_books_requested (
 
 -- Create 'matches' table
 CREATE TABLE IF NOT EXISTS matches (
-                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         provider_id BIGINT NOT NULL,
-                         requester_id BIGINT NOT NULL,
-                         book_id BIGINT NOT NULL,
-                         status ENUM('Pending', 'Completed', 'Cancelled') DEFAULT 'Pending',
-                         matched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         FOREIGN KEY (provider_id) REFERENCES users(id) ON DELETE CASCADE,
-                         FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
-                         FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+                                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                       provider_id BIGINT NOT NULL,
+                                       requester_id BIGINT NOT NULL,
+                                       book_id BIGINT NOT NULL,
+                                       status ENUM('Pending', 'Completed', 'Cancelled') DEFAULT 'Pending',
+                                       matched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                       expiration_date TIMESTAMP,
+                                       FOREIGN KEY (provider_id) REFERENCES users(id) ON DELETE CASCADE,
+                                       FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+                                       FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
 );
+
+DELIMITER //
+
+CREATE TRIGGER set_expiration_date
+    BEFORE INSERT ON matches
+    FOR EACH ROW
+BEGIN
+    SET NEW.expiration_date = CURRENT_TIMESTAMP + INTERVAL 14 DAY;
+END //
+
+DELIMITER ;

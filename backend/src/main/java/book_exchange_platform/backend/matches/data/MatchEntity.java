@@ -6,6 +6,8 @@ import book_exchange_platform.backend.users.data.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Date;
+
 
 @Entity
 @Builder
@@ -35,19 +37,25 @@ public class MatchEntity {
     @Enumerated(EnumType.STRING)
     private MatchStatus status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "expiration_date")
+    private Date expirationDate;
+
     public MatchEntity() {
         this.id = null;
         this.provider = null;
         this.requester = null;
         this.book = null;
         this.status = null;
+        this.expirationDate = null;
     }
 
-    public MatchEntity(Long id, UserEntity provider, UserEntity requester, BookEntity book, MatchStatus status) {
+    public MatchEntity(Long id, UserEntity provider, UserEntity requester, BookEntity book, MatchStatus status, Date expirationDate) {
         this.id = id;
         this.provider = provider;
         this.requester = requester;
         this.book = book;
         this.status = status;
+        this.expirationDate = expirationDate;
     }
 }
