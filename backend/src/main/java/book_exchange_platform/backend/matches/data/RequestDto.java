@@ -11,10 +11,10 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-public class RequestDto {
+public class RequestDto implements TradeDto {
 
     private Long id;
     private BookDto book;
     private UserDto user;
-    private Date requestedAt;
+    private Date date;
 }

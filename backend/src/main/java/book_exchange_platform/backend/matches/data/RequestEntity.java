@@ -17,6 +17,7 @@ import java.util.Date;
 public class RequestEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
