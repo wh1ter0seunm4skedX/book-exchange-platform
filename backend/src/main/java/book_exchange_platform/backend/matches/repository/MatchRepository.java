@@ -6,12 +6,10 @@ import book_exchange_platform.backend.matches.data.RequestEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import book_exchange_platform.backend.matches.data.MatchEntity;
-import jakarta.transaction.NotSupportedException;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.util.List;
 

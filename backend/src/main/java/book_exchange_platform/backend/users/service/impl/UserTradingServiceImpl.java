@@ -3,7 +3,6 @@ package book_exchange_platform.backend.users.service.impl;
 import book_exchange_platform.backend.matches.data.MatchDto;
 import book_exchange_platform.backend.matches.data.PublicationDto;
 import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.data.TradeDto;
 import book_exchange_platform.backend.matches.repository.MatchRepository;
 import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
 import book_exchange_platform.backend.users.service.UserTradingService;
