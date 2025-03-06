@@ -10,19 +10,8 @@ import java.util.List;
 
 public interface MatchesService {
 
-    public RequestDto addRequest(RequestDto requestDto);
-
-    public void deleteRequest(RequestDto requestDto);
-
-    public RequestDto updateRequest(RequestDto requestDto);
 
     public List<RequestDto> getAllRequests();
-
-    public PublicationDto addPublication(PublicationDto publicationDto);
-
-    public void deletePublication(PublicationDto publicationDto);
-
-    public PublicationDto updatePublication(PublicationDto publicationDto);
 
     public List<PublicationDto> getAllPublications();
 
@@ -34,11 +23,7 @@ public interface MatchesService {
 
     public List<TradeDto> searchAvailableTrades(Long bookId, List<TradeDto> allTrades);
 
-    public MatchDto findBestMatch(TradeDto incomingTrade, List<TradeDto> allTrades);
-
-
-
-
+    public MatchDto findMatch(TradeDto incomingTrade, List<TradeDto> allTrades);
 
 }
 

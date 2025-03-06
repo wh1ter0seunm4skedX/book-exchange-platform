@@ -17,45 +17,14 @@ public class MatchesServiceImpl implements MatchesService {
 
     private final MatchRepository matchRepository;
 
-
     public MatchesServiceImpl(MatchRepository matchRepository) {
         this.matchRepository = matchRepository;
     }
 
 
     @Override
-    public RequestDto addRequest(RequestDto requestDto) {
-        return MatchesEntityToDtoConverter.toRequestDto(matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(requestDto)));
-    }
-
-    @Override
-    public RequestDto updateRequest(RequestDto requestDto) {
-        return MatchesEntityToDtoConverter.toRequestDto(matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(requestDto)));
-    }
-
-    @Override
-    public void deleteRequest(RequestDto requestDto) {
-        matchRepository.removeRequest(MatchesEntityToDtoConverter.toRequestEntity(requestDto));
-    }
-
-    @Override
     public List<RequestDto> getAllRequests() {
         return matchRepository.getAllRequests().stream().map(MatchesEntityToDtoConverter::toRequestDto).toList();
-    }
-
-    @Override
-    public PublicationDto addPublication(PublicationDto publicationDto) {
-        return MatchesEntityToDtoConverter.toPublicationDto(matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(publicationDto)));
-    }
-
-    @Override
-    public PublicationDto updatePublication(PublicationDto publicationDto) {
-        return MatchesEntityToDtoConverter.toPublicationDto(matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(publicationDto)));
-    }
-
-    @Override
-    public void deletePublication(PublicationDto publicationDto) {
-        matchRepository.removePublication(MatchesEntityToDtoConverter.toPublicationEntity(publicationDto));
     }
 
     @Override
@@ -87,7 +56,7 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     @Override
-    public MatchDto findBestMatch(TradeDto incomingTrade, List<TradeDto> allTrades) {
+    public MatchDto findMatch(TradeDto incomingTrade, List<TradeDto> allTrades) {
 
         List<TradeDto> relevantTrades = allTrades.stream()
                 .filter(trade -> trade.getBook().getId().equals(incomingTrade.getBook().getId()))

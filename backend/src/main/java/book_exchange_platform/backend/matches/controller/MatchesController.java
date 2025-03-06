@@ -17,7 +17,7 @@ public class MatchesController {
     }
 
     @GetMapping("/{userId}")
-    public List<MatchDto> getUserMatches(@RequestBody Long userId) {
+    public List<MatchDto> getUserMatches(@PathVariable Long userId) {
         return matchesManager.getUserMatches(userId);
     }
 
