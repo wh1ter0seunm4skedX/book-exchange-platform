@@ -21,7 +21,7 @@ public class AuthenticationUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByEmail(username);
+        UserEntity userEntity = userRepository.findUserByEmail(username);
         if (userEntity == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }

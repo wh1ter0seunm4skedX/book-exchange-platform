@@ -33,11 +33,5 @@ public interface UserTradingService {
 
     public PublicationDto updatePublication(PublicationDto publicationDto);
 
-
-
-
-
-
-
 }
 
