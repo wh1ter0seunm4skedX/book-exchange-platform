@@ -1,7 +1,7 @@
 package book_exchange_platform.backend.users.controller;
 
-import book_exchange_platform.backend.users.data.UserEntity;
-import book_exchange_platform.backend.users.repository.UserRepository;
+import book_exchange_platform.backend.users.data.UserDto;
+import book_exchange_platform.backend.users.manager.UserManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,16 +10,29 @@ import java.util.List;
 @RequestMapping("/book_exchange_platform/users")
 public class UsersController {
 
-    private final UserRepository userRepository;
+    private final UserManager userManager;
 
-    public UsersController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UsersController(UserManager userManager) {
+        this.userManager = userManager;
     }
+
 
     @GetMapping("/all")
     @ResponseBody
-    public List<UserEntity> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        return userManager.getAll();
+    }
+
+    @GetMapping("/{userId}")
+    @ResponseBody
+    public UserDto getUser(@PathVariable Long userId) {
+        return userManager.getUser(userId);
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public UserDto updateUser(@RequestBody UserDto userDto) {
+        return userManager.updateUser(userDto);
     }
 }
 

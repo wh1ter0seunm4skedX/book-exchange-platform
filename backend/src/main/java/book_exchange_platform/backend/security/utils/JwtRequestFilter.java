@@ -1,6 +1,6 @@
 package book_exchange_platform.backend.security.utils;
 
-import book_exchange_platform.backend.security.serivce.AuthenticationUserDetailsService;
+import book_exchange_platform.backend.security.manager.AuthenticationManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,9 +22,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private final AuthenticationUserDetailsService authenticationUserDetailsService;
+    private final AuthenticationManager authenticationUserDetailsService;
 
-    public JwtRequestFilter(JwtUtil jwtUtil, @Lazy AuthenticationUserDetailsService authenticationUserDetailsService) {
+    public JwtRequestFilter(JwtUtil jwtUtil, @Lazy AuthenticationManager authenticationUserDetailsService) {
         this.jwtUtil = jwtUtil;
         this.authenticationUserDetailsService = authenticationUserDetailsService;
     }
