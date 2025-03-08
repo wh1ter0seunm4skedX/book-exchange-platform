@@ -20,17 +20,17 @@ public interface MatchesManager {
 
     public List<RequestDto> getUserRequests(Long userId);
 
-    public RequestDto requestBook(BookDto book, Long userId);
+    public MatchDto requestBook(BookDto book, Long userId);
 
-    public void deleteRequest(BookDto bookDto, Long userId);
+    public void deleteRequest(RequestDto requestDto);
 
     public RequestDto updateRequest(RequestDto requestDto);
 
     public List<PublicationDto> getUserPublications(Long userId);
 
-    public PublicationDto publishBook(BookDto bookDto, Long userId);
+    public MatchDto publishBook(BookDto bookDto, Long userId);
 
-    public void deletePublication(BookDto bookDto, Long userId);
+    public void deletePublication(PublicationDto publicationDto);
 
     public PublicationDto updatePublication(PublicationDto publicationDto);
 

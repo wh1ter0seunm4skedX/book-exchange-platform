@@ -6,6 +6,7 @@ import book_exchange_platform.backend.matches.data.RequestDto;
 import book_exchange_platform.backend.matches.data.TradeDto;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface MatchesService {
@@ -21,9 +22,9 @@ public interface MatchesService {
 
     public void deleteMatch(MatchDto match);
 
-    public List<TradeDto> searchAvailableTrades(Long bookId, List<TradeDto> allTrades);
+    public <T extends TradeDto> List<TradeDto> searchAvailableTrades(Long bookId, List<T> allTrades);
 
-    public MatchDto findMatch(TradeDto incomingTrade, List<TradeDto> allTrades);
+    public Optional<MatchDto> findMatch(TradeDto incomingTrade, List<TradeDto> optionalTrades);
 
 }
 

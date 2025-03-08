@@ -19,7 +19,7 @@ public interface UserTradingService {
 
     public RequestDto addRequest(BookDto bookDto, UserDto userDto);
 
-    public void deleteRequest(BookDto bookDto, UserDto userDto);
+    public void deleteRequest(RequestDto requestDto);
 
     public RequestDto updateRequest(RequestDto requestDto);
 
@@ -29,7 +29,7 @@ public interface UserTradingService {
 
     public PublicationDto addPublication(BookDto bookDto, UserDto userDto);
 
-    public void deletePublication(BookDto bookDto, UserDto userDto);
+    public void deletePublication(PublicationDto publicationDto);
 
     public PublicationDto updatePublication(PublicationDto publicationDto);
 

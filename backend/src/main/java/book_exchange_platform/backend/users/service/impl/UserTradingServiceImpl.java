@@ -48,11 +48,7 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
     @Override
-    public void deleteRequest(BookDto bookDto, UserDto userDto) {
-        RequestDto requestDto = RequestDto.builder()
-                .user(userDto)
-                .book(bookDto)
-                .build();
+    public void deleteRequest(RequestDto requestDto) {
         matchRepository.removeRequest(MatchesEntityToDtoConverter.toRequestEntity(requestDto));
     }
 
@@ -81,11 +77,7 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
     @Override
-    public void deletePublication(BookDto bookDto, UserDto userDto) {
-        PublicationDto publicationDto = PublicationDto.builder()
-                .user(userDto)
-                .book(bookDto)
-                .build();
+    public void deletePublication(PublicationDto publicationDto) {
         matchRepository.removePublication(MatchesEntityToDtoConverter.toPublicationEntity(publicationDto));
     }
 

@@ -1,15 +1,13 @@
 package book_exchange_platform.backend.matches.service.impl;
 
-import book_exchange_platform.backend.matches.data.MatchDto;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.data.TradeDto;
+import book_exchange_platform.backend.matches.data.*;
 import book_exchange_platform.backend.matches.repository.MatchRepository;
 import book_exchange_platform.backend.matches.service.MatchesService;
 import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -48,43 +46,41 @@ public class MatchesServiceImpl implements MatchesService {
     }
 
     @Override
-    public List<TradeDto> searchAvailableTrades(Long bookId, List<TradeDto> allTrades) {
-        List<TradeDto> availableTrades = allTrades.stream()
+    public <T extends TradeDto> List<TradeDto> searchAvailableTrades(Long bookId, List<T> allTrades) {
+        List<TradeDto> availableTrades = (List<TradeDto>) allTrades.stream()
                 .filter(trade -> trade.getBook().getId().equals(bookId))
                 .toList();
          return availableTrades;
     }
 
     @Override
-    public MatchDto findMatch(TradeDto incomingTrade, List<TradeDto> allTrades) {
+    public Optional<MatchDto> findMatch(TradeDto incomingTrade, List<TradeDto> optionalTrades) {
 
-        List<TradeDto> relevantTrades = allTrades.stream()
-                .filter(trade -> trade.getBook().getId().equals(incomingTrade.getBook().getId()))
-                .toList();
-
-        if(relevantTrades.isEmpty()){
-            return null;
+        if(optionalTrades.isEmpty()){
+            return Optional.empty();
         }
 
-        TradeDto bestFitTrade = relevantTrades.get(0);
-        for (TradeDto relevantTrade : relevantTrades) {
-            if(relevantTrade.getDate().before(bestFitTrade.getDate())){
-                bestFitTrade = relevantTrade;
+        TradeDto bestFitTrade = optionalTrades.get(0);
+        for (TradeDto candidateTrade : optionalTrades) {
+            if(candidateTrade.getDate().before(bestFitTrade.getDate())){
+                bestFitTrade = candidateTrade;
             }
         }
 
         if (incomingTrade instanceof RequestDto){
-            return MatchDto.builder()
-                    .book(bestFitTrade.getBook())
-                    .provider(bestFitTrade.getUser())
-                    .requester(incomingTrade.getUser())
-                    .build();
+            return Optional.of(MatchDto.builder()
+                                    .book(bestFitTrade.getBook())
+                                    .provider(bestFitTrade.getUser())
+                                    .requester(incomingTrade.getUser())
+                                    .status(MatchStatus.PENDING)
+                                    .build());
         }
-        return MatchDto.builder()
-                .book(bestFitTrade.getBook())
-                .provider(incomingTrade.getUser())
-                .requester(bestFitTrade.getUser())
-                .build();
+        return Optional.of(MatchDto.builder()
+                                .book(bestFitTrade.getBook())
+                                .provider(incomingTrade.getUser())
+                                .requester(bestFitTrade.getUser())
+                                .status(MatchStatus.PENDING)
+                                .build());
     }
 }
 
