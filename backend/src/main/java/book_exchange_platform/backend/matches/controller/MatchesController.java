@@ -1,6 +1,7 @@
 package book_exchange_platform.backend.matches.controller;
 
 import book_exchange_platform.backend.books.data.BookDto;
+import book_exchange_platform.backend.books.data.BookPublicationDto;
 import book_exchange_platform.backend.matches.data.MatchDto;
 import book_exchange_platform.backend.matches.data.PublicationDto;
 import book_exchange_platform.backend.matches.data.RequestDto;
@@ -51,8 +52,8 @@ public class MatchesController {
 
 
     @PostMapping("/{userId}/publish")
-    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody BookDto book) {
-        return matchesManager.publishBook(book, userId);
+    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody BookPublicationDto bookPublication) {
+        return matchesManager.publishBook(bookPublication.getBook(), bookPublication.getBookCondition(), userId);
     }
 
     @PostMapping("/update_publication")

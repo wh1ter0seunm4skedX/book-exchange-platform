@@ -1,9 +1,7 @@
 package book_exchange_platform.backend.users.service.impl;
 
 import book_exchange_platform.backend.books.data.BookDto;
-import book_exchange_platform.backend.matches.data.MatchDto;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
+import book_exchange_platform.backend.matches.data.*;
 import book_exchange_platform.backend.matches.repository.MatchRepository;
 import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
 import book_exchange_platform.backend.users.data.UserDto;
@@ -34,6 +32,11 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
     @Override
+    public RequestDto getRequest(Long userId, Long bookId) {
+        return MatchesEntityToDtoConverter.toRequestDto(matchRepository.getRequest(userId,bookId));
+    }
+
+    @Override
     public List<BookDto> getUserRequestedBooks(Long userId) {
         return getUserRequests(userId).stream().map(request -> request.getBook()).toList();
     }
@@ -43,6 +46,7 @@ public class UserTradingServiceImpl implements UserTradingService {
         RequestDto requestDto = RequestDto.builder()
                 .user(userDto)
                 .book(bookDto)
+                .status(TradeStatus.AVAILABLE)
                 .build();
         return MatchesEntityToDtoConverter.toRequestDto(matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(requestDto)));
     }
@@ -63,15 +67,22 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
     @Override
+    public PublicationDto getPublication(Long userId, Long bookId) {
+        return MatchesEntityToDtoConverter.toPublicationDto(matchRepository.getPublication(userId,bookId));
+    }
+
+    @Override
     public List<BookDto> getUserPublishedBooks(Long userId) {
         return getUserPublications(userId).stream().map(publication -> publication.getBook()).toList();
     }
 
     @Override
-    public PublicationDto addPublication(BookDto bookDto, UserDto userDto) {
+    public PublicationDto addPublication(BookDto bookDto, SharedBookCondition bookCondition, UserDto userDto) {
         PublicationDto publicationDto = PublicationDto.builder()
                 .user(userDto)
                 .book(bookDto)
+                .status(TradeStatus.AVAILABLE)
+                .bookCondition(bookCondition)
                 .build();
         return MatchesEntityToDtoConverter.toPublicationDto(matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(publicationDto)));
     }

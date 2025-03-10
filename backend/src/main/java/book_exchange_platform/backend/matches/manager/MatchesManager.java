@@ -4,6 +4,7 @@ import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.matches.data.MatchDto;
 import book_exchange_platform.backend.matches.data.PublicationDto;
 import book_exchange_platform.backend.matches.data.RequestDto;
+import book_exchange_platform.backend.matches.data.SharedBookCondition;
 import book_exchange_platform.backend.users.data.UserDto;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public interface MatchesManager {
 
     public List<MatchDto> getUserMatches(Long userId);
 
-    //public MatchDto addMatch(MatchDto match);
+    public MatchDto deactivateMatch(MatchDto match);
 
-    public MatchDto invalidateMatch(MatchDto match);
+    public MatchDto completeMatch(MatchDto match);
 
     public List<RequestDto> getUserRequests(Long userId);
 
@@ -28,7 +29,7 @@ public interface MatchesManager {
 
     public List<PublicationDto> getUserPublications(Long userId);
 
-    public MatchDto publishBook(BookDto bookDto, Long userId);
+    public MatchDto publishBook(BookDto bookDto, SharedBookCondition bookCondition, Long userId);
 
     public void deletePublication(PublicationDto publicationDto);
 
