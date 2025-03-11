@@ -1,0 +1,51 @@
+services:
+  mariadb:
+    image: mariadb:10.6
+    container_name: book-exchange-mariadb
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=book_exchange
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=bookuser
+      - MYSQL_PASSWORD=bookpassword
+      - MYSQL_ROOT_HOST=%  # Allow connections from any host
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./backend/mariadb-init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: book-exchange-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/book_exchange
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.mariadb.jdbc.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MariaDBDialect
+      - SPRING_JPA_SHOW_SQL=true
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/build.gradle:/app/build.gradle
+      - ./backend/settings.gradle:/app/settings.gradle
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mariadb-data:
+    driver: local
