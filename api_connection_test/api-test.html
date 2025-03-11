@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Exchange API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .response {
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Exchange API Tester</h1>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Authentication</h2>
+            <div class="form-group">
+                <label for="baseUrl">Base URL:</label>
+                <input type="text" id="baseUrl" value="http://localhost:8080/book_exchange_platform" />
+            </div>
+            <div class="form-group">
+                <label for="authToken">Authentication Token:</label>
+                <input type="text" id="authToken" placeholder="JWT token will appear here after login" readonly />
+                <button onclick="copyToken()">Copy Token</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Register</h2>
+            <div class="form-group">
+                <label for="registerEmail">Email:</label>
+                <input type="email" id="registerEmail" value="test@example.com" />
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password:</label>
+                <input type="password" id="registerPassword" value="password123" />
+            </div>
+            <div class="form-group">
+                <label for="registerFirstName">First Name:</label>
+                <input type="text" id="registerFirstName" value="Test" />
+            </div>
+            <div class="form-group">
+                <label for="registerLastName">Last Name:</label>
+                <input type="text" id="registerLastName" value="User" />
+            </div>
+            <button onclick="register()">Register</button>
+            <div class="response" id="registerResponse"></div>
+        </div>
+
+        <div class="card">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" value="test@example.com" />
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" value="password123" />
+            </div>
+            <button onclick="login()">Login</button>
+            <div class="response" id="loginResponse"></div>
+        </div>
+
+        <div class="card">
+            <h2>API Request</h2>
+            <div class="form-group">
+                <label for="requestMethod">Method:</label>
+                <select id="requestMethod">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="requestEndpoint">Endpoint:</label>
+                <input type="text" id="requestEndpoint" value="/books/all" />
+            </div>
+            <div class="form-group">
+                <label for="requestBody">Request Body (JSON):</label>
+                <textarea id="requestBody" rows="5"></textarea>
+            </div>
+            <button onclick="makeRequest()">Send Request</button>
+            <div class="response" id="apiResponse"></div>
+        </div>
+    </div>
+
+    <script>
+        function copyToken() {
+            const tokenInput = document.getElementById('authToken');
+            tokenInput.select();
+            document.execCommand('copy');
+            alert('Token copied to clipboard!');
+        }
+
+        function register() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const firstName = document.getElementById('registerFirstName').value;
+            const lastName = document.getElementById('registerLastName').value;
+            
+            const responseDiv = document.getElementById('registerResponse');
+            responseDiv.innerHTML = 'Sending request...';
+            
+            fetch(`${baseUrl}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    firstName,
+                    lastName
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                responseDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                console.log('Registration successful:', data);
+            })
+            .catch(error => {
+                responseDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                console.error('Registration error:', error);
+            });
+        }
+
+        function login() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const responseDiv = document.getElementById('loginResponse');
+            responseDiv.innerHTML = 'Sending request...';
+            
+            fetch(`${baseUrl}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(token => {
+                document.getElementById('authToken').value = token;
+                responseDiv.innerHTML = `<pre>Token received: ${token}</pre>`;
+                console.log('Login successful, token:', token);
+            })
+            .catch(error => {
+                responseDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                console.error('Login error:', error);
+            });
+        }
+
+        function makeRequest() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const method = document.getElementById('requestMethod').value;
+            const endpoint = document.getElementById('requestEndpoint').value;
+            const body = document.getElementById('requestBody').value;
+            const token = document.getElementById('authToken').value;
+            
+            const responseDiv = document.getElementById('apiResponse');
+            responseDiv.innerHTML = 'Sending request...';
+            
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (token) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            if (method !== 'GET' && body) {
+                try {
+                    options.body = body;
+                } catch (e) {
+                    responseDiv.innerHTML = `<pre>Error parsing JSON: ${e.message}</pre>`;
+                    return;
+                }
+            }
+            
+            fetch(`${baseUrl}${endpoint}`, options)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text().then(text => {
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        return text;
+                    }
+                });
+            })
+            .then(data => {
+                if (typeof data === 'object') {
+                    responseDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    responseDiv.innerHTML = `<pre>${data}</pre>`;
+                }
+                console.log('API response:', data);
+            })
+            .catch(error => {
+                responseDiv.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                console.error('API error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
