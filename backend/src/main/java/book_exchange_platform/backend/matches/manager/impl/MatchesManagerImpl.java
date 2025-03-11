@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Implementation of the MatchesManager interface.
+ */
 @Service
 public class MatchesManagerImpl implements MatchesManager {
 
@@ -25,7 +27,6 @@ public class MatchesManagerImpl implements MatchesManager {
         this.userTradingService = userTradingService;
         this.userService = userService;
     }
-
 
     @Override
     public List<MatchDto> getUserMatches(Long userId) {
@@ -62,7 +63,9 @@ public class MatchesManagerImpl implements MatchesManager {
 
 
     @Override
-    public List<RequestDto> getUserRequests(Long userId)  { return userTradingService.getUserRequests(userId);}
+    public List<RequestDto> getUserRequests(Long userId) { 
+        return userTradingService.getUserRequests(userId);
+    }
 
     @Override
     public MatchDto requestBook(BookDto book, Long userId) {
@@ -120,4 +123,3 @@ public class MatchesManagerImpl implements MatchesManager {
     }
 
 }
-

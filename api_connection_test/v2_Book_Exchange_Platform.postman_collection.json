@@ -1,0 +1,716 @@
+{
+	"info": {
+		"_postman_id": "c5e3d8a0-5f1e-4b0a-8e1c-3a9f8c5d7e6b",
+		"name": "Book Exchange Platform",
+		"description": "API collection for testing the Book Exchange Platform application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"phoneNumber\": 9721234567,\n    \"preferredExchangeLocation\": \"Tel Aviv Campus\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login and get JWT token"
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints for registering and logging in"
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get All Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/books/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"books",
+								"all"
+							]
+						},
+						"description": "Get all books in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Most Wanted Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/books/most_wanted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"books",
+								"most_wanted"
+							]
+						},
+						"description": "Get the most requested books in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Wanted Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/books/1/user_wanted",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"books",
+								"1",
+								"user_wanted"
+							]
+						},
+						"description": "Get books wanted by a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Published Books",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/books/1/user_published",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"books",
+								"1",
+								"user_published"
+							]
+						},
+						"description": "Get books published by a specific user"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing books"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/users/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"users",
+								"all"
+							]
+						},
+						"description": "Get all users in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/users/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get a specific user by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"fullName\": \"Updated User\",\n    \"email\": \"updated@example.com\",\n    \"phoneNumber\": 9729876543,\n    \"preferredExchangeLocation\": \"Jerusalem Campus\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/users/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"users",
+								"update"
+							]
+						},
+						"description": "Update a user's profile"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing user profiles"
+		},
+		{
+			"name": "Matches",
+			"item": [
+				{
+					"name": "Get User Matches",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"1"
+							]
+						},
+						"description": "Get all matches for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Requests",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/1/request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"1",
+								"request"
+							]
+						},
+						"description": "Get all book requests for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Add User Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"title\": \"Introduction to Computer Science Using Java\",\n    \"courseNumber\": 20441\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/1/request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"1",
+								"request"
+							]
+						},
+						"description": "Add a book request for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1,\n        \"title\": \"Introduction to Computer Science Using Java\",\n        \"courseNumber\": 20441\n    },\n    \"user\": {\n        \"id\": 1\n    },\n    \"requestedAt\": \"2025-03-10T09:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/update_request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"update_request"
+							]
+						},
+						"description": "Update a book request"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1\n    },\n    \"user\": {\n        \"id\": 1\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/request",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"request"
+							]
+						},
+						"description": "Delete a book request"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Publications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/1/publication",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"1",
+								"publication"
+							]
+						},
+						"description": "Get all book publications for a specific user"
+					},
+					"response": []
+				},
+				{
+					"name": "Add User Publication",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"title\": \"Introduction to Computer Science Using Java\",\n    \"courseNumber\": 20441\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/1/publish",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"1",
+								"publish"
+							]
+						},
+						"description": "Add a book publication for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Publication",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1,\n        \"title\": \"Introduction to Computer Science Using Java\",\n        \"courseNumber\": 20441\n    },\n    \"user\": {\n        \"id\": 1\n    },\n    \"sharedAt\": \"2025-03-10T09:00:00.000Z\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/update_publication",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"update_publication"
+							]
+						},
+						"description": "Update a book publication"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Publication",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1\n    },\n    \"user\": {\n        \"id\": 1\n    }\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/book_exchange_platform/Matches/publication",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"book_exchange_platform",
+								"Matches",
+								"publication"
+							]
+						},
+						"description": "Delete a book publication"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing book matches, requests, and publications"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Automatically save JWT token from login response",
+					"if (pm.response.code === 200 && pm.request.url.toString().includes('/auth/login')) {",
+					"    pm.environment.set(\"jwt_token\", pm.response.text());",
+					"    console.log(\"JWT token saved to environment variable\");",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": ""
+		}
+	]
+}

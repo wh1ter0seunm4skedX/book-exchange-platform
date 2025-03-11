@@ -1,0 +1,35 @@
+-- Use the book_exchange database
+USE book_exchange;
+
+-- Insert Computer Science books from the Open University of Israel
+INSERT INTO books (id, title, course_number, cover_image_url) VALUES
+(1, 'Introduction to Computer Science Using Java', 20441, 'https://www.openu.ac.il/courses/20441.htm'),
+(2, 'Data Structures and Introduction to Algorithms', 20407, 'https://www.openu.ac.il/courses/20407.htm'),
+(3, 'Automata Theory and Formal Languages', 20440, 'https://www.openu.ac.il/courses/20440.htm'),
+(4, 'Assembly Language', 20465, 'https://www.openu.ac.il/courses/20465.htm'),
+(5, 'Computer Organization', 20471, 'https://www.openu.ac.il/courses/20471.htm'),
+(6, 'Algorithms', 20417, 'https://www.openu.ac.il/courses/20417.htm'),
+(7, 'Operating Systems', 20594, 'https://www.openu.ac.il/courses/20594.htm'),
+(8, 'Computer Networks', 20582, 'https://www.openu.ac.il/courses/20582.htm'),
+(9, 'Database Systems', 20277, 'https://www.openu.ac.il/courses/20277.htm'),
+(10, 'Software Engineering', 20442, 'https://www.openu.ac.il/courses/20442.htm'),
+(11, 'Advanced Programming with Java', 20554, 'https://www.openu.ac.il/courses/20554.htm'),
+(12, 'Introduction to Artificial Intelligence', 20551, 'https://www.openu.ac.il/courses/20551.htm'),
+(13, 'Logic Programming', 20596, 'https://www.openu.ac.il/courses/20596.htm'),
+(14, 'Computer Graphics', 20562, 'https://www.openu.ac.il/courses/20562.htm'),
+(15, 'Computational Models', 20364, 'https://www.openu.ac.il/courses/20364.htm'),
+(16, 'Discrete Mathematics: Set Theory, Combinatorics and Graph Theory', 20281, 'https://www.openu.ac.il/courses/20281.htm'),
+(17, 'Mathematical Logic', 20466, 'https://www.openu.ac.il/courses/20466.htm'),
+(18, 'Numerical Analysis', 20462, 'https://www.openu.ac.il/courses/20462.htm'),
+(19, 'Complexity Theory', 20585, 'https://www.openu.ac.il/courses/20585.htm'),
+(20, 'Compilation', 20364, 'https://www.openu.ac.il/courses/20364.htm'),
+(21, 'Advanced Programming in C++', 20585, 'https://www.openu.ac.il/courses/20585.htm'),
+(22, 'Computer Security', 20643, 'https://www.openu.ac.il/courses/20643.htm'),
+(23, 'Workshop: Web Application Development', 20503, 'https://www.openu.ac.il/courses/20503.htm'),
+(24, 'Workshop: Mobile Application Development', 20586, 'https://www.openu.ac.il/courses/20586.htm'),
+(25, 'Workshop: Systems Programming', 20465, 'https://www.openu.ac.il/courses/20465.htm'),
+(26, 'Final Project: Software Engineering', 20998, 'https://www.openu.ac.il/courses/20998.htm'),
+(27, 'Machine Learning', 20588, 'https://www.openu.ac.il/courses/20588.htm'),
+(28, 'Deep Learning', 20595, 'https://www.openu.ac.il/courses/20595.htm'),
+(29, 'Data Mining', 20595, 'https://www.openu.ac.il/courses/20595.htm'),
+(30, 'Distributed Systems', 20594, 'https://www.openu.ac.il/courses/20594.htm');

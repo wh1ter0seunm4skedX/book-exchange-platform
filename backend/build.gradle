@@ -38,17 +38,11 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-//	implementation 'org.springframework.security:spring-security-core:6.1.1'
-//	implementation 'org.springframework.security:spring-security-config:6.1.1'
-//	implementation 'org.springframework.security:spring-security-web:6.1.1'
+	// Development tools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-
-
-	// Database
-	implementation 'ch.vorburger.mariaDB4j:mariaDB4j-springboot:2.4.0'
+	// Database - only MariaDB JDBC driver needed for containerized DB
 	implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.5'
-	runtimeOnly 'ch.vorburger.mariaDB4j:mariaDB4j:2.4.0'
-
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

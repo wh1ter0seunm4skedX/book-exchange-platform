@@ -1,9 +1,9 @@
 package book_exchange_platform.backend.users.repository;
 
-
-import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -54,9 +54,15 @@ public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
 
     public UserEntity findUserByEmail(String email) {
         String query = "SELECT u FROM UserEntity u WHERE u.email = :email";
-        return entityManager.createQuery(query, UserEntity.class)
+        TypedQuery<UserEntity> typedQuery = entityManager.createQuery(query, UserEntity.class)
                 .setParameter("email", email)
-                .getSingleResult();
+                .setMaxResults(1);
+        
+        try {
+            return typedQuery.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public UserEntity getUser(Long userId) {
@@ -66,5 +72,11 @@ public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
         return optionalUser.get();
     }
 
+    public boolean existsByEmail(String email) {
+        String query = "SELECT COUNT(u) FROM UserEntity u WHERE u.email = :email";
+        Long count = entityManager.createQuery(query, Long.class)
+                .setParameter("email", email)
+                .getSingleResult();
+        return count > 0;
+    }
 }
-
