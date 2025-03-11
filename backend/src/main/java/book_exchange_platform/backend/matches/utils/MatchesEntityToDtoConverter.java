@@ -33,6 +33,8 @@ public class MatchesEntityToDtoConverter {
                 .id(publicationEntity.getId())
                 .book(BooksEntityToDtoConverter.toBookDto(publicationEntity.getBook()))
                 .user(UsersEntityToDtoConverter.toUserDto(publicationEntity.getUser()))
+                .bookCondition(publicationEntity.getBookCondition())
+                .status(publicationEntity.getStatus())
                 .date(publicationEntity.getSharedAt())
                 .build();
     }
@@ -42,6 +44,8 @@ public class MatchesEntityToDtoConverter {
                 .id(publicationDto.getId())
                 .book(BooksEntityToDtoConverter.toBookEntity(publicationDto.getBook()))
                 .user(UsersEntityToDtoConverter.toUserEntity(publicationDto.getUser()))
+                .bookCondition(publicationDto.getBookCondition())
+                .status(publicationDto.getStatus())
                 .sharedAt(publicationDto.getDate())
                 .build();
     }
@@ -51,6 +55,7 @@ public class MatchesEntityToDtoConverter {
                 .id(requestEntity.getId())
                 .book(BooksEntityToDtoConverter.toBookDto(requestEntity.getBook()))
                 .user(UsersEntityToDtoConverter.toUserDto(requestEntity.getUser()))
+                .status(requestEntity.getStatus())
                 .date(requestEntity.getRequestedAt())
                 .build();
     }
@@ -60,6 +65,7 @@ public class MatchesEntityToDtoConverter {
                 .id(requestDto.getId())
                 .book(BooksEntityToDtoConverter.toBookEntity(requestDto.getBook()))
                 .user(UsersEntityToDtoConverter.toUserEntity(requestDto.getUser()))
+                .status(requestDto.getStatus())
                 .requestedAt(requestDto.getDate())
                 .build();
     }

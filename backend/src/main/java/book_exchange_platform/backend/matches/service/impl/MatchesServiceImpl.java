@@ -48,7 +48,7 @@ public class MatchesServiceImpl implements MatchesService {
     @Override
     public <T extends TradeDto> List<TradeDto> searchAvailableTrades(Long bookId, List<T> allTrades) {
         List<TradeDto> availableTrades = (List<TradeDto>) allTrades.stream()
-                .filter(trade -> trade.getBook().getId().equals(bookId))
+                .filter(trade -> (trade.getBook().getId().equals(bookId) && trade.getStatus().equals(TradeStatus.AVAILABLE)))
                 .toList();
          return availableTrades;
     }
@@ -68,6 +68,13 @@ public class MatchesServiceImpl implements MatchesService {
         }
 
         if (incomingTrade instanceof RequestDto){
+            RequestDto incomingRequest = (RequestDto) incomingTrade;
+            incomingRequest.setStatus(TradeStatus.MATCHED);
+            matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(incomingRequest));
+            PublicationDto fittedPublication = (PublicationDto) bestFitTrade;
+            fittedPublication.setStatus(TradeStatus.MATCHED);
+            matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(fittedPublication));
+
             return Optional.of(MatchDto.builder()
                                     .book(bestFitTrade.getBook())
                                     .provider(bestFitTrade.getUser())
@@ -75,6 +82,13 @@ public class MatchesServiceImpl implements MatchesService {
                                     .status(MatchStatus.PENDING)
                                     .build());
         }
+        PublicationDto incomingPublication = (PublicationDto) incomingTrade;
+        incomingPublication.setStatus(TradeStatus.MATCHED);
+        matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(incomingPublication));
+        RequestDto fittedRequest = (RequestDto) bestFitTrade;
+        fittedRequest.setStatus(TradeStatus.MATCHED);
+        matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(fittedRequest));
+
         return Optional.of(MatchDto.builder()
                                 .book(bestFitTrade.getBook())
                                 .provider(incomingTrade.getUser())

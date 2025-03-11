@@ -16,5 +16,6 @@ public class RequestDto implements TradeDto {
     private Long id;
     private BookDto book;
     private UserDto user;
+    private TradeStatus status;
     private Date date;
 }

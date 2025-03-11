@@ -1,11 +1,7 @@
 package book_exchange_platform.backend.matches.manager.impl;
 
 import book_exchange_platform.backend.books.data.BookDto;
-import book_exchange_platform.backend.matches.data.MatchDto;
-import book_exchange_platform.backend.matches.data.MatchStatus;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.data.TradeDto;
+import book_exchange_platform.backend.matches.data.*;
 import book_exchange_platform.backend.matches.manager.MatchesManager;
 import book_exchange_platform.backend.matches.service.MatchesService;
 import book_exchange_platform.backend.users.data.UserDto;
@@ -38,10 +34,33 @@ public class MatchesManagerImpl implements MatchesManager {
     }
 
     @Override
-    public MatchDto invalidateMatch(MatchDto match) {
-        match.setStatus(MatchStatus.INVALIDATED);
+    public MatchDto deactivateMatch(MatchDto match) {
+        match.setStatus(MatchStatus.CANCELLED);
+        matchesService.updateMatch(match);
+        RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
+        matchedRequest.setStatus(TradeStatus.AVAILABLE);
+        userTradingService.updateRequest(matchedRequest);
+        PublicationDto matchedPublication = userTradingService.getPublication(match.getProvider().getId(), match.getBook().getId());
+        matchedPublication.setStatus(TradeStatus.AVAILABLE);
+        userTradingService.updatePublication(matchedPublication);
+        List<PublicationDto> allPublications = matchesService.getAllPublications();
+        allPublications.remove(matchedPublication);
+        return match(matchedRequest, allPublications);
+    }
+
+    @Override
+    public MatchDto completeMatch(MatchDto match) {
+        RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
+        PublicationDto matchedPublication = userTradingService.getPublication(match.getProvider().getId(), match.getBook().getId());
+        userTradingService.deleteRequest(matchedRequest);
+        userTradingService.deletePublication(matchedPublication);
+        match.setStatus(MatchStatus.COMPLETED);
         return matchesService.updateMatch(match);
     }
+
+
+//    Create invalidation script
+
 
     @Override
     public List<RequestDto> getUserRequests(Long userId) { 
@@ -52,19 +71,12 @@ public class MatchesManagerImpl implements MatchesManager {
     public MatchDto requestBook(BookDto book, Long userId) {
         UserDto user = userService.getUser(userId);
         RequestDto request = RequestDto.builder()
-                .user(user)
-                .book(book)
-                .build();
-        RequestDto addedRequest = userTradingService.updateRequest(request);
+                                .user(user)
+                                .book(book)
+                                .build();
+        RequestDto addedRequest = userTradingService.addRequest(book,user);
         List<PublicationDto> allPublications = matchesService.getAllPublications();
-        List<TradeDto> optionalTrades = matchesService.searchAvailableTrades(addedRequest.getBook().getId(), allPublications);
-        Optional<MatchDto> optionalFoundMatch = matchesService.findMatch(addedRequest, optionalTrades);
-        if(optionalFoundMatch.isPresent()){
-            MatchDto match = optionalFoundMatch.get();
-            matchesService.addMatch(match);
-            return match;
-        }
-        return MatchDto.builder().build();
+        return match(addedRequest, allPublications);
     }
 
     @Override
@@ -78,27 +90,15 @@ public class MatchesManagerImpl implements MatchesManager {
     }
 
     @Override
-    public List<PublicationDto> getUserPublications(Long userId) { 
-        return userTradingService.getUserPublications(userId);
-    }
+    public List<PublicationDto> getUserPublications(Long userId)   { return userTradingService.getUserPublications(userId);}
+
 
     @Override
-    public MatchDto publishBook(BookDto bookDto, Long userId) {
+    public MatchDto publishBook(BookDto book, SharedBookCondition bookCondition, Long userId) {
         UserDto user = userService.getUser(userId);
-        PublicationDto publication = PublicationDto.builder()
-                .user(user)
-                .book(bookDto)
-                .build();
-        PublicationDto addedPublication = userTradingService.updatePublication(publication);
+        PublicationDto addedPublication = userTradingService.addPublication(book, bookCondition, user);
         List<RequestDto> allRequests = matchesService.getAllRequests();
-        List<TradeDto> optionalTrades = matchesService.searchAvailableTrades(addedPublication.getBook().getId(), allRequests);
-        Optional<MatchDto> optionalFoundMatch = matchesService.findMatch(addedPublication, optionalTrades);
-        if(optionalFoundMatch.isPresent()){
-            MatchDto match = optionalFoundMatch.get();
-            matchesService.addMatch(match);
-            return match;
-        }
-        return MatchDto.builder().build();
+        return match(addedPublication, allRequests);
     }
 
     @Override
@@ -110,4 +110,16 @@ public class MatchesManagerImpl implements MatchesManager {
     public PublicationDto updatePublication(PublicationDto publicationDto) {
         return userTradingService.updatePublication(publicationDto);
     }
+
+    private <T extends TradeDto> MatchDto match(TradeDto tradeDto, List<T> allRequests) {
+        List<TradeDto> optionalTrades = matchesService.searchAvailableTrades(tradeDto.getBook().getId(), allRequests);
+        Optional<MatchDto> optionalFoundMatch = matchesService.findMatch(tradeDto, optionalTrades);
+        if(optionalFoundMatch.isPresent()){
+            MatchDto match = optionalFoundMatch.get();
+            MatchDto addedMatch = matchesService.addMatch(match);
+            return addedMatch;
+        }
+        return MatchDto.builder().build();
+    }
+
 }

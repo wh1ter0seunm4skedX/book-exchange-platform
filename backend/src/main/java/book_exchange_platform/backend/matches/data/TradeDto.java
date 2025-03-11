@@ -12,5 +12,7 @@ public interface TradeDto {
 
     public BookDto getBook();
 
+    public TradeStatus getStatus();
+
     public Date getDate();
 }

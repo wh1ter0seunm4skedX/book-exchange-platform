@@ -57,6 +57,14 @@ public class MatchRepository extends SimpleJpaRepository<MatchEntity, Long> {
                 .getResultList();
     }
 
+    public RequestEntity getRequest(Long userId , Long bookId) {
+        String query = "SELECT r FROM RequestEntity r WHERE r.user.id = :userId AND r.book.id = :bookId";
+        return entityManager.createQuery(query, RequestEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("bookId", bookId)
+                .getSingleResult();
+    }
+
     @Transactional
     public void removeRequest(RequestEntity requestEntity) {
         if (entityManager.contains(requestEntity)) {
@@ -85,6 +93,14 @@ public class MatchRepository extends SimpleJpaRepository<MatchEntity, Long> {
         return entityManager.createQuery(query, PublicationEntity.class)
                 .setParameter("userId", userId)
                 .getResultList();
+    }
+
+    public PublicationEntity getPublication(Long userId , Long bookId) {
+        String query = "SELECT r FROM PublicationEntity r WHERE r.user.id = :userId AND r.book.id = :bookId";
+        return entityManager.createQuery(query, PublicationEntity.class)
+                .setParameter("userId", userId)
+                .setParameter("bookId", bookId)
+                .getSingleResult();
     }
 
     @Transactional
