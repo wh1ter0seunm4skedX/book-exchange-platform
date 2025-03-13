@@ -6,12 +6,14 @@ import book_exchange_platform.backend.matches.data.MatchDto;
 import book_exchange_platform.backend.matches.data.PublicationDto;
 import book_exchange_platform.backend.matches.data.RequestDto;
 import book_exchange_platform.backend.matches.manager.MatchesManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/book_exchange_platform/Matches")
+@RequestMapping("book_exchange_platform/matches")
+@Slf4j
 public class MatchesController {
 
     private final MatchesManager matchesManager;
@@ -20,7 +22,7 @@ public class MatchesController {
         this.matchesManager = matchesManager;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/match")
     public List<MatchDto> getUserMatches(@PathVariable Long userId) {
         return matchesManager.getUserMatches(userId);
     }
@@ -53,6 +55,7 @@ public class MatchesController {
 
     @PostMapping("/{userId}/publish")
     public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody BookPublicationDto bookPublication) {
+        // Using the methods we added to the BookPublicationDto class
         return matchesManager.publishBook(bookPublication.getBook(), bookPublication.getBookCondition(), userId);
     }
 
@@ -65,7 +68,4 @@ public class MatchesController {
     public void deletePublication(@RequestBody PublicationDto publicationDto){
         matchesManager.deletePublication(publicationDto);
     }
-
-
 }
-

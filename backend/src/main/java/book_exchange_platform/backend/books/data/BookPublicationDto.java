@@ -5,12 +5,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Builder
 @Getter
 @Setter
 public class BookPublicationDto {
-
-    private BookDto book;
+    private Long id;
+    private String title;
+    private Long courseNumber;
+    private String coverImageUrl;
     private SharedBookCondition bookCondition;
+    
+    // This method returns itself to be used in contexts where a BookEntity is expected
+    public BookDto getBook() {
+        return BookDto.builder()
+                .id(this.id)
+                .title(this.title)
+                .courseNumber(this.courseNumber)
+                .coverImageUrl(this.coverImageUrl)
+                .build();
+    }
 }

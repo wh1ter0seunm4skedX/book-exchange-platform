@@ -1,10 +1,15 @@
 package book_exchange_platform.backend.users.utils;
 
+import book_exchange_platform.backend.books.data.BookDto;
+import book_exchange_platform.backend.books.data.BookEntity;
+import book_exchange_platform.backend.books.data.BookPublicationDto;
 import book_exchange_platform.backend.books.utils.BooksEntityToDtoConverter;
 import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
+import book_exchange_platform.backend.users.data.UserBookDto;
 import book_exchange_platform.backend.users.data.UserDto;
 import book_exchange_platform.backend.users.data.UserEntity;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class UsersEntityToDtoConverter {
@@ -17,10 +22,20 @@ public class UsersEntityToDtoConverter {
                 .password(userEntity.getPassword())
                 .phoneNumber(userEntity.getPhoneNumber())
                 .preferredExchangeLocation(userEntity.getPreferredExchangeLocation())
-                .booksForShare(userEntity.getBooksForShare().stream().map(bookEntity -> BooksEntityToDtoConverter.toBookDto(bookEntity)).collect(Collectors.toList()))
-                .requiredBooks(userEntity.getRequiredBooks().stream().map(bookEntity -> BooksEntityToDtoConverter.toBookDto(bookEntity)).collect(Collectors.toList()))
-                .matchesToProvide(userEntity.getMatchesToProvide().stream().map(matchEntity -> MatchesEntityToDtoConverter.toMatchDto(matchEntity)).collect(Collectors.toList()))
-                .matchesToRequest(userEntity.getMatchesToRequest().stream().map(matchEntity -> MatchesEntityToDtoConverter.toMatchDto(matchEntity)).collect(Collectors.toList()))
+                .booksForShare(Collections.emptyList()) // Avoid circular reference
+                .requiredBooks(Collections.emptyList()) // Avoid circular reference
+                .matchesToProvide(Collections.emptyList()) // Avoid circular reference
+                .matchesToRequest(Collections.emptyList()) // Avoid circular reference
+                .build();
+    }
+    
+    public static UserBookDto toUserBookDto(UserEntity userEntity){
+        return UserBookDto.builder()
+                .id(userEntity.getId())
+                .fullName(userEntity.getFullName())
+                .email(userEntity.getEmail())
+                .phoneNumber(userEntity.getPhoneNumber()) // Using Long type now
+                .preferredExchangeLocation(userEntity.getPreferredExchangeLocation())
                 .build();
     }
 
@@ -32,10 +47,26 @@ public class UsersEntityToDtoConverter {
                 .password(userDto.getPassword())
                 .phoneNumber(userDto.getPhoneNumber())
                 .preferredExchangeLocation(userDto.getPreferredExchangeLocation())
-                .booksForShare(userDto.getBooksForShare().stream().map(bookDto -> BooksEntityToDtoConverter.toBookEntity(bookDto)).collect(Collectors.toList()))
-                .requiredBooks(userDto.getRequiredBooks().stream().map(bookDto -> BooksEntityToDtoConverter.toBookEntity(bookDto)).collect(Collectors.toList()))
-                .matchesToProvide(userDto.getMatchesToProvide().stream().map(matchDto -> MatchesEntityToDtoConverter.toMatchEntity(matchDto)).collect(Collectors.toList()))
-                .matchesToRequest(userDto.getMatchesToRequest().stream().map(matchDto -> MatchesEntityToDtoConverter.toMatchEntity(matchDto)).collect(Collectors.toList()))
+                .booksForShare(userDto.getBooksForShare() != null ? 
+                    userDto.getBooksForShare().stream()
+                        .map(BooksEntityToDtoConverter::toBookEntity)
+                        .collect(Collectors.toList()) : 
+                    Collections.emptyList())
+                .requiredBooks(userDto.getRequiredBooks() != null ? 
+                    userDto.getRequiredBooks().stream()
+                        .map(BooksEntityToDtoConverter::toBookEntity)
+                        .collect(Collectors.toList()) : 
+                    Collections.emptyList())
+                .matchesToProvide(userDto.getMatchesToProvide() != null ? 
+                    userDto.getMatchesToProvide().stream()
+                        .map(MatchesEntityToDtoConverter::toMatchEntity)
+                        .collect(Collectors.toList()) : 
+                    Collections.emptyList())
+                .matchesToRequest(userDto.getMatchesToRequest() != null ? 
+                    userDto.getMatchesToRequest().stream()
+                        .map(MatchesEntityToDtoConverter::toMatchEntity)
+                        .collect(Collectors.toList()) : 
+                    Collections.emptyList())
                 .build();
     }
 }
