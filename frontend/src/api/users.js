@@ -1,26 +1,47 @@
-import { mockUsers, mockMatches, mockBookRequests } from '../mockData';
+/**
+ * Users API functions for interacting with the backend
+ */
 
-// Simulate API delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+import { apiRequest, getCurrentUserId } from './apiUtils';
 
 export const usersApi = {
-  // Get user profile
-  getUserProfile: async (userId) => {
-    return mockUsers.find(user => user.id === userId);
+  /**
+   * Get all users
+   * @returns {Promise<Array>} List of all users
+   */
+  getAllUsers: async () => {
+    return apiRequest('/book_exchange_platform/users/all');
+  },
+  
+  /**
+   * Get user profile by ID
+   * @param {string} userId User ID (optional, uses current user if not provided)
+   * @returns {Promise<Object>} User profile data
+   */
+  getUserProfile: async (userId = null) => {
+    const id = userId || getCurrentUserId();
+    return apiRequest(`/book_exchange_platform/users/${id}`);
   },
 
-  // Get user matches
-  getUserMatches: async (userId) => {
-    return mockMatches.filter(match => {
-      const request = mockBookRequests.find(req => req.id === match.requestId);
-      return request && request.userId === userId;
+  /**
+   * Update user profile
+   * @param {Object} userData Updated user data
+   * @returns {Promise<Object>} Updated user profile
+   */
+  updateUserProfile: async (userData) => {
+    return apiRequest('/book_exchange_platform/users/update', {
+      method: 'POST',
+      body: JSON.stringify(userData)
     });
   },
-
-  // Update user profile
-  updateUserProfile: async (userId, userData) => {
-    // In a real app, this would make an API call
-    console.log('Updating user profile:', userData);
-    return { ...userData, id: userId };
+  
+  /**
+   * Get user matches
+   * @param {string} userId User ID (optional, uses current user if not provided)
+   * @returns {Promise<Array>} List of user matches
+   */
+  getUserMatches: async (userId = null) => {
+    const id = userId || getCurrentUserId();
+    return apiRequest(`/book_exchange_platform/Matches/${id}`);
   }
 };

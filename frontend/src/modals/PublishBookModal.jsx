@@ -1,31 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
-import { mockBooks } from '../mockData';
+import { booksApi } from '../api/books';
 
-const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook = null }) => {
+const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     bookId: '',
     condition: 'Like New',
     notes: ''
   });
+  const [currentBook, setCurrentBook] = useState(null);
 
-  // Update form when selectedBook changes
+  // Fetch all books when modal opens
   useEffect(() => {
-    if (selectedBook) {
+    if (isOpen) {
+      fetchBooks();
+    }
+  }, [isOpen]);
+
+  // Update form when initialBook changes
+  useEffect(() => {
+    if (initialBook) {
       setFormData(prev => ({
         ...prev,
-        bookId: selectedBook.id
+        bookId: initialBook.id
       }));
+      setCurrentBook(initialBook);
     }
-  }, [selectedBook]);
+  }, [initialBook]);
+
+  // Update currentBook when bookId changes
+  useEffect(() => {
+    if (formData.bookId && books.length > 0) {
+      const selected = books.find(book => book.id === parseInt(formData.bookId, 10));
+      setCurrentBook(selected || null);
+    } else {
+      setCurrentBook(null);
+    }
+  }, [formData.bookId, books]);
+
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const allBooks = await booksApi.getAllBooks();
+      setBooks(allBooks);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const selectedBook = mockBooks.find(book => book.id === formData.bookId);
+    if (!currentBook) return;
+    
     onPublish({
-      ...formData,
-      title: selectedBook.title,
-      courseNumber: selectedBook.courseNumber,
+      bookId: parseInt(formData.bookId, 10),
+      condition: formData.condition,
+      notes: formData.notes,
+      title: currentBook.title,
+      author: currentBook.author,
+      courseNumber: currentBook.courseNumber
     });
   };
 
@@ -36,8 +73,6 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook = null }) =
       [name]: value
     }));
   };
-
-  const currentBook = formData.bookId ? mockBooks.find(book => book.id === formData.bookId) : null;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -50,27 +85,37 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook = null }) =
             <label htmlFor="bookId" className="block text-sm font-medium text-gray-700">
               Select Book
             </label>
-            <select
-              name="bookId"
-              id="bookId"
-              value={formData.bookId}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              required
-            >
-              <option value="">Choose a book</option>
-              {mockBooks.map(book => (
-                <option key={book.id} value={book.id}>
-                  {book.title} - {book.courseNumber}
-                </option>
-              ))}
-            </select>
+            {loading ? (
+              <div className="mt-2 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+                <span className="ml-2 text-sm text-gray-500">Loading books...</span>
+              </div>
+            ) : (
+              <select
+                name="bookId"
+                id="bookId"
+                value={formData.bookId}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              >
+                <option value="">Choose a book</option>
+                {books.map(book => (
+                  <option key={book.id} value={book.id}>
+                    {book.title} - {book.courseNumber}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           {currentBook && (
             <div className="bg-gray-50 rounded-lg p-4 mb-4">
               <h4 className="text-sm font-medium text-gray-900">{currentBook.title}</h4>
               <p className="text-sm text-gray-600">Course Number: {currentBook.courseNumber}</p>
+              {currentBook.author && (
+                <p className="text-sm text-gray-600">Author: {currentBook.author}</p>
+              )}
             </div>
           )}
 
@@ -109,7 +154,8 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, selectedBook = null }) =
           <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
             <button
               type="submit"
-              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+              disabled={!currentBook || loading}
+              className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Publish
             </button>

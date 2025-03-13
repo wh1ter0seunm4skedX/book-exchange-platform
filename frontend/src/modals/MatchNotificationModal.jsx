@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import Modal from '../components/Modal';
+import { matchesApi } from '../api/matches';
 
-const MatchNotificationModal = ({ isOpen, onClose, match }) => {
+const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   const [loading, setLoading] = useState(false);
 
   if (!match) return null;
@@ -9,8 +10,16 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
   const handleAction = async (action) => {
     setLoading(true);
     try {
-      // In a real app, this would make an API call
-      console.log(`${action} match:`, match.id);
+      if (action === 'accept') {
+        await matchesApi.acceptMatch(match.id);
+      } else if (action === 'decline') {
+        await matchesApi.declineMatch(match.id);
+      }
+      
+      if (onMatchUpdate) {
+        onMatchUpdate(match.id, action);
+      }
+      
       onClose();
     } catch (error) {
       console.error('Error handling match response:', error);
@@ -18,6 +27,9 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
       setLoading(false);
     }
   };
+
+  // Default image if no cover image is available
+  const defaultCoverImage = '/images/default-book-cover.png';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -43,18 +55,27 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
         {/* Book Details */}
         <div className="mt-6">
           <div className="flex items-start space-x-4">
-            <div className="flex-shrink-0 h-32 w-24 overflow-hidden rounded-lg">
+            <div className="flex-shrink-0 h-32 w-24 overflow-hidden rounded-lg bg-gray-100">
               <img
-                src={match.book.coverImage}
-                alt={match.book.title}
+                src={match.book?.coverImage || defaultCoverImage}
+                alt={match.book?.title || 'Book cover'}
                 className="h-full w-full object-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = defaultCoverImage;
+                }}
               />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-medium text-gray-900">{match.book.title}</h3>
-              <p className="mt-1 text-sm text-gray-500">{match.book.author}</p>
-              <p className="mt-1 text-sm text-gray-500">Edition: {match.book.edition}</p>
-              <p className="mt-1 text-sm text-gray-500">Course: {match.book.courseNumber}</p>
+              <h3 className="text-lg font-medium text-gray-900">{match.book?.title}</h3>
+              <p className="mt-1 text-sm text-gray-500">{match.book?.author}</p>
+              {match.book?.edition && (
+                <p className="mt-1 text-sm text-gray-500">Edition: {match.book.edition}</p>
+              )}
+              <p className="mt-1 text-sm text-gray-500">Course: {match.book?.courseNumber}</p>
+              {match.book?.condition && (
+                <p className="mt-1 text-sm text-gray-500">Condition: {match.book.condition}</p>
+              )}
             </div>
           </div>
         </div>
@@ -67,8 +88,8 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
                 Match Details
               </h3>
               <div className="mt-2 text-sm text-blue-700">
-                <p><strong>Owner:</strong> {match.matchedUser.name}</p>
-                <p><strong>Location:</strong> {match.matchedUser.preferredLocation}</p>
+                <p><strong>Owner:</strong> {match.matchedUser?.fullName}</p>
+                <p><strong>Location:</strong> {match.matchedUser?.preferredExchangeLocation}</p>
                 <p className="mt-2"><strong>Next Steps:</strong></p>
                 <ul className="list-disc pl-5 space-y-1 mt-1">
                   <li>Accept the match to proceed with the exchange</li>
@@ -86,7 +107,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
             type="button"
             onClick={() => handleAction('accept')}
             disabled={loading}
-            className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+            className="inline-flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Processing...' : 'Accept Match'}
           </button>
@@ -94,7 +115,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match }) => {
             type="button"
             onClick={() => handleAction('decline')}
             disabled={loading}
-            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm"
+            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Decline
           </button>

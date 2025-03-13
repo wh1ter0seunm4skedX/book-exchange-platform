@@ -1,23 +1,43 @@
-const API_BASE_URL = 'http://localhost:8080/api';
+/**
+ * Books API functions for interacting with the backend
+ */
+
+import { apiRequest, getCurrentUserId } from './apiUtils';
 
 export const booksApi = {
+  /**
+   * Get all books in the catalog
+   * @returns {Promise<Array>} List of all books
+   */
   getAllBooks: async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/books/all`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch books');
-      }
-      
-      return await response.json();
-    } catch (error) {
-      console.error('Error fetching books:', error);
-      throw error;
-    }
+    return apiRequest('/book_exchange_platform/books/all');
   },
   
+  /**
+   * Get most wanted books
+   * @returns {Promise<Array>} List of most wanted books
+   */
+  getMostWantedBooks: async () => {
+    return apiRequest('/book_exchange_platform/books/most_wanted');
+  },
+  
+  /**
+   * Get books wanted by the current user
+   * @param {string} userId User ID (optional, uses current user if not provided)
+   * @returns {Promise<Array>} List of books wanted by the user
+   */
+  getUserWantedBooks: async (userId = null) => {
+    const id = userId || getCurrentUserId();
+    return apiRequest(`/book_exchange_platform/books/${id}/user_wanted`);
+  },
+  
+  /**
+   * Get books published by the current user
+   * @param {string} userId User ID (optional, uses current user if not provided)
+   * @returns {Promise<Array>} List of books published by the user
+   */
+  getUserPublishedBooks: async (userId = null) => {
+    const id = userId || getCurrentUserId();
+    return apiRequest(`/book_exchange_platform/books/${id}/user_published`);
+  }
 };
