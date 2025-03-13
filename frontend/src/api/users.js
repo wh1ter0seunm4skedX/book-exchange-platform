@@ -42,6 +42,6 @@ export const usersApi = {
    */
   getUserMatches: async (userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/Matches/${id}`);
+    return apiRequest(`/book_exchange_platform/matches/${id}/match`);
   }
 };
