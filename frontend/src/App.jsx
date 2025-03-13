@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
@@ -34,34 +32,41 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {isLoggedIn && <Header />}
-      <main className={`flex-grow ${!isLoggedIn ? 'p-0' : ''}`}>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Protected routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          
-          {/* Redirect root to dashboard if logged in, otherwise to login */}
-          <Route path="/" element={
-            isLoggedIn ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
-          } />
-        </Routes>
-      </main>
-      {isLoggedIn && <Footer />}
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        {/* Protected routes*/}
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <>
+              <Header />
+              <main className="flex-grow">
+                <Dashboard />
+              </main>
+              <Footer />
+            </>
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <>
+              <Header />
+              <main className="flex-grow">
+                <Profile />
+              </main>
+              <Footer />
+            </>
+          </ProtectedRoute>
+        } />
+        
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
+        <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
+      </Routes>
     </div>
-  );
+  )
 }
 
 export default App
