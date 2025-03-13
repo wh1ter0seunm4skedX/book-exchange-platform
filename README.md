@@ -42,15 +42,12 @@ BookXChange is a **smart textbook exchange platform** designed for students at t
 
 ## 🐳 Docker Setup and Configuration
 
-The Book Exchange Platform uses Docker and Docker Compose for easy setup and deployment. This ensures consistent environments across development and production.
-
 ### Prerequisites
-- [Docker](https://www.docker.com/products/docker-desktop/) installed on your machine
-- [Docker Compose](https://docs.docker.com/compose/install/) (included with Docker Desktop)
+- [Docker](https://www.docker.com/products/docker-desktop/)
 
 ### Running the Application
 
-1. **Clone the repo**
+1. **Clone this repo**
    ```powershell
    git clone https://github.com/wh1ter0seunm4skedX/book-exchange-platform.git
    cd book-exchange-platform
@@ -60,25 +57,32 @@ The Book Exchange Platform uses Docker and Docker Compose for easy setup and dep
    ```powershell
    docker-compose up -d
    ```
-   This command starts both the MariaDB database and Spring Boot backend in detached mode.
+   This command starts **all services**:
+   - **MariaDB database**
+   - **Spring Boot backend**
+   - **React frontend**
 
 3. **Check container status**
    ```powershell
    docker-compose ps
    ```
-   confirm that both containers are running.
+   Confirm that the following services are running:
+   - `book-exchange-frontend`
+   - `book-exchange-backend`
+   - `book-exchange-mariadb`
 
 4. **Access the application**
-   - Backend API: http://localhost:8080
-   - MariaDB database: localhost:3307 (username: root, password: root)
+   - **Frontend**: [http://localhost:5173](http://localhost:5173)  
+   - **Backend API**: [http://localhost:8080](http://localhost:8080)  
+   - **DB**: `localhost:3307` (username: `root`, password: `root`)
 
 ### Stopping the Application
 
+To stop all running containers:
 ```powershell
 docker-compose down
 ```
-
-To remove volumes as well (this will delete all data):
+To remove volumes as well (🧨this **deletes all database data**🧨):
 ```powershell
 docker-compose down -v
 ```
