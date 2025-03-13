@@ -54,9 +54,7 @@ export const getUserIdFromToken = () => {
   if (!token) return null;
   
   const decodedToken = parseJwt(token);
-  // The 'sub' claim in JWT typically contains the user ID
-  // Adjust this based on your backend JWT structure
-  return decodedToken?.sub ? parseInt(decodedToken.sub, 10) : null;
+  return decodedToken?.userId || null;
 };
 
 /**
@@ -66,12 +64,15 @@ export const getUserIdFromToken = () => {
  */
 export const createHeaders = (includeContentType = true) => {
   const headers = new Headers();
-  const token = getAuthToken();
   
+  // Add authentication header if token exists
+  const token = getAuthToken();
   if (token) {
+    // Ensure token is sent with 'Bearer ' prefix as required by backend
     headers.append('Authorization', `Bearer ${token}`);
   }
   
+  // Add content type for JSON requests
   if (includeContentType) {
     headers.append('Content-Type', 'application/json');
   }
@@ -88,38 +89,44 @@ export const createHeaders = (includeContentType = true) => {
 export const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
   
-  // Default options
+  // Set up default options with authentication
   const defaultOptions = {
-    headers: createHeaders(),
+    headers: createHeaders(options.body !== undefined),
   };
   
-  // Merge options
+  // Merge default options with provided options
   const fetchOptions = {
     ...defaultOptions,
     ...options,
     headers: options.headers 
-      ? { ...defaultOptions.headers, ...options.headers } 
+      ? new Headers({...Object.fromEntries(defaultOptions.headers), ...options.headers})
       : defaultOptions.headers
   };
+  
+  // Convert body to JSON string if it's an object
+  if (fetchOptions.body && typeof fetchOptions.body === 'object') {
+    fetchOptions.body = JSON.stringify(fetchOptions.body);
+  }
   
   try {
     const response = await fetch(url, fetchOptions);
     
-    // Handle non-2xx responses
+    // Handle HTTP errors
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `Request failed with status ${response.status}`);
+      const errorText = await response.text();
+      throw new Error(errorText || `HTTP error ${response.status}: ${response.statusText}`);
     }
     
-    // Parse JSON response if content exists
+    // Handle empty responses
     const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('application/json')) {
-      return await response.json();
+    if (!contentType || !contentType.includes('application/json')) {
+      return response.text();
     }
     
-    return await response.text();
+    // Parse JSON response
+    return await response.json();
   } catch (error) {
-    console.error(`API request failed: ${error.message}`);
+    console.error(`API request failed for ${endpoint}:`, error);
     throw error;
   }
 };
@@ -131,5 +138,7 @@ export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
   localStorage.removeItem('email');
-  window.location.href = '/';
+  
+  // Redirect to login page
+  window.location.href = '/login';
 };
