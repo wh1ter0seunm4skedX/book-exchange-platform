@@ -21,9 +21,13 @@ RUN ./gradlew build -x test
 
 # Expose the application port
 EXPOSE 8080
+EXPOSE 5005
 
 # Set environment variables for Spring
 ENV SPRING_PROFILES_ACTIVE=default
 
 # Run the application
-CMD ["java", "-jar", "build/libs/backend-0.0.1-SNAPSHOT.jar"]
+#CMD ["java", "-jar", "build/libs/backend-0.0.1-SNAPSHOT.jar"]
+
+# Run the application with remote debugging enabled
+CMD ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "build/libs/backend-0.0.1-SNAPSHOT.jar"]

@@ -28,6 +28,7 @@ services:
     container_name: book-exchange-backend
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       - SPRING_PROFILES_ACTIVE=default
       - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/book_exchange
