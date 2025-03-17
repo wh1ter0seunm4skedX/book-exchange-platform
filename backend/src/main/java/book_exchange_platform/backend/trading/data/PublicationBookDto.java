@@ -1,4 +1,4 @@
-package book_exchange_platform.backend.matches.data;
+package book_exchange_platform.backend.trading.data;
 
 import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.users.data.UserDto;
@@ -11,11 +11,12 @@ import java.util.Date;
 @Builder
 @Getter
 @Setter
-public class RequestBookDto implements TradeDto {
+public class PublicationBookDto implements TradeDto {
     private Long id;
     private Long bookId;
     private String bookTitle;
     private UserDto user;
+    private SharedBookCondition bookCondition;
     private TradeStatus status;
     private Date date;
     

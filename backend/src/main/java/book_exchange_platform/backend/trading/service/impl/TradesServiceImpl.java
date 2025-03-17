@@ -1,9 +1,9 @@
-package book_exchange_platform.backend.matches.service.impl;
+package book_exchange_platform.backend.trading.service.impl;
 
-import book_exchange_platform.backend.matches.data.*;
-import book_exchange_platform.backend.matches.repository.MatchRepository;
-import book_exchange_platform.backend.matches.service.MatchesService;
-import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
+import book_exchange_platform.backend.trading.data.*;
+import book_exchange_platform.backend.trading.repository.TradesRepository;
+import book_exchange_platform.backend.trading.service.TradesService;
+import book_exchange_platform.backend.trading.utils.TradesEntityToDtoConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,38 +11,38 @@ import java.util.Optional;
 
 
 @Service
-public class MatchesServiceImpl implements MatchesService {
+public class TradesServiceImpl implements TradesService {
 
-    private final MatchRepository matchRepository;
+    private final TradesRepository tradesRepository;
 
-    public MatchesServiceImpl(MatchRepository matchRepository) {
-        this.matchRepository = matchRepository;
+    public TradesServiceImpl(TradesRepository tradesRepository) {
+        this.tradesRepository = tradesRepository;
     }
 
 
     @Override
     public List<RequestDto> getAllRequests() {
-        return matchRepository.getAllRequests().stream().map(MatchesEntityToDtoConverter::toRequestDto).toList();
+        return tradesRepository.getAllRequests().stream().map(TradesEntityToDtoConverter::toRequestDto).toList();
     }
 
     @Override
     public List<PublicationDto> getAllPublications() {
-        return matchRepository.getAllPublications().stream().map(MatchesEntityToDtoConverter::toPublicationDto).toList();
+        return tradesRepository.getAllPublications().stream().map(TradesEntityToDtoConverter::toPublicationDto).toList();
     }
 
     @Override
     public MatchDto addMatch(MatchDto matchDto) {
-        return MatchesEntityToDtoConverter.toMatchDto(matchRepository.save(MatchesEntityToDtoConverter.toMatchEntity(matchDto)));
+        return TradesEntityToDtoConverter.toMatchDto(tradesRepository.save(TradesEntityToDtoConverter.toMatchEntity(matchDto)));
     }
 
     @Override
     public MatchDto updateMatch(MatchDto matchDto) {
-        return MatchesEntityToDtoConverter.toMatchDto(matchRepository.save(MatchesEntityToDtoConverter.toMatchEntity(matchDto)));
+        return TradesEntityToDtoConverter.toMatchDto(tradesRepository.save(TradesEntityToDtoConverter.toMatchEntity(matchDto)));
     }
 
     @Override
     public void deleteMatch(MatchDto matchDto) {
-        matchRepository.delete(MatchesEntityToDtoConverter.toMatchEntity(matchDto));
+        tradesRepository.delete(TradesEntityToDtoConverter.toMatchEntity(matchDto));
     }
 
     @Override
@@ -56,12 +56,16 @@ public class MatchesServiceImpl implements MatchesService {
     @Override
     public Optional<MatchDto> findMatch(TradeDto incomingTrade, List<TradeDto> optionalTrades) {
 
-        if(optionalTrades.isEmpty()){
+        List<TradeDto> optionalTradesNoSelfUser = optionalTrades.stream()
+                .filter(trade -> !trade.getUser().getId().equals(incomingTrade.getUser().getId()))
+                .toList();
+
+        if(optionalTradesNoSelfUser.isEmpty()){
             return Optional.empty();
         }
 
-        TradeDto bestFitTrade = optionalTrades.get(0);
-        for (TradeDto candidateTrade : optionalTrades) {
+        TradeDto bestFitTrade = optionalTradesNoSelfUser.get(0);
+        for (TradeDto candidateTrade : optionalTradesNoSelfUser) {
             if(candidateTrade.getDate().before(bestFitTrade.getDate())){
                 bestFitTrade = candidateTrade;
             }
@@ -70,10 +74,10 @@ public class MatchesServiceImpl implements MatchesService {
         if (incomingTrade instanceof RequestDto){
             RequestDto incomingRequest = (RequestDto) incomingTrade;
             incomingRequest.setStatus(TradeStatus.MATCHED);
-            matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(incomingRequest));
+            tradesRepository.saveRequest(TradesEntityToDtoConverter.toRequestEntity(incomingRequest));
             PublicationDto fittedPublication = (PublicationDto) bestFitTrade;
             fittedPublication.setStatus(TradeStatus.MATCHED);
-            matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(fittedPublication));
+            tradesRepository.savePublication(TradesEntityToDtoConverter.toPublicationEntity(fittedPublication));
 
             return Optional.of(MatchDto.builder()
                                     .book(bestFitTrade.getBook())
@@ -84,10 +88,10 @@ public class MatchesServiceImpl implements MatchesService {
         }
         PublicationDto incomingPublication = (PublicationDto) incomingTrade;
         incomingPublication.setStatus(TradeStatus.MATCHED);
-        matchRepository.savePublication(MatchesEntityToDtoConverter.toPublicationEntity(incomingPublication));
+        tradesRepository.savePublication(TradesEntityToDtoConverter.toPublicationEntity(incomingPublication));
         RequestDto fittedRequest = (RequestDto) bestFitTrade;
         fittedRequest.setStatus(TradeStatus.MATCHED);
-        matchRepository.saveRequest(MatchesEntityToDtoConverter.toRequestEntity(fittedRequest));
+        tradesRepository.saveRequest(TradesEntityToDtoConverter.toRequestEntity(fittedRequest));
 
         return Optional.of(MatchDto.builder()
                                 .book(bestFitTrade.getBook())

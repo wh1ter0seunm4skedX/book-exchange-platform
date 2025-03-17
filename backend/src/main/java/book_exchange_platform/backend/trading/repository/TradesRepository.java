@@ -1,11 +1,11 @@
-package book_exchange_platform.backend.matches.repository;
+package book_exchange_platform.backend.trading.repository;
 
 
-import book_exchange_platform.backend.matches.data.PublicationEntity;
-import book_exchange_platform.backend.matches.data.RequestEntity;
+import book_exchange_platform.backend.trading.data.PublicationEntity;
+import book_exchange_platform.backend.trading.data.RequestEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import book_exchange_platform.backend.matches.data.MatchEntity;
+import book_exchange_platform.backend.trading.data.MatchEntity;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public class MatchRepository extends SimpleJpaRepository<MatchEntity, Long> {
+public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public MatchRepository(EntityManager entityManager) {
+    public TradesRepository(EntityManager entityManager) {
         super(JpaEntityInformationSupport.getEntityInformation(MatchEntity.class, entityManager), entityManager);
         this.entityManager = entityManager;
     }

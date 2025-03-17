@@ -2,11 +2,11 @@ package book_exchange_platform.backend.books.utils;
 
 import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.books.data.BookEntity;
-import book_exchange_platform.backend.matches.data.PublicationBookDto;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestBookDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
+import book_exchange_platform.backend.trading.data.PublicationBookDto;
+import book_exchange_platform.backend.trading.data.PublicationDto;
+import book_exchange_platform.backend.trading.data.RequestBookDto;
+import book_exchange_platform.backend.trading.data.RequestDto;
+import book_exchange_platform.backend.trading.utils.TradesEntityToDtoConverter;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -31,10 +31,10 @@ public class BooksEntityToDtoConverter {
                 .courseNumber(bookEntity.getCourseNumber())
                 .coverImageUrl(bookEntity.getCoverImageUrl())
                 .sharedByUsers(bookEntity.getSharedByUsers().stream()
-                        .map(publicationEntity -> MatchesEntityToDtoConverter.toPublicationDto(publicationEntity))
+                        .map(publicationEntity -> TradesEntityToDtoConverter.toPublicationDto(publicationEntity))
                         .collect(Collectors.toList()))
                 .requestedByUsers(bookEntity.getRequestedByUsers().stream()
-                        .map(requestEntity -> MatchesEntityToDtoConverter.toRequestDto(requestEntity))
+                        .map(requestEntity -> TradesEntityToDtoConverter.toRequestDto(requestEntity))
                         .collect(Collectors.toList()))
                 .build();
     }

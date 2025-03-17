@@ -1,4 +1,4 @@
-package book_exchange_platform.backend.matches.data;
+package book_exchange_platform.backend.trading.data;
 
 import book_exchange_platform.backend.books.data.BookEntity;
 import book_exchange_platform.backend.users.data.UserEntity;
@@ -10,14 +10,13 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Builder
 @Getter
 @Setter
-@Table(name = "user_books_requested")
-public class RequestEntity {
+@Builder
+@Table(name = "user_books_shared")
+public class PublicationEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -29,25 +28,30 @@ public class RequestEntity {
     private UserEntity user;
 
     @Enumerated(EnumType.STRING)
+    private SharedBookCondition bookCondition;
+
+    @Enumerated(EnumType.STRING)
     private TradeStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "requested_at")
-    private Date requestedAt;
+    @Column(name = "shared_at")
+    private Date sharedAt;
 
-    public RequestEntity() {
+    public PublicationEntity() {
         this.id = null;
         this.book = null;
         this.user = null;
+        this.bookCondition = null;
         this.status = null;
-        this.requestedAt = null;
+        this.sharedAt = null;
     }
 
-    public RequestEntity(Long id, BookEntity book, UserEntity user, TradeStatus status, Date requestedAt) {
+    public PublicationEntity(Long id, BookEntity book, UserEntity user, SharedBookCondition bookCondition, TradeStatus status,  Date sharedAt) {
         this.id = id;
         this.book = book;
         this.user = user;
+        this.bookCondition = bookCondition;
         this.status = status;
-        this.requestedAt = requestedAt;
+        this.sharedAt = sharedAt;
     }
 }

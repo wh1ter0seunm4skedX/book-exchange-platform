@@ -2,8 +2,6 @@ package book_exchange_platform.backend.books.manager;
 
 
 import book_exchange_platform.backend.books.data.BookDto;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
 
 import java.util.List;
 

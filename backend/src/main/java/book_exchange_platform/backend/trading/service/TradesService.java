@@ -1,15 +1,15 @@
-package book_exchange_platform.backend.matches.service;
+package book_exchange_platform.backend.trading.service;
 
-import book_exchange_platform.backend.matches.data.MatchDto;
-import book_exchange_platform.backend.matches.data.PublicationDto;
-import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.data.TradeDto;
+import book_exchange_platform.backend.trading.data.MatchDto;
+import book_exchange_platform.backend.trading.data.PublicationDto;
+import book_exchange_platform.backend.trading.data.RequestDto;
+import book_exchange_platform.backend.trading.data.TradeDto;
 
 import java.util.List;
 import java.util.Optional;
 
 
-public interface MatchesService {
+public interface TradesService {
 
 
     public List<RequestDto> getAllRequests();

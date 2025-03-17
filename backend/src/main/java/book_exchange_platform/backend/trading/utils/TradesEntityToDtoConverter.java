@@ -1,12 +1,12 @@
-package book_exchange_platform.backend.matches.utils;
+package book_exchange_platform.backend.trading.utils;
 
 import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.books.utils.BooksEntityToDtoConverter;
-import book_exchange_platform.backend.matches.data.*;
+import book_exchange_platform.backend.trading.data.*;
 import book_exchange_platform.backend.users.data.UserDto;
 import book_exchange_platform.backend.users.utils.UsersEntityToDtoConverter;
 
-public class MatchesEntityToDtoConverter {
+public class TradesEntityToDtoConverter {
 
     public static MatchDto toMatchDto(MatchEntity matchEntity) {
         // Use simplified Book DTO without relations

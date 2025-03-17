@@ -2,7 +2,7 @@ package book_exchange_platform.backend.users.data;
 
 import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.*;
-import book_exchange_platform.backend.matches.data.MatchEntity;
+import book_exchange_platform.backend.trading.data.MatchEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

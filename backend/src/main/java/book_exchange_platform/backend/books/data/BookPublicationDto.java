@@ -1,6 +1,6 @@
 package book_exchange_platform.backend.books.data;
 
-import book_exchange_platform.backend.matches.data.SharedBookCondition;
+import book_exchange_platform.backend.trading.data.SharedBookCondition;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

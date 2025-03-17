@@ -1,4 +1,4 @@
-package book_exchange_platform.backend.matches.data;
+package book_exchange_platform.backend.trading.data;
 
 import book_exchange_platform.backend.books.data.BookEntity;
 import jakarta.persistence.*;

@@ -1,10 +1,7 @@
 package book_exchange_platform.backend.users.utils;
 
-import book_exchange_platform.backend.books.data.BookDto;
-import book_exchange_platform.backend.books.data.BookEntity;
-import book_exchange_platform.backend.books.data.BookPublicationDto;
 import book_exchange_platform.backend.books.utils.BooksEntityToDtoConverter;
-import book_exchange_platform.backend.matches.utils.MatchesEntityToDtoConverter;
+import book_exchange_platform.backend.trading.utils.TradesEntityToDtoConverter;
 import book_exchange_platform.backend.users.data.UserBookDto;
 import book_exchange_platform.backend.users.data.UserDto;
 import book_exchange_platform.backend.users.data.UserEntity;
@@ -59,12 +56,12 @@ public class UsersEntityToDtoConverter {
                     Collections.emptyList())
                 .matchesToProvide(userDto.getMatchesToProvide() != null ? 
                     userDto.getMatchesToProvide().stream()
-                        .map(MatchesEntityToDtoConverter::toMatchEntity)
+                        .map(TradesEntityToDtoConverter::toMatchEntity)
                         .collect(Collectors.toList()) : 
                     Collections.emptyList())
                 .matchesToRequest(userDto.getMatchesToRequest() != null ? 
                     userDto.getMatchesToRequest().stream()
-                        .map(MatchesEntityToDtoConverter::toMatchEntity)
+                        .map(TradesEntityToDtoConverter::toMatchEntity)
                         .collect(Collectors.toList()) : 
                     Collections.emptyList())
                 .build();

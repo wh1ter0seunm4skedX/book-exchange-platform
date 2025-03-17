@@ -4,8 +4,7 @@ import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.books.repository.BooksRepository;
 import book_exchange_platform.backend.books.service.BooksService;
 import book_exchange_platform.backend.books.utils.BooksEntityToDtoConverter;
-import book_exchange_platform.backend.matches.data.RequestDto;
-import book_exchange_platform.backend.matches.repository.MatchRepository;
+import book_exchange_platform.backend.trading.data.RequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

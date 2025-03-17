@@ -1,7 +1,7 @@
 package book_exchange_platform.backend.books.data;
 
-import book_exchange_platform.backend.matches.data.PublicationEntity;
-import book_exchange_platform.backend.matches.data.RequestEntity;
+import book_exchange_platform.backend.trading.data.PublicationEntity;
+import book_exchange_platform.backend.trading.data.RequestEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +21,10 @@ public class BookEntity {
     private Long courseNumber;
     private String coverImageUrl;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private List<PublicationEntity> sharedByUsers;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
     private List<RequestEntity> requestedByUsers;
 
     public BookEntity() {
