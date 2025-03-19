@@ -10,4 +10,4 @@ INSERT INTO users (id, full_name, email, password, phone_number, preferred_excha
 (5, 'Yoav Stern', 'yoav.stern@example.com', '$2a$10$xVfAMXE8Qzq8MHm.hB0Fu.HKJKMdVB9VlzWroTHJWYeOTMUvYmQPi', 9723332222, 'Beer Sheva Campus');
 
 -- Note: All passwords are set to 'password123' (hashed with BCrypt)
--- The actual hash value is a placeholder and should be generated properly in a real system
+-- The actual hash value is a placeholder and should be generated properly in our real system 😅
