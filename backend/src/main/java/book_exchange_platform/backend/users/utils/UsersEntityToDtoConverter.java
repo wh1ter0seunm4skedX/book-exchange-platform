@@ -1,13 +1,8 @@
 package book_exchange_platform.backend.users.utils;
 
-import book_exchange_platform.backend.books.utils.BooksEntityToDtoConverter;
-import book_exchange_platform.backend.trading.utils.TradesEntityToDtoConverter;
 import book_exchange_platform.backend.users.data.UserBookDto;
 import book_exchange_platform.backend.users.data.UserDto;
 import book_exchange_platform.backend.users.data.UserEntity;
-
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class UsersEntityToDtoConverter {
 
@@ -19,10 +14,6 @@ public class UsersEntityToDtoConverter {
                 .password(userEntity.getPassword())
                 .phoneNumber(userEntity.getPhoneNumber())
                 .preferredExchangeLocation(userEntity.getPreferredExchangeLocation())
-                .booksForShare(Collections.emptyList()) // Avoid circular reference
-                .requiredBooks(Collections.emptyList()) // Avoid circular reference
-                .matchesToProvide(Collections.emptyList()) // Avoid circular reference
-                .matchesToRequest(Collections.emptyList()) // Avoid circular reference
                 .build();
     }
     
@@ -44,26 +35,6 @@ public class UsersEntityToDtoConverter {
                 .password(userDto.getPassword())
                 .phoneNumber(userDto.getPhoneNumber())
                 .preferredExchangeLocation(userDto.getPreferredExchangeLocation())
-                .booksForShare(userDto.getBooksForShare() != null ? 
-                    userDto.getBooksForShare().stream()
-                        .map(BooksEntityToDtoConverter::toBookEntity)
-                        .collect(Collectors.toList()) : 
-                    Collections.emptyList())
-                .requiredBooks(userDto.getRequiredBooks() != null ? 
-                    userDto.getRequiredBooks().stream()
-                        .map(BooksEntityToDtoConverter::toBookEntity)
-                        .collect(Collectors.toList()) : 
-                    Collections.emptyList())
-                .matchesToProvide(userDto.getMatchesToProvide() != null ? 
-                    userDto.getMatchesToProvide().stream()
-                        .map(TradesEntityToDtoConverter::toMatchEntity)
-                        .collect(Collectors.toList()) : 
-                    Collections.emptyList())
-                .matchesToRequest(userDto.getMatchesToRequest() != null ? 
-                    userDto.getMatchesToRequest().stream()
-                        .map(TradesEntityToDtoConverter::toMatchEntity)
-                        .collect(Collectors.toList()) : 
-                    Collections.emptyList())
                 .build();
     }
 }

@@ -9,7 +9,6 @@ import book_exchange_platform.backend.users.service.UserTradingService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service

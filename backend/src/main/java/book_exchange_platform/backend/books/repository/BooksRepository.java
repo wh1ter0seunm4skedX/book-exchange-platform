@@ -29,11 +29,5 @@ public class BooksRepository extends SimpleJpaRepository<BookEntity, Long> {
                 .getResultList();
     }
 
-//    public List<BookEntity> getUsersRequestedList(Long userId) {
-//        String query = "SELECT b FROM BookEntity b JOIN b.requestedByUsers u WHERE u.id = :userId";
-//        return entityManager.createQuery(query, BookEntity.class)
-//                .setParameter("userId", userId)
-//                .getResultList();
-//    }
 }
 

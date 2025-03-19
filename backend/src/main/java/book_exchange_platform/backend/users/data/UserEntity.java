@@ -26,23 +26,6 @@ public class UserEntity {
     private Long phoneNumber;
     private String preferredExchangeLocation;
 
-    @ManyToMany
-    @JoinTable( name = "user_books_shared",
-                joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private List<BookEntity> booksForShare;
-
-    @ManyToMany
-    @JoinTable( name = "user_books_requested",
-                joinColumns = @JoinColumn(name = "user_id"),
-                inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private List<BookEntity> requiredBooks;
-
-    @OneToMany(mappedBy = "provider")
-    private List<MatchEntity> matchesToProvide;
-
-    @OneToMany(mappedBy = "requester")
-    private List<MatchEntity> matchesToRequest;
 
     public UserEntity() {
         this.id = null;
@@ -51,22 +34,14 @@ public class UserEntity {
         this.password = null;
         this.phoneNumber = null;
         this.preferredExchangeLocation = null;
-        this.booksForShare = null;
-        this.requiredBooks = null;
-        this.matchesToProvide = null;
-        this.matchesToRequest = null;
     }
 
-    public UserEntity(Long id, String fullName, String email, String password, Long phoneNumber, String preferredExchangeLocation, List<BookEntity> booksForShare, List<BookEntity> requiredBooks, List<MatchEntity> matchesToProvide, List<MatchEntity> matchesToRequest) {
+    public UserEntity(Long id, String fullName, String email, String password, Long phoneNumber, String preferredExchangeLocation) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.preferredExchangeLocation = preferredExchangeLocation;
-        this.booksForShare = booksForShare;
-        this.requiredBooks = requiredBooks;
-        this.matchesToProvide = matchesToProvide;
-        this.matchesToRequest = matchesToRequest;
     }
 }

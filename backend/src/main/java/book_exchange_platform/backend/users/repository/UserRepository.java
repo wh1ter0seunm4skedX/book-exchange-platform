@@ -37,19 +37,19 @@ public class UserRepository extends SimpleJpaRepository<UserEntity, Long> {
 //    }
 
 
-    public List<UserEntity> getBookPublishers(Long bookId) {
-        String query = "SELECT u FROM UserEntity u JOIN u.booksForShare b WHERE b.id = :bookId";
-        return entityManager.createQuery(query, UserEntity.class)
-                .setParameter("bookId", bookId)
-                .getResultList();
-    }
+   public List<UserEntity> getBookPublishers(Long bookId) {
+       String query = "SELECT u FROM UserEntity u JOIN PublicationEntity p ON u.id = p.user.id WHERE p.book.id = :bookId";
+       return entityManager.createQuery(query, UserEntity.class)
+               .setParameter("bookId", bookId)
+               .getResultList();
+   }
 
-    public List<UserEntity> getBookRequesters(Long bookId) {
-        String query = "SELECT u FROM UserEntity u JOIN u.requiredBooks b WHERE b.id = :bookId";
-        return entityManager.createQuery(query, UserEntity.class)
-                .setParameter("bookId", bookId)
-                .getResultList();
-    }
+   public List<UserEntity> getBookRequesters(Long bookId) {
+       String query = "SELECT u FROM UserEntity u JOIN RequestEntity r ON u.id = r.user.id WHERE r.book.id = :bookId";
+       return entityManager.createQuery(query, UserEntity.class)
+               .setParameter("bookId", bookId)
+               .getResultList();
+   }
 
 
     public UserEntity findUserByEmail(String email) {

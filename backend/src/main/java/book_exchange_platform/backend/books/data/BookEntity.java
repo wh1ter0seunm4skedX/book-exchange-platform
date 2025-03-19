@@ -21,27 +21,17 @@ public class BookEntity {
     private Long courseNumber;
     private String coverImageUrl;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
-    private List<PublicationEntity> sharedByUsers;
-
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
-    private List<RequestEntity> requestedByUsers;
-
     public BookEntity() {
         this.id = null;
         this.title = null;
         this.courseNumber  = null;
         this.coverImageUrl  = null;
-        this.sharedByUsers = null;
-        this.requestedByUsers = null;
     }
 
-    public BookEntity(Long id, String title, Long courseNumber, String coverImageUrl, List<PublicationEntity> sharedByUsers, List<RequestEntity> requestedByUsers) {
+    public BookEntity(Long id, String title, Long courseNumber, String coverImageUrl) {
         this.id = id;
         this.title = title;
         this.courseNumber = courseNumber;
         this.coverImageUrl = coverImageUrl;
-        this.sharedByUsers = sharedByUsers;
-        this.requestedByUsers = requestedByUsers;
     }
 }
