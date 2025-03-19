@@ -112,10 +112,6 @@ public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
         }
     }
 
-
-
-
-
     private boolean isExists(RequestEntity entity) {
         String query = "SELECT COUNT(r) FROM RequestEntity r WHERE r.book.id = :bookId AND r.user.id = :userId";
         Long count = entityManager.createQuery(query, Long.class)
@@ -124,8 +120,6 @@ public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
                 .getSingleResult();
         return count > 0;
     }
-
-
 
     private boolean isExists(PublicationEntity entity) {
         String query = "SELECT COUNT(r) FROM PublicationEntity r WHERE r.book.id = :bookId AND r.user.id = :userId";

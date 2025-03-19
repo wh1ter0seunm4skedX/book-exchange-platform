@@ -22,12 +22,8 @@ CREATE TABLE IF NOT EXISTS user_books_published (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     book_id BIGINT NOT NULL,
-<<<<<<< Updated upstream
-    published_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-=======
     status ENUM('AVAILABLE', 'MATCHED') DEFAULT 'AVAILABLE',
     shared_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
->>>>>>> Stashed changes
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (book_id) REFERENCES books(id)
 );

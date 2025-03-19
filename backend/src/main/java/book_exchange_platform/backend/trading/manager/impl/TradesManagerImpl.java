@@ -88,9 +88,9 @@ public class TradesManagerImpl implements TradesManager {
 
 
     @Override
-    public MatchDto publishBook(BookDto book, SharedBookCondition bookCondition, Long userId) {
+    public MatchDto publishBook(BookDto book, Long userId) {
         UserDto user = userService.getUser(userId);
-        PublicationDto addedPublication = userTradingService.addPublication(book, bookCondition, user);
+        PublicationDto addedPublication = userTradingService.addPublication(book, user);
         List<RequestDto> allRequests = tradesService.getAllRequests();
         return match(addedPublication, allRequests);
     }
