@@ -28,9 +28,6 @@ public class PublicationEntity {
     private UserEntity user;
 
     @Enumerated(EnumType.STRING)
-    private SharedBookCondition bookCondition;
-
-    @Enumerated(EnumType.STRING)
     private TradeStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,16 +38,14 @@ public class PublicationEntity {
         this.id = null;
         this.book = null;
         this.user = null;
-        this.bookCondition = null;
         this.status = null;
         this.sharedAt = null;
     }
 
-    public PublicationEntity(Long id, BookEntity book, UserEntity user, SharedBookCondition bookCondition, TradeStatus status,  Date sharedAt) {
+    public PublicationEntity(Long id, BookEntity book, UserEntity user, TradeStatus status, Date sharedAt) {
         this.id = id;
         this.book = book;
         this.user = user;
-        this.bookCondition = bookCondition;
         this.status = status;
         this.sharedAt = sharedAt;
     }

@@ -48,7 +48,6 @@ public class TradesEntityToDtoConverter {
                 .id(publicationEntity.getId())
                 .book(bookDto)
                 .user(userDto)
-                .bookCondition(publicationEntity.getBookCondition())
                 .status(publicationEntity.getStatus())
                 .date(publicationEntity.getSharedAt())
                 .build();
@@ -59,7 +58,6 @@ public class TradesEntityToDtoConverter {
                 .id(publicationDto.getId())
                 .book(BooksEntityToDtoConverter.toBookEntity(publicationDto.getBook()))
                 .user(UsersEntityToDtoConverter.toUserEntity(publicationDto.getUser()))
-                .bookCondition(publicationDto.getBookCondition())
                 .status(publicationDto.getStatus())
                 .sharedAt(publicationDto.getDate())
                 .build();
@@ -97,7 +95,6 @@ public class TradesEntityToDtoConverter {
                 .bookId(publicationEntity.getBook().getId())
                 .bookTitle(publicationEntity.getBook().getTitle())
                 .user(UsersEntityToDtoConverter.toUserDto(publicationEntity.getUser()))
-                .bookCondition(publicationEntity.getBookCondition())
                 .status(publicationEntity.getStatus())
                 .date(publicationEntity.getSharedAt())
                 .build();

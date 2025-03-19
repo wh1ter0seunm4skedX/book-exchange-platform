@@ -16,7 +16,6 @@ public class PublicationBookDto implements TradeDto {
     private Long bookId;
     private String bookTitle;
     private UserDto user;
-    private SharedBookCondition bookCondition;
     private TradeStatus status;
     private Date date;
     
