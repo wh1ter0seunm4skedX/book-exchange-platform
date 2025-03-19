@@ -1,7 +1,5 @@
--- Use the book_exchange database
 USE book_exchange;
 
--- Insert sample users
 INSERT INTO users (id, full_name, email, password, phone_number, preferred_exchange_location) VALUES
 (1, 'Tal Cohen', 'tal.cohen@example.com', '$2a$10$xVfAMXE8Qzq8MHm.hB0Fu.HKJKMdVB9VlzWroTHJWYeOTMUvYmQPi', 9721234567, 'Raanana Campus'),
 (2, 'Noa Levi', 'noa.levi@example.com', '$2a$10$xVfAMXE8Qzq8MHm.hB0Fu.HKJKMdVB9VlzWroTHJWYeOTMUvYmQPi', 9729876543, 'Tel Aviv Campus'),

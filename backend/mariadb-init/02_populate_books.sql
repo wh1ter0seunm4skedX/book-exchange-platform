@@ -1,7 +1,5 @@
--- Use the book_exchange database
 USE book_exchange;
 
--- Insert Computer Science books from the Open University of Israel
 INSERT INTO books (id, title, course_number, cover_image_url) VALUES
 (1, 'Introduction to Computer Science Using Java', 20441, 'https://www.openu.ac.il/courses/20441.htm'),
 (2, 'Data Structures and Introduction to Algorithms', 20407, 'https://www.openu.ac.il/courses/20407.htm'),
