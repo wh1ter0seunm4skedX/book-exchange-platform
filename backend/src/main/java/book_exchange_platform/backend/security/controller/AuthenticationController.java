@@ -42,20 +42,6 @@ public class AuthenticationController {
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
         
-//        // Initialize empty lists to avoid NullPointerException
-//        if (user.getBooksForShare() == null) {
-//            user.setBooksForShare(new ArrayList<>());
-//        }
-//        if (user.getRequiredBooks() == null) {
-//            user.setRequiredBooks(new ArrayList<>());
-//        }
-//        if (user.getMatchesToProvide() == null) {
-//            user.setMatchesToProvide(new ArrayList<>());
-//        }
-//        if (user.getMatchesToRequest() == null) {
-//            user.setMatchesToRequest(new ArrayList<>());
-//        }
-        
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserDto savedUser = userManager.addUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);

@@ -14,7 +14,7 @@ public interface TradesManager {
 
     public List<MatchDto> getUserMatches(Long userId);
 
-    public MatchDto unMatch(MatchDto match);
+    public void unMatch(MatchDto match);
 
     public MatchDto completeMatch(MatchDto match);
 

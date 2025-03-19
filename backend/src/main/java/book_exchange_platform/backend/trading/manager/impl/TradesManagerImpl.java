@@ -34,7 +34,7 @@ public class TradesManagerImpl implements TradesManager {
     }
 
     @Override
-    public MatchDto unMatch(MatchDto match) {
+    public void unMatch(MatchDto match) {
         match.setStatus(MatchStatus.CANCELLED);
         tradesService.updateMatch(match);
         RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
@@ -45,7 +45,6 @@ public class TradesManagerImpl implements TradesManager {
         userTradingService.updatePublication(matchedPublication);
         List<PublicationDto> allPublications = tradesService.getAllPublications();
         allPublications.remove(matchedPublication);
-        return match(matchedRequest, allPublications);
     }
 
     @Override

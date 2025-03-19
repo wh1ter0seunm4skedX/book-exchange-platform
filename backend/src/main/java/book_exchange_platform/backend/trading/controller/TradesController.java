@@ -26,6 +26,15 @@ public class TradesController {
         return tradesManager.getUserMatches(userId);
     }
 
+    @PostMapping("/cancel_match")
+    public void cancelMatch(@RequestBody MatchDto match) {tradesManager.unMatch(match);}
+
+    @PostMapping("/confirm_match")
+    public MatchDto confirmMatch(@RequestBody MatchDto match) {
+        return tradesManager.completeMatch(match);
+    }
+
+
     @GetMapping("/{userId}/request")
     public List<RequestDto> getUserRequests(@PathVariable Long userId) {
         return tradesManager.getUserRequests(userId);
@@ -45,7 +54,6 @@ public class TradesController {
     public List<PublicationDto> getUserPublications(@PathVariable Long userId) {
         return tradesManager.getUserPublications(userId);
     }
-
 
     @PostMapping("/{userId}/publish")
     public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody PublicationDto bookPublication) {
