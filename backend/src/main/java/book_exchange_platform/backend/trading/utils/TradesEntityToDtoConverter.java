@@ -48,9 +48,8 @@ public class TradesEntityToDtoConverter {
                 .id(publicationEntity.getId())
                 .book(bookDto)
                 .user(userDto)
-                .bookCondition(publicationEntity.getBookCondition())
                 .status(publicationEntity.getStatus())
-                .date(publicationEntity.getSharedAt())
+                .date(publicationEntity.getPublishedAt())
                 .build();
     }
 
@@ -59,9 +58,8 @@ public class TradesEntityToDtoConverter {
                 .id(publicationDto.getId())
                 .book(BooksEntityToDtoConverter.toBookEntity(publicationDto.getBook()))
                 .user(UsersEntityToDtoConverter.toUserEntity(publicationDto.getUser()))
-                .bookCondition(publicationDto.getBookCondition())
                 .status(publicationDto.getStatus())
-                .sharedAt(publicationDto.getDate())
+                .publishedAt(publicationDto.getDate())
                 .build();
     }
 
@@ -91,26 +89,4 @@ public class TradesEntityToDtoConverter {
                 .build();
     }
 
-    public static PublicationBookDto toPublicationBookDto(PublicationEntity publicationEntity) {
-        return PublicationBookDto.builder()
-                .id(publicationEntity.getId())
-                .bookId(publicationEntity.getBook().getId())
-                .bookTitle(publicationEntity.getBook().getTitle())
-                .user(UsersEntityToDtoConverter.toUserDto(publicationEntity.getUser()))
-                .bookCondition(publicationEntity.getBookCondition())
-                .status(publicationEntity.getStatus())
-                .date(publicationEntity.getSharedAt())
-                .build();
-    }
-
-    public static RequestBookDto toRequestBookDto(RequestEntity requestEntity) {
-        return RequestBookDto.builder()
-                .id(requestEntity.getId())
-                .bookId(requestEntity.getBook().getId())
-                .bookTitle(requestEntity.getBook().getTitle())
-                .user(UsersEntityToDtoConverter.toUserDto(requestEntity.getUser()))
-                .status(requestEntity.getStatus())
-                .date(requestEntity.getRequestedAt())
-                .build();
-    }
 }

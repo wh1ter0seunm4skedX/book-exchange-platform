@@ -1,7 +1,6 @@
 package book_exchange_platform.backend.trading.controller;
 
 import book_exchange_platform.backend.books.data.BookDto;
-import book_exchange_platform.backend.books.data.BookPublicationDto;
 import book_exchange_platform.backend.trading.data.MatchDto;
 import book_exchange_platform.backend.trading.data.PublicationDto;
 import book_exchange_platform.backend.trading.data.RequestDto;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("book_exchange_platform/matches")
+@RequestMapping("book_exchange_platform/trades")
 @Slf4j
 public class TradesController {
 
@@ -49,7 +48,7 @@ public class TradesController {
 
 
     @PostMapping("/{userId}/publish")
-    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody BookPublicationDto bookPublication) {
+    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody PublicationDto bookPublication) {
         // Using the methods we added to the BookPublicationDto class
         return tradesManager.publishBook(bookPublication.getBook(), bookPublication.getBookCondition(), userId);
     }

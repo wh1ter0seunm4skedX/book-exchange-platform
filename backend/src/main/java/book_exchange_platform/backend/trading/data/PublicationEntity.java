@@ -13,7 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-@Table(name = "user_books_shared")
+@Table(name = "user_books_published")
 public class PublicationEntity {
 
     @Id
@@ -28,30 +28,25 @@ public class PublicationEntity {
     private UserEntity user;
 
     @Enumerated(EnumType.STRING)
-    private SharedBookCondition bookCondition;
-
-    @Enumerated(EnumType.STRING)
     private TradeStatus status;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "shared_at")
-    private Date sharedAt;
+    @Column(name = "published_at")
+    private Date publishedAt;
 
     public PublicationEntity() {
         this.id = null;
         this.book = null;
         this.user = null;
-        this.bookCondition = null;
         this.status = null;
-        this.sharedAt = null;
+        this.publishedAt = null;
     }
 
-    public PublicationEntity(Long id, BookEntity book, UserEntity user, SharedBookCondition bookCondition, TradeStatus status,  Date sharedAt) {
+    public PublicationEntity(Long id, BookEntity book, UserEntity user, TradeStatus status,  Date publishedAt) {
         this.id = id;
         this.book = book;
         this.user = user;
-        this.bookCondition = bookCondition;
         this.status = status;
-        this.sharedAt = sharedAt;
+        this.publishedAt = publishedAt;
     }
 }
