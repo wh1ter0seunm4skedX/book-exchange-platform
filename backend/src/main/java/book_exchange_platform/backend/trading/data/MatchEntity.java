@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 @Builder
 @Getter
-@Table(name = "matches")
+@Table(name = "trading")
 public class MatchEntity {
 
     @Id
