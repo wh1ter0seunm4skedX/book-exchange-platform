@@ -29,15 +29,9 @@ public interface UserTradingService {
 
     public List<BookDto> getUserPublishedBooks(Long userId);
 
-    public PublicationDto addPublication(BookDto bookDto, SharedBookCondition bookCondition, UserDto userDto);
+    public PublicationDto addPublication(BookDto bookDto, UserDto userDto);
 
     public void deletePublication(PublicationDto publicationDto);
 
     public PublicationDto updatePublication(PublicationDto publicationDto);
-
-
-
-
-
 }
-

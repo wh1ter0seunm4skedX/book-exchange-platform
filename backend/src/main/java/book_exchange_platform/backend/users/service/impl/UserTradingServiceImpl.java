@@ -83,12 +83,11 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
     @Override
-    public PublicationDto addPublication(BookDto bookDto, SharedBookCondition bookCondition, UserDto userDto) {
+    public PublicationDto addPublication(BookDto bookDto, UserDto userDto) {
         PublicationDto publicationDto = PublicationDto.builder()
                 .user(userDto)
                 .book(bookDto)
                 .status(TradeStatus.AVAILABLE)
-                .bookCondition(bookCondition)
                 .build();
         if(isPublicationAlreadyExists(publicationDto)){
             throw new IllegalArgumentException("Publication already exists");
@@ -121,4 +120,3 @@ public class UserTradingServiceImpl implements UserTradingService {
     }
 
 }
-
