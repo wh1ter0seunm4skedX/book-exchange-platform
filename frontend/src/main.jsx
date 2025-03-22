@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 
+document.documentElement.classList.add('light');
+document.documentElement.classList.remove('dark');
+
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
