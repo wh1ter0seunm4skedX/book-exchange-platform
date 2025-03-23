@@ -58,11 +58,12 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) =>
     
     onPublish({
       bookId: parseInt(formData.bookId, 10),
-      condition: formData.condition,
-      notes: formData.notes,
       title: currentBook.title,
+      courseNumber: currentBook.courseNumber,
       author: currentBook.author,
-      courseNumber: currentBook.courseNumber
+      coverImage: currentBook.coverImage,
+      condition: formData.condition,
+      notes: formData.notes
     });
   };
 
@@ -75,16 +76,12 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) =>
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-        <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-          Publish a Book
-        </h3>
+    <Modal isOpen={isOpen} onClose={onClose} title="Publish Book">
         <form onSubmit={handleSubmit} className="space-y-4">
+          <label htmlFor="bookId" className="block text-sm font-medium text-gray-700">
+            Select Book to Publish
+          </label>
           <div>
-            <label htmlFor="bookId" className="block text-sm font-medium text-gray-700">
-              Select Book
-            </label>
             {loading ? (
               <div className="mt-2 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
@@ -119,38 +116,6 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) =>
             </div>
           )}
 
-          <div>
-            <label htmlFor="condition" className="block text-sm font-medium text-gray-700">
-              Condition
-            </label>
-            <select
-              name="condition"
-              id="condition"
-              value={formData.condition}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              required
-            >
-              <option value="Like New">Like New</option>
-              <option value="Very Good">Very Good</option>
-              <option value="Good">Good</option>
-              <option value="Fair">Fair</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-              Notes
-            </label>
-            <textarea
-              name="notes"
-              id="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="Add any additional details about the book's condition or other notes..."
-            />
-          </div>
           <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
             <button
               type="submit"
@@ -168,7 +133,7 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) =>
             </button>
           </div>
         </form>
-      </div>
+
     </Modal>
   );
 };

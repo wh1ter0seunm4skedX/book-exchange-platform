@@ -10,14 +10,22 @@ const formatDate = (dateString) => {
 };
 
 const RequestedBookCard = ({ book, requestDate }) => {
+  if (!book) {
+    return (
+      <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden p-4">
+        <p className="text-gray-500">Book data not available</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden transform transition-all duration-200 hover:shadow-md">
       <div className="flex h-32">
         {/* Book Cover */}
         <div className="flex-shrink-0 w-24 bg-gray-200 overflow-hidden">
           <img
-            src={book.coverImage}
-            alt={book.title}
+            src={book.coverImage || '/placeholder-book.jpg'}
+            alt={book.title || 'Book cover'}
             className="w-full h-full object-cover"
           />
         </div>
@@ -27,10 +35,10 @@ const RequestedBookCard = ({ book, requestDate }) => {
           <div className="flex flex-col h-full">
             <div>
               <h3 className="text-sm font-medium text-gray-900 truncate">
-                {book.title}
+                {book.title || 'Untitled Book'}
               </h3>
               <p className="text-xs text-gray-500 mt-1">
-                Course: {book.courseNumber}
+                Course: {book.courseNumber || 'N/A'}
               </p>
               <p className="text-xs text-gray-500 mt-1">
                 Requested on: {formatDate(requestDate)}

@@ -50,10 +50,12 @@ const RequestBookModal = ({ isOpen, onClose, onRequest }) => {
     try {
       await onRequest({
         bookId: parseInt(formData.bookId, 10),
+        title: selectedBook.title,
+        courseNumber: selectedBook.courseNumber,
+        author: selectedBook.author,
         urgency: formData.urgency,
         notes: formData.notes,
-        title: selectedBook.title,
-        courseNumber: selectedBook.courseNumber
+        date: new Date().toISOString()
       });
       onClose();
     } catch (error) {
@@ -82,7 +84,7 @@ const RequestBookModal = ({ isOpen, onClose, onRequest }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={resetForm} title="Request Book">
+    <Modal isOpen={isOpen} onClose={onClose} title="Request Book">
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Book Selection */}
         <div>
@@ -125,40 +127,6 @@ const RequestBookModal = ({ isOpen, onClose, onRequest }) => {
             </div>
           </div>
         )}
-
-        {/* Request Urgency */}
-        <div>
-          <label htmlFor="urgency" className="block text-sm font-medium text-gray-700">
-            Request Urgency
-          </label>
-          <select
-            id="urgency"
-            name="urgency"
-            value={formData.urgency}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-          >
-            <option value="low">Low - No rush</option>
-            <option value="medium">Medium - Need within a few weeks</option>
-            <option value="high">High - Need as soon as possible</option>
-          </select>
-        </div>
-
-        {/* Additional Notes */}
-        <div>
-          <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-            Additional Notes
-          </label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows="3"
-            value={formData.notes}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            placeholder="Any additional information about your request..."
-          />
-        </div>
 
         {/* Action Buttons */}
         <div className="mt-5 sm:mt-6 flex justify-end space-x-3">
