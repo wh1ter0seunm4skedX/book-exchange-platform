@@ -1,0 +1,484 @@
+{
+	"info": {
+		"_postman_id": "d8e7f6c5-b4a3-42c1-9de0-f8a7b6c5d4e3",
+		"name": "BookXChange_v1",
+		"description": "API collection for the Book Exchange Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract and save the JWT token to the environment variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"if (jsonData && jsonData.token) {",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"    console.log(\"Registration successful: JWT token saved to environment variable\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"New User\",\n    \"email\": \"newuser@example.com\",\n    \"password\": \"password123\",\n    \"phoneNumber\": 9721234567,\n    \"preferredExchangeLocation\": \"Main Campus\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "auth", "register"]
+						},
+						"description": "Register a new user account"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Extract and save the JWT token to the environment variable",
+									"var jsonData = pm.response.json();",
+									"",
+									"if (jsonData && jsonData.token) {",
+									"    pm.environment.set(\"jwt_token\", jsonData.token);",
+									"    console.log(\"Login successful: JWT token saved to environment variable\");",
+									"    ",
+									"    // Also save the userId if it's available",
+									"    if (jsonData.userId) {",
+									"        pm.environment.set(\"userId\", jsonData.userId);",
+									"        console.log(\"User ID saved to environment variable: \" + jsonData.userId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"tal.cohen@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "auth", "login"]
+						},
+						"description": "Login with existing credentials and receive a JWT token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Home",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/books/",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "books", ""]
+						},
+						"description": "Books API welcome endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Books",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/books/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "books", "all"]
+						},
+						"description": "Retrieve all books in the system"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Most Wanted Books",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/books/most_wanted",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "books", "most_wanted"]
+						},
+						"description": "Get the most requested books (requires authentication)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/users/all",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "users", "all"]
+						},
+						"description": "Get all users (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "users", "{{userId}}"]
+						},
+						"description": "Get a specific user by ID (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{userId}}\",\n    \"fullName\": \"Updated User Name\",\n    \"email\": \"updated@example.com\",\n    \"phoneNumber\": 9729876543,\n    \"preferredExchangeLocation\": \"Library Building\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/users/update",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "users", "update"]
+						},
+						"description": "Update an existing user (requires authentication)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trading",
+			"item": [
+				{
+					"name": "Get User Matches",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/{{userId}}/match",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "{{userId}}", "match"]
+						},
+						"description": "Get matches for a specific user (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Match",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"providerId\": 1,\n    \"requesterId\": 2,\n    \"bookId\": 1,\n    \"status\": \"PENDING\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/cancel_match",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "cancel_match"]
+						},
+						"description": "Cancel an existing match (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Match",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"providerId\": 1,\n    \"requesterId\": 2,\n    \"bookId\": 1,\n    \"status\": \"PENDING\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/confirm_match",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "confirm_match"]
+						},
+						"description": "Confirm a match (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/{{userId}}/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "{{userId}}", "request"]
+						},
+						"description": "Get book requests for a specific user (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Book Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"title\": \"Test Book\",\n    \"courseNumber\": 101,\n    \"coverImageUrl\": \"http://example.com/cover.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/{{userId}}/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "{{userId}}", "request"]
+						},
+						"description": "Add a new book request (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Request",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1\n    },\n    \"user\": {\n        \"id\": 1\n    },\n    \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/request",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "request"]
+						},
+						"description": "Delete a book request (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Publications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/{{userId}}/publication",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "{{userId}}", "publication"]
+						},
+						"description": "Get published books for a specific user (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Book Publication",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"book\": {\n        \"id\": 1,\n        \"title\": \"Test Book\",\n        \"courseNumber\": 101,\n        \"coverImageUrl\": \"http://example.com/cover.jpg\"\n    },\n    \"bookCondition\": \"GOOD\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/{{userId}}/publish",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "{{userId}}", "publish"]
+						},
+						"description": "Add a new book publication (requires authentication)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Publication",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"book\": {\n        \"id\": 1\n    },\n    \"user\": {\n        \"id\": 1\n    },\n    \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/book_exchange_platform/trades/publication",
+							"host": ["{{baseUrl}}"],
+							"path": ["book_exchange_platform", "trades", "publication"]
+						},
+						"description": "Delete a book publication (requires authentication)"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "1",
+			"type": "string"
+		}
+	]
+}
