@@ -1,5 +1,5 @@
 /**
- * Matches API functions for interacting with the backend
+ * Trades API functions for interacting with the backend
  */
 
 import { apiRequest, getCurrentUserId } from './apiUtils';
@@ -12,7 +12,7 @@ export const matchesApi = {
    */
   getUserMatches: async (userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/matches/${id}/match`);
+    return apiRequest(`/book_exchange_platform/trades/${id}/match`);
   },
 
   /**
@@ -22,7 +22,7 @@ export const matchesApi = {
    */
   getUserRequests: async (userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/matches/${id}/request`);
+    return apiRequest(`/book_exchange_platform/trades/${id}/request`);
   },
 
   /**
@@ -33,7 +33,7 @@ export const matchesApi = {
    */
   addBookRequest: async (book, userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/matches/${id}/request`, {
+    return apiRequest(`/book_exchange_platform/trades/${id}/request`, {
       method: 'POST',
       body: JSON.stringify(book)
     });
@@ -45,7 +45,7 @@ export const matchesApi = {
    * @returns {Promise<Object>} Updated request
    */
   updateRequest: async (requestData) => {
-    return apiRequest('/book_exchange_platform/matches/update_request', {
+    return apiRequest('/book_exchange_platform/trades/update_request', {
       method: 'POST',
       body: JSON.stringify(requestData)
     });
@@ -57,7 +57,7 @@ export const matchesApi = {
    * @returns {Promise<void>}
    */
   deleteRequest: async (requestData) => {
-    return apiRequest('/book_exchange_platform/matches/request', {
+    return apiRequest('/book_exchange_platform/trades/request', {
       method: 'DELETE',
       body: JSON.stringify(requestData)
     });
@@ -70,7 +70,7 @@ export const matchesApi = {
    */
   getUserPublications: async (userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/matches/${id}/publication`);
+    return apiRequest(`/book_exchange_platform/trades/${id}/publication`);
   },
 
   /**
@@ -81,7 +81,7 @@ export const matchesApi = {
    */
   publishBook: async (bookPublication, userId = null) => {
     const id = userId || getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/matches/${id}/publish`, {
+    return apiRequest(`/book_exchange_platform/trades/${id}/publication`, {
       method: 'POST',
       body: JSON.stringify(bookPublication)
     });
@@ -93,7 +93,7 @@ export const matchesApi = {
    * @returns {Promise<Object>} Updated publication
    */
   updatePublication: async (publicationData) => {
-    return apiRequest('/book_exchange_platform/matches/update_publication', {
+    return apiRequest('/book_exchange_platform/trades/update_publication', {
       method: 'POST',
       body: JSON.stringify(publicationData)
     });
@@ -105,7 +105,7 @@ export const matchesApi = {
    * @returns {Promise<void>}
    */
   deletePublication: async (publicationData) => {
-    return apiRequest('/book_exchange_platform/matches/publication', {
+    return apiRequest('/book_exchange_platform/trades/publication', {
       method: 'DELETE',
       body: JSON.stringify(publicationData)
     });
@@ -117,8 +117,12 @@ export const matchesApi = {
    * @returns {Promise<Object>} Updated match
    */
   acceptMatch: async (matchId) => {
-    return apiRequest(`/book_exchange_platform/matches/${matchId}/accept`, {
-      method: 'POST'
+    return apiRequest(`/book_exchange_platform/trades/confirm_match`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: matchId,
+        status: 'ACCEPTED'
+      })
     });
   },
 
@@ -128,8 +132,12 @@ export const matchesApi = {
    * @returns {Promise<Object>} Updated match
    */
   declineMatch: async (matchId) => {
-    return apiRequest(`/book_exchange_platform/matches/${matchId}/decline`, {
-      method: 'POST'
+    return apiRequest(`/book_exchange_platform/trades/cancel_match`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: matchId,
+        status: 'DECLINED'
+      })
     });
   },
 
@@ -139,6 +147,6 @@ export const matchesApi = {
    * @returns {Promise<Object>} Match details
    */
   getMatchDetails: async (matchId) => {
-    return apiRequest(`/book_exchange_platform/matches/${matchId}`);
+    return apiRequest(`/book_exchange_platform/trades/match/${matchId}`);
   }
 };
