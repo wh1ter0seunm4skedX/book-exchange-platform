@@ -34,15 +34,5 @@ public class BooksController {
         return booksManager.getMostWantedBooks();
     }
 
-//    @GetMapping("/{userId}/user_wanted")
-//    public List<BookDto> getUserWanted(@PathVariable Long userId) {
-//        return booksManager.getUserRequests(userId);
-//    }
-//
-//    @GetMapping("/{userId}/user_published")
-//    public List<BookDto> getUserPublished(@PathVariable Long userId) {
-//        return booksManager.getUserPublications(userId);
-//    }
-
 }
 

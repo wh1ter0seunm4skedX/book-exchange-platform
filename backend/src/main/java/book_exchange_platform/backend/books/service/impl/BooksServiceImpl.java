@@ -28,22 +28,28 @@ public class BooksServiceImpl implements BooksService {
     @Override
     public List<BookDto> getMostWantedBooks(List<RequestDto> requests, Integer amount) {
 
-        Map<BookDto, Integer> bookRequestsCount = new HashMap<>();
+        Map<Long, Integer> bookRequestsCount = new HashMap<>();
         requests.forEach(request -> {
-            BookDto book = request.getBook();
-            bookRequestsCount.put(book, bookRequestsCount.getOrDefault(book, 0) + 1);
+            Long bookId = request.getBook().getId();
+            bookRequestsCount.put(bookId, bookRequestsCount.getOrDefault(bookId, 0) + 1);
         });
 
-        PriorityQueue<Map.Entry<BookDto, Integer>> topBooks =
+        PriorityQueue<Map.Entry<Long, Integer>> topBooks =
                 new PriorityQueue<>(Map.Entry.comparingByValue(Comparator.reverseOrder())
         );
         topBooks.addAll(bookRequestsCount.entrySet());
 
         List<BookDto> mostWantedBooks = new ArrayList<>();
         for(int i = 0; i < amount && !topBooks.isEmpty(); i++) {
-            mostWantedBooks.add(topBooks.poll().getKey());
+            mostWantedBooks.add(getBook(topBooks.poll().getKey()));
         }
         return mostWantedBooks;
+    }
+
+
+    @Override
+    public BookDto getBook(Long bookId){
+        return BooksEntityToDtoConverter.toBookDto(booksRepository.getBook(bookId));
     }
 }
 
