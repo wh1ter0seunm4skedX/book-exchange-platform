@@ -26,14 +26,13 @@ public class TradesController {
         return tradesManager.getUserMatches(userId);
     }
 
-    @PostMapping("/cancel_match")
-    public void cancelMatch(@RequestBody MatchDto match) {tradesManager.unMatch(match);}
+    @PostMapping("/{matchId}/cancel_match")
+    public void cancelMatch(@PathVariable Long matchId) {tradesManager.unMatch(matchId);}
 
-    @PostMapping("/confirm_match")
-    public MatchDto confirmMatch(@RequestBody MatchDto match) {
-        return tradesManager.completeMatch(match);
+    @PostMapping("/{matchId}/confirm_match")
+    public MatchDto confirmMatch(@PathVariable Long matchId) {
+        return tradesManager.completeMatch(matchId);
     }
-
 
     @GetMapping("/{userId}/request")
     public List<RequestDto> getUserRequests(@PathVariable Long userId) {

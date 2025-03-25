@@ -31,6 +31,11 @@ public class TradesServiceImpl implements TradesService {
     }
 
     @Override
+    public MatchDto getMatch(Long matchId) {
+        return TradesEntityToDtoConverter.toMatchDto(tradesRepository.getMatchById(matchId));
+    }
+
+    @Override
     public MatchDto addMatch(MatchDto matchDto) {
         return TradesEntityToDtoConverter.toMatchDto(tradesRepository.save(TradesEntityToDtoConverter.toMatchEntity(matchDto)));
     }

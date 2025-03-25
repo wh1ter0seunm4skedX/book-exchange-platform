@@ -12,9 +12,9 @@ public interface TradesManager {
 
     public List<MatchDto> getUserMatches(Long userId);
 
-    public void unMatch(MatchDto match);
+    public void unMatch(Long matchId);
 
-    public MatchDto completeMatch(MatchDto match);
+    public MatchDto completeMatch(Long matchId);
 
     public List<RequestDto> getUserRequests(Long userId);
 

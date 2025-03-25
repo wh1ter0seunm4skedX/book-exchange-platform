@@ -34,7 +34,8 @@ public class TradesManagerImpl implements TradesManager {
     }
 
     @Override
-    public void unMatch(MatchDto match) {
+    public void unMatch(Long matchId) {
+        MatchDto match = tradesService.getMatch(matchId);
         match.setStatus(MatchStatus.CANCELLED);
         tradesService.updateMatch(match);
         RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
@@ -48,10 +49,15 @@ public class TradesManagerImpl implements TradesManager {
     }
 
     @Override
-    public MatchDto completeMatch(MatchDto match) {
+    public MatchDto completeMatch(Long matchId) {
+        MatchDto match = tradesService.getMatch(matchId);
         RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
         PublicationDto matchedPublication = userTradingService.getPublication(match.getProvider().getId(), match.getBook().getId());
+        matchedRequest.setStatus(TradeStatus.AVAILABLE);
+        userTradingService.updateRequest(matchedRequest);
         userTradingService.deleteRequest(matchedRequest);
+        matchedPublication.setStatus(TradeStatus.AVAILABLE);
+        userTradingService.updatePublication(matchedPublication);
         userTradingService.deletePublication(matchedPublication);
         match.setStatus(MatchStatus.COMPLETED);
         return tradesService.updateMatch(match);

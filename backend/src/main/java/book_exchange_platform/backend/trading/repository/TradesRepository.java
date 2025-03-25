@@ -29,6 +29,13 @@ public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
         return entityManager.createQuery(query, MatchEntity.class).getResultList();
     }
 
+    public MatchEntity getMatchById(Long matchId) {
+        String query = "SELECT m FROM MatchEntity m WHERE m.id = :matchId";
+        return entityManager.createQuery(query, MatchEntity.class)
+                .setParameter("matchId", matchId)
+                .getSingleResult();
+    }
+
     public List<MatchEntity> getAllUserMatches(Long userId) {
         String query = "SELECT m FROM MatchEntity m WHERE (m.provider.id = :userId OR m.requester.id = :userId)";
         return entityManager.createQuery(query, MatchEntity.class)
