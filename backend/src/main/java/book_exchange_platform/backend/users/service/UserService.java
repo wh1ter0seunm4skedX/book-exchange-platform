@@ -19,5 +19,7 @@ public interface UserService {
 
     public List<UserDto> getAll();
 
+    public boolean existsByEmail(String email);
+
 }
 

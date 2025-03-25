@@ -48,5 +48,10 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAll() {
         return userRepository.findAll().stream().map(userEntity -> UsersEntityToDtoConverter.toUserDto(userEntity)).toList();
     }
+
+    @Override
+    public boolean existsByEmail(String email){
+        return userRepository.existsByEmail(email);
+    }
 }
 
