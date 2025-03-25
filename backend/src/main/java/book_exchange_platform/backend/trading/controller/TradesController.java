@@ -55,10 +55,10 @@ public class TradesController {
         return tradesManager.getUserPublications(userId);
     }
 
-    @PostMapping("/{userId}/publish")
-    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody PublicationDto bookPublication) {
+    @PostMapping("/{userId}/publication")
+    public MatchDto addUserPublication(@PathVariable Long userId, @RequestBody BookDto book) {
         // Using the methods we added to the BookPublicationDto class
-        return tradesManager.publishBook(bookPublication.getBook(), userId);
+        return tradesManager.publishBook(book, userId);
     }
 
     @DeleteMapping("/publication")
