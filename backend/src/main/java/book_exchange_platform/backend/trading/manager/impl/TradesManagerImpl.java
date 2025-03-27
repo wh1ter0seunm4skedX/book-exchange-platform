@@ -45,7 +45,11 @@ public class TradesManagerImpl implements TradesManager {
         matchedPublication.setStatus(TradeStatus.AVAILABLE);
         userTradingService.updatePublication(matchedPublication);
         List<PublicationDto> allPublications = tradesService.getAllPublications();
-        allPublications.remove(matchedPublication);
+        allPublications.removeIf(publication -> publication.getId().equals(matchedPublication.getId()));
+        match(matchedRequest, allPublications);
+        List<RequestDto> allRequests = tradesService.getAllRequests();
+        allRequests.removeIf(request -> request.getId().equals(matchedRequest.getId()));
+        match(matchedPublication, allRequests);
     }
 
     @Override

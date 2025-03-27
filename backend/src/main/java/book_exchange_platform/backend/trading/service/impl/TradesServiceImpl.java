@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -22,12 +23,12 @@ public class TradesServiceImpl implements TradesService {
 
     @Override
     public List<RequestDto> getAllRequests() {
-        return tradesRepository.getAllRequests().stream().map(TradesEntityToDtoConverter::toRequestDto).toList();
+        return tradesRepository.getAllRequests().stream().map(TradesEntityToDtoConverter::toRequestDto).collect(Collectors.toList());
     }
 
     @Override
     public List<PublicationDto> getAllPublications() {
-        return tradesRepository.getAllPublications().stream().map(TradesEntityToDtoConverter::toPublicationDto).toList();
+        return tradesRepository.getAllPublications().stream().map(TradesEntityToDtoConverter::toPublicationDto).collect(Collectors.toList());
     }
 
     @Override
