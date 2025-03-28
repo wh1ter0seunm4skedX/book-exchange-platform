@@ -16,6 +16,8 @@ public interface TradesService {
 
     public List<PublicationDto> getAllPublications();
 
+    public List<MatchDto> getAllMatches();
+
     public MatchDto getMatch(Long matchId);
 
     public MatchDto addMatch(MatchDto match);

@@ -32,6 +32,11 @@ public class TradesServiceImpl implements TradesService {
     }
 
     @Override
+    public List<MatchDto> getAllMatches(){
+        return tradesRepository.getAllMatches().stream().map(TradesEntityToDtoConverter::toMatchDto).collect(Collectors.toList());
+    }
+
+    @Override
     public MatchDto getMatch(Long matchId) {
         return TradesEntityToDtoConverter.toMatchDto(tradesRepository.getMatchById(matchId));
     }
@@ -89,7 +94,7 @@ public class TradesServiceImpl implements TradesService {
                                     .book(bestFitTrade.getBook())
                                     .provider(bestFitTrade.getUser())
                                     .requester(incomingTrade.getUser())
-                                    .status(MatchStatus.PENDING)
+                                    .status(MatchStatus.NEW)
                                     .build());
         }
         PublicationDto incomingPublication = (PublicationDto) incomingTrade;
@@ -103,7 +108,7 @@ public class TradesServiceImpl implements TradesService {
                                 .book(bestFitTrade.getBook())
                                 .provider(incomingTrade.getUser())
                                 .requester(bestFitTrade.getUser())
-                                .status(MatchStatus.PENDING)
+                                .status(MatchStatus.NEW)
                                 .build());
     }
 }

@@ -2,6 +2,7 @@ package book_exchange_platform.backend.trading.controller;
 
 import book_exchange_platform.backend.books.data.BookDto;
 import book_exchange_platform.backend.trading.data.MatchDto;
+import book_exchange_platform.backend.trading.data.MatchStatus;
 import book_exchange_platform.backend.trading.data.PublicationDto;
 import book_exchange_platform.backend.trading.data.RequestDto;
 import book_exchange_platform.backend.trading.manager.TradesManager;
@@ -27,11 +28,16 @@ public class TradesController {
     }
 
     @PostMapping("/{matchId}/cancel_match")
-    public void cancelMatch(@PathVariable Long matchId) {tradesManager.unMatch(matchId);}
+    public void cancelMatch(@PathVariable Long matchId) {tradesManager.unMatch(matchId, MatchStatus.CANCELLED);}
+
+    @PostMapping("/{matchId}/complete_match")
+    public MatchDto completeMatch(@PathVariable Long matchId) {
+        return tradesManager.completeMatch(matchId);
+    }
 
     @PostMapping("/{matchId}/confirm_match")
     public MatchDto confirmMatch(@PathVariable Long matchId) {
-        return tradesManager.completeMatch(matchId);
+        return tradesManager.confirmMatch(matchId);
     }
 
     @GetMapping("/{userId}/request")

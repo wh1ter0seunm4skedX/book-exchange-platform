@@ -9,6 +9,7 @@ import book_exchange_platform.backend.users.service.UserService;
 import book_exchange_platform.backend.users.service.UserTradingService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,13 +31,19 @@ public class TradesManagerImpl implements TradesManager {
 
     @Override
     public List<MatchDto> getUserMatches(Long userId) {
+        handleMatchExpirations(getAllMatches());
         return userTradingService.getUserMatches(userId);
     }
 
     @Override
-    public void unMatch(Long matchId) {
+    public List<MatchDto> getAllMatches(){
+        return tradesService.getAllMatches();
+    }
+
+    @Override
+    public void unMatch(Long matchId, MatchStatus reason) {
         MatchDto match = tradesService.getMatch(matchId);
-        match.setStatus(MatchStatus.CANCELLED);
+        match.setStatus(reason);
         tradesService.updateMatch(match);
         RequestDto matchedRequest = userTradingService.getRequest(match.getRequester().getId(), match.getBook().getId());
         matchedRequest.setStatus(TradeStatus.AVAILABLE);
@@ -67,8 +74,20 @@ public class TradesManagerImpl implements TradesManager {
         return tradesService.updateMatch(match);
     }
 
+    public MatchDto confirmMatch(Long matchId){
+        MatchDto match = tradesService.getMatch(matchId);
+        match.setStatus(MatchStatus.PENDING);
+        return tradesService.updateMatch(match);
+    }
 
-//    Create invalidation script
+
+    @Override
+    public void handleMatchExpirations(List<MatchDto> matches){
+        matches.forEach((match) -> {
+            if (match.getExpirationDate().before(new Date()) && (match.getStatus().equals(MatchStatus.PENDING) || match.getStatus().equals(MatchStatus.NEW))) {
+                unMatch(match.getId(), MatchStatus.EXPIRED);
+            }});
+    }
 
 
     @Override
