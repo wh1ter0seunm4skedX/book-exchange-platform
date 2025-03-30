@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../components/Modal';
 import { booksApi } from '../api/books';
 
-const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) => {
+const PublishBookModal = ({ isOpen, onClose, onPublish, initialBookData = null }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -21,14 +21,14 @@ const PublishBookModal = ({ isOpen, onClose, onPublish, initialBook = null }) =>
 
   // Update form when initialBook changes
   useEffect(() => {
-    if (initialBook) {
+    if (initialBookData) {
       setFormData(prev => ({
         ...prev,
-        bookId: initialBook.id
+        bookId: initialBookData.id
       }));
-      setCurrentBook(initialBook);
+      setCurrentBook(initialBookData);
     }
-  }, [initialBook]);
+  }, [initialBookData]);
 
   // Update currentBook when bookId changes
   useEffect(() => {

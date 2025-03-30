@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [initialBookForPublish, setInitialBookForPublish] = useState(null); // State for pre-selected book
   const [activeTab, setActiveTab] = useState('matches');
   
   const navigate = useNavigate();
@@ -114,6 +115,7 @@ const Dashboard = () => {
     setShowPublishModal(false);
     setShowRequestModal(false);
     setShowMatchModal(false);
+    setInitialBookForPublish(null); // Reset selected book on close
     
     if (refreshData) {
       fetchDashboardData();
@@ -310,10 +312,13 @@ const Dashboard = () => {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => setShowPublishModal(true)}
+                        onClick={() => {
+                          setInitialBookForPublish(book); // Set the selected book
+                          setShowPublishModal(true);      // Open the modal
+                        }}
                         className="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                       >
-                        Publish Book
+                        I have this one!
                       </motion.button>
                     </div>
                   </motion.div>
@@ -335,9 +340,10 @@ const Dashboard = () => {
       {/* Modals */}
       <AnimatePresence>
         {showPublishModal && (
-          <PublishBookModal 
+          <PublishBookModal
             isOpen={showPublishModal}
             onClose={() => handleModalClose()}
+            initialBookData={initialBookForPublish} // Pass the selected book data
             onPublish={handlePublishBook}
           />
         )}
