@@ -292,7 +292,11 @@ const Profile = () => {
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => handleRemovePublication(publication)}
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) {
+                              handleRemovePublication(publication);
+                            }
+                          }}
                           className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
