@@ -38,16 +38,14 @@ export const booksApi = {
    */
   publishBook: async (bookData) => {
     const userId = getCurrentUserId();
-    return apiRequest(`/book_exchange_platform/trades/${userId}/publish`, {
+    // Corrected endpoint and request body structure
+    return apiRequest(`/book_exchange_platform/trades/${userId}/publication`, {
       method: 'POST',
       body: JSON.stringify({
-        book: {
-          id: bookData.bookId,
-          title: bookData.title,
-          courseNumber: bookData.courseNumber,
-          coverImage: bookData.coverImage
-        },
-        date: new Date().toISOString(),
+        id: bookData.bookId, // Ensure this matches the expected ID field if necessary
+        title: bookData.title,
+        courseNumber: bookData.courseNumber,
+        coverImageUrl: bookData.coverImage // Renamed field
       })
     });
   },
@@ -61,13 +59,13 @@ export const booksApi = {
     const userId = getCurrentUserId();
     return apiRequest(`/book_exchange_platform/trades/${userId}/request`, {
       method: 'POST',
+      // Corrected request body structure to match BookDto
       body: JSON.stringify({
-        book: {
-          id: requestData.bookId,
-          title: requestData.title,
-          courseNumber: requestData.courseNumber,
-        },
-        date: new Date().toISOString(),
+        id: requestData.bookId,
+        title: requestData.title,
+        courseNumber: requestData.courseNumber,
+        // coverImageUrl is part of BookDto, but might not be available/needed for a request.
+        // Sending null or omitting if backend handles it. Assuming omission for now.
       })
     });
   }
