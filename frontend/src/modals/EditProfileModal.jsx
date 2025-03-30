@@ -39,7 +39,8 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'phoneNumber' ? (parseInt(value, 10) || '') : value
+      // Ensure phoneNumber is number or null, not empty string
+      [name]: name === 'phoneNumber' ? (parseInt(value, 10) || null) : value
     }));
   };
 

@@ -70,11 +70,16 @@ const Profile = () => {
   };
 
   const handleUpdateProfile = async (userData) => {
+    // userData contains: fullName, email, phoneNumber, preferredExchangeLocation
+    // We need to add id and the existing password from the user state
     try {
-      const updatedUser = await usersApi.updateUserProfile({
-        ...userData,
-        id: userId
-      });
+      const payload = {
+        ...userData, // Spread the form data
+        id: userId, // Add the user ID
+        password: user?.password // Add the existing password hash from state
+      };
+      console.log("Updating profile with payload:", payload); // Log the payload for debugging
+      const updatedUser = await usersApi.updateUserProfile(payload);
       setUser(updatedUser);
       setIsEditModalOpen(false);
     } catch (error) {
@@ -361,8 +366,9 @@ const Profile = () => {
       <AnimatePresence>
         {isEditModalOpen && (
           <EditProfileModal
+            isOpen={isEditModalOpen}
             user={user}
-            onUpdate={handleUpdateProfile}
+            onSave={handleUpdateProfile} 
             onClose={() => setIsEditModalOpen(false)}
           />
         )}
