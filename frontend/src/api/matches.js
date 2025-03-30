@@ -117,12 +117,8 @@ export const matchesApi = {
    * @returns {Promise<Object>} Updated match
    */
   acceptMatch: async (matchId) => {
-    return apiRequest(`/book_exchange_platform/trades/confirm_match`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: matchId,
-        status: 'ACCEPTED'
-      })
+    return apiRequest(`/book_exchange_platform/trades/${matchId}/confirm_match`, {
+      method: 'POST'
     });
   },
 
