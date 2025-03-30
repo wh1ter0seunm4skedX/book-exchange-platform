@@ -105,9 +105,11 @@ export const matchesApi = {
    * @returns {Promise<void>}
    */
   deletePublication: async (publicationData) => {
+    // Attempting workaround: Send only the ID, as the backend might be failing with the full object
+    // despite the @RequestBody annotation. The 500 error suggests a backend processing issue.
     return apiRequest('/book_exchange_platform/trades/publication', {
       method: 'DELETE',
-      body: JSON.stringify(publicationData)
+      body: JSON.stringify({ id: publicationData.id })
     });
   },
 

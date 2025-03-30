@@ -88,8 +88,17 @@ const Profile = () => {
   };
 
   const handlePublishBook = async (bookData) => {
+    // bookData from modal: { bookId, title, courseNumber, author, coverImage, condition, notes }
+    // booksApi.publishBook expects: { bookId, title, courseNumber, coverImage }
+    // It will structure the payload correctly as BookDto for the backend.
     try {
-      await matchesApi.publishBook(bookData, userId);
+      // Call the corrected API function from booksApi
+      await booksApi.publishBook({
+        bookId: bookData.bookId,
+        title: bookData.title,
+        courseNumber: bookData.courseNumber,
+        coverImage: bookData.coverImage // booksApi handles renaming to coverImageUrl
+      });
       fetchProfileData(); // Refresh data after publishing
       setIsPublishModalOpen(false);
     } catch (error) {
@@ -379,6 +388,9 @@ const Profile = () => {
         
         {isPublishModalOpen && (
           <PublishBookModal
+            key="publish-book-modal"
+            isOpen={isPublishModalOpen} 
+            onPublish={handlePublishBook}
             onClose={() => setIsPublishModalOpen(false)}
           />
         )}
