@@ -82,8 +82,23 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex items-center justify-center px-4 sm:px-6 py-12 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 z-0">
+      {/* Animated background patterns */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute w-full h-full">
+          <svg className="absolute w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{ stopColor: '#4F46E5', stopOpacity: 0.1 }} />
+                <stop offset="100%" style={{ stopColor: '#7C3AED', stopOpacity: 0.1 }} />
+              </linearGradient>
+              <pattern id="pattern1" width="4" height="4" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.1)" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grad1)" />
+            <rect width="100%" height="100%" fill="url(#pattern1)" />
+          </svg>
+        </div>
         <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
         <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000"></div>
@@ -94,7 +109,7 @@ const Login = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl p-8 space-y-8 relative z-10 border border-white/20">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-8 space-y-8 relative z-10 border border-white/20 transition-all duration-300 hover:shadow-blue-100/50">
           <div className="text-center">
             <motion.div
               initial={{ scale: 0.8 }}
@@ -145,7 +160,7 @@ const Login = () => {
                     type="email"
                     autoComplete="email"
                     required
-                    className={`appearance-none block w-full pl-10 pr-3 py-2 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-300 ${!validationState.email.isValid ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    className={`appearance-none block w-full pl-10 pr-3 py-3 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-300 bg-gray-50/50 hover:bg-white ${!validationState.email.isValid ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={handleChange}
@@ -179,7 +194,7 @@ const Login = () => {
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
                     required
-                    className={`appearance-none block w-full pl-10 pr-10 py-2 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-300 ${!validationState.password.isValid ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+                    className={`appearance-none block w-full pl-10 pr-10 py-3 border rounded-lg placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-blue-300 bg-gray-50/50 hover:bg-white ${!validationState.password.isValid ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
                     placeholder="Enter your password"
                     value={formData.password}
                     onChange={handleChange}
