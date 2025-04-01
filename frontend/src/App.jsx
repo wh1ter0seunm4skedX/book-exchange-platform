@@ -62,8 +62,8 @@ function App() {
         } />
         
         {/* Default redirect */}
-        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
-        <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/login"} />} />
+        <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/register"} />} />
+        <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/register"} />} />
       </Routes>
     </div>
   )
