@@ -17,6 +17,8 @@ const BookCard = ({
   status = null,
   date = null
 }) => {
+  const [showPlaceholder, setShowPlaceholder] = React.useState(false);
+
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -27,15 +29,12 @@ const BookCard = ({
       <div className="flex h-32">
         {/* Book Cover */}
         <div className="flex-shrink-0 w-24 bg-gray-50 overflow-hidden">
-          {book?.coverImage ? (
+          {book?.courseNumber && !showPlaceholder ? (
             <img
-              src= "https://placehold.co/150x200"
+              src={`/coursesImages/${book.courseNumber}.png`}
               alt={book.title || 'Book cover'}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentElement.appendChild(BookPlaceholder());
-              }}
+              onError={() => setShowPlaceholder(true)}
             />
           ) : (
             <BookPlaceholder />

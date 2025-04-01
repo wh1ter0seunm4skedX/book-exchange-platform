@@ -239,7 +239,6 @@ const Dashboard = () => {
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="text-lg font-medium text-gray-900">{match.book?.title || 'Unknown Book'}</h3>
-                        <p className="mt-1 text-sm text-gray-500">Status: {match.status}</p>
                       </div>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${match.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           match.status === 'accepted' ? 'bg-green-100 text-green-800' :

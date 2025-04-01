@@ -63,8 +63,10 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
         >
           <div className="flex items-start space-x-4">
             <BookCard
-              book={match.book}
-              showRequestButton={false}
+              book={{
+                ...match.book,
+                coverImage: match.book.coverImage ? `/coursesImages/${match.book.coverImage}` : '/coursesImages/default-book-cover.png'
+              }}              showRequestButton={false}
               status={match.status}
               date={match.matchDate}
             />

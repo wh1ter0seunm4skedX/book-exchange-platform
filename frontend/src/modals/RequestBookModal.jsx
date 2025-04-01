@@ -118,12 +118,33 @@ const RequestBookModal = ({ isOpen, onClose, onRequest }) => {
         {/* Selected Book Details */}
         {selectedBook && (
           <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-            <div>
-              <h4 className="text-sm font-medium text-gray-900">{selectedBook.title}</h4>
-              <p className="text-sm text-gray-600">Course: {selectedBook.courseNumber}</p>
-              {selectedBook.author && (
-                <p className="text-sm text-gray-600">Author: {selectedBook.author}</p>
-              )}
+            <div className="flex items-start space-x-4">
+              <div className="flex-shrink-0 h-24 w-16 bg-gray-100 rounded-lg overflow-hidden">
+                {selectedBook ? (
+                  <img
+                    src={`/coursesImages/${selectedBook.courseNumber}.png`}
+                    alt={selectedBook.title}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/coursesImages/default-book-cover.png';
+                    }}
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <svg className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-sm font-medium text-gray-900">{selectedBook.title}</h4>
+                <p className="text-sm text-gray-600">Course: {selectedBook.courseNumber}</p>
+                {selectedBook.author && (
+                  <p className="text-sm text-gray-600">Author: {selectedBook.author}</p>
+                )}
+              </div>
             </div>
           </div>
         )}
