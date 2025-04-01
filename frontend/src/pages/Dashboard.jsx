@@ -24,10 +24,12 @@ const Dashboard = () => {
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [initialBookForPublish, setInitialBookForPublish] = useState(null); // State for pre-selected book
   const [activeTab, setActiveTab] = useState('matches');
-  
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+
   const navigate = useNavigate();
   const userId = getCurrentUserId();
-  
+
   useEffect(() => {
     fetchDashboardData();
   }, []);
@@ -36,7 +38,7 @@ const Dashboard = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Fetch user profile
       try {
         const userData = await usersApi.getUserProfile(userId);
@@ -45,7 +47,7 @@ const Dashboard = () => {
         console.error('Error fetching user profile:', userError);
         setUser({ name: 'User', email: 'user@example.com' });
       }
-      
+
       // Fetch user matches
       try {
         const userMatches = await matchesApi.getUserMatches(userId);
@@ -54,7 +56,7 @@ const Dashboard = () => {
         console.error('Error fetching user matches:', matchesError);
         setMatches([]);
       }
-      
+
       // Fetch most wanted books
       try {
         const wantedBooks = await booksApi.getMostWantedBooks();
@@ -116,7 +118,7 @@ const Dashboard = () => {
     setShowRequestModal(false);
     setShowMatchModal(false);
     setInitialBookForPublish(null); // Reset selected book on close
-    
+
     if (refreshData) {
       fetchDashboardData();
     }
@@ -137,7 +139,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <motion.div 
+              <motion.div
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg"
               >
@@ -146,7 +148,7 @@ const Dashboard = () => {
                 </span>
               </motion.div>
               <div>
-                <motion.h1 
+                <motion.h1
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="text-2xl font-bold text-gray-900"
@@ -187,15 +189,16 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center shadow-sm"
-            role="alert"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center shadow-sm"
+          role="alert"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -206,16 +209,16 @@ const Dashboard = () => {
 
         {/* Grid Layout */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
           className="grid grid-cols-1 lg:grid-cols-2 gap-8"
         >
           {/* Matches Section */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6"
           >
             <div className="flex items-center justify-between mb-6">
@@ -224,16 +227,13 @@ const Dashboard = () => {
               </h2>
               <span className="text-sm text-gray-500">{matches.length} matches</span>
             </div>
-            
+
             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
               {matches.length > 0 ? (
                 matches.map((match) => (
                   <motion.div
                     key={match.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-all duration-200"
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md transition-shadow duration-200"
                     onClick={() => handleViewMatch(match)}
                   >
                     <div className="flex items-start justify-between">
@@ -241,11 +241,10 @@ const Dashboard = () => {
                         <h3 className="text-lg font-medium text-gray-900">{match.book?.title || 'Unknown Book'}</h3>
                         <p className="mt-1 text-sm text-gray-500">Status: {match.status}</p>
                       </div>
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        match.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        match.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${match.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          match.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                            'bg-red-100 text-red-800'
+                        }`}>
                         {match.status}
                       </span>
                     </div>
@@ -282,7 +281,7 @@ const Dashboard = () => {
               </h2>
               <span className="text-sm text-gray-500">{mostWantedBooks.length} books</span>
             </div>
-            
+
             <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
               {mostWantedBooks.length > 0 ? (
                 mostWantedBooks.map((book) => (
@@ -293,34 +292,24 @@ const Dashboard = () => {
                     transition={{ duration: 0.3 }}
                     className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200"
                   >
-                    <div className="aspect-w-3 aspect-h-4 bg-gradient-to-br from-gray-100 to-gray-200">
-                      {book.coverImage ? (
-                        <img 
-                          src={book.coverImage} 
-                          alt={book.title} 
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          No image
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-lg font-medium text-gray-900">{book.title}</h3>
-                      <p className="mt-1 text-sm text-gray-500">Course: {book.course || 'N/A'}</p>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                          setInitialBookForPublish(book); // Set the selected book
-                          setShowPublishModal(true);      // Open the modal
-                        }}
-                        className="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                      >
-                        I have this one!
-                      </motion.button>
-                    </div>
+                    <BookCard
+                      book={book}
+                      showRequestButton={false}
+                      actionButton={
+                        <motion.button
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          transition={{ duration: 0.15, ease: 'easeOut' }}
+                          onClick={() => {
+                            setInitialBookForPublish(book); 
+                            setShowPublishModal(true);     
+                          }}
+                          className="w-full inline-flex justify-center items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200"
+                        >
+                          I have this one!
+                        </motion.button>
+                      }
+                    />
                   </motion.div>
                 ))
               ) : (
@@ -347,17 +336,17 @@ const Dashboard = () => {
             onPublish={handlePublishBook}
           />
         )}
-        
+
         {showRequestModal && (
-          <RequestBookModal 
+          <RequestBookModal
             isOpen={showRequestModal}
             onClose={() => handleModalClose()}
             onRequest={handleRequestBook}
           />
         )}
-        
+
         {showMatchModal && selectedMatch && (
-          <MatchNotificationModal 
+          <MatchNotificationModal
             isOpen={showMatchModal}
             onClose={() => handleModalClose()}
             match={selectedMatch}

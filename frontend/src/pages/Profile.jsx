@@ -10,6 +10,14 @@ import { usersApi } from '../api/users';
 import { matchesApi } from '../api/matches';
 import { getCurrentUserId } from '../api/apiUtils';
 
+// Define a custom spring transition with reduced stiffness
+const gentleSpring = {
+  type: "spring",
+  stiffness: 200,  // Reduced from default (more gentle)
+  damping: 25,     // Increased damping for less oscillation
+  mass: 1.2        // Slight increase in mass for smoother feel
+};
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [publishedBooks, setPublishedBooks] = useState([]);
@@ -118,8 +126,10 @@ const Profile = () => {
 
   const handleRemoveRequest = async (request) => {
     try {
-      await matchesApi.deleteRequest(request);
-      fetchProfileData(); // Refresh data after removing request
+      if (window.confirm(`Are you sure you want to cancel your request for "${request.book.title}"?`)) {
+        await matchesApi.deleteRequest(request);
+        fetchProfileData(); // Refresh data after removing request
+      }
     } catch (error) {
       console.error('Error removing book request:', error);
     }
@@ -175,6 +185,7 @@ const Profile = () => {
             <div className="flex items-center space-x-4">
               <motion.div 
                 whileHover={{ scale: 1.05, rotate: 5 }}
+                transition={gentleSpring}
                 className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg"
               >
                 <span className="text-white text-2xl font-bold">
@@ -185,6 +196,7 @@ const Profile = () => {
                 <motion.h1 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
+                  transition={{ ...gentleSpring, delay: 0.1 }}
                   className="text-2xl font-bold text-gray-900"
                 >
                   {user?.fullName}
@@ -214,6 +226,7 @@ const Profile = () => {
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
+              transition={gentleSpring}
               onClick={() => setIsEditModalOpen(true)}
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-md"
             >
@@ -228,25 +241,35 @@ const Profile = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action Buttons - Mobile Only */}
-        <div className="sm:hidden flex space-x-2 mb-6">
+        {/* Action Buttons - For all screen sizes */}
+        <div className="flex flex-wrap gap-3 mb-6 justify-center sm:justify-end">
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
+            transition={gentleSpring}
             onClick={() => setIsPublishModalOpen(true)}
-            className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-green-600 hover:to-emerald-700 transition-colors shadow-md"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
           >
+            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
             Publish Book
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
+            transition={gentleSpring}
             onClick={() => setIsRequestModalOpen(true)}
-            className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-indigo-700 transition-colors shadow-md"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
           >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
             Request Book
           </motion.button>
         </div>
+
+        {/* Remove the mobile-only buttons */}
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -254,7 +277,7 @@ const Profile = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ ...gentleSpring, delay: 0.2 }}
             className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6"
           >
             <div className="flex items-center justify-between mb-6">
@@ -275,6 +298,7 @@ const Profile = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    transition={gentleSpring}
                     onClick={() => setIsPublishModalOpen(true)}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
@@ -290,6 +314,7 @@ const Profile = () => {
                     key={publication.id}
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
+                    transition={gentleSpring}
                     className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200"
                   >
                     <BookCard
@@ -301,6 +326,7 @@ const Profile = () => {
                         <motion.button
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
+                          transition={gentleSpring}
                           onClick={() => {
                             if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) {
                               handleRemovePublication(publication);
@@ -325,7 +351,7 @@ const Profile = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ ...gentleSpring, delay: 0.2 }}
             className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6"
           >
             <div className="flex items-center justify-between mb-6">
@@ -346,6 +372,7 @@ const Profile = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
+                    transition={gentleSpring}
                     onClick={() => setIsRequestModalOpen(true)}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
@@ -361,11 +388,13 @@ const Profile = () => {
                     key={request.id}
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
+                    transition={gentleSpring}
                     className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200"
                   >
                     <RequestedBookCard
                       book={request.book}
                       requestDate={request.requestDate}
+                      onCancelRequest={() => handleRemoveRequest(request)}
                     />
                   </motion.div>
                 ))
@@ -397,6 +426,9 @@ const Profile = () => {
         
         {isRequestModalOpen && (
           <RequestBookModal
+            key="request-book-modal"
+            isOpen={isRequestModalOpen}
+            onRequest={handleRequestBook}
             onClose={() => setIsRequestModalOpen(false)}
           />
         )}

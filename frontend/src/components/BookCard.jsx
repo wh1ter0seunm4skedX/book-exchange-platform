@@ -29,7 +29,7 @@ const BookCard = ({
         <div className="flex-shrink-0 w-24 bg-gray-50 overflow-hidden">
           {book?.coverImage ? (
             <img
-              src={book.coverImage}
+              src= "https://placehold.co/150x200"
               alt={book.title || 'Book cover'}
               className="w-full h-full object-cover"
               onError={(e) => {

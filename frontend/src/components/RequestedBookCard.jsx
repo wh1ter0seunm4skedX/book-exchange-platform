@@ -9,7 +9,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const RequestedBookCard = ({ book, requestDate }) => {
+const RequestedBookCard = ({ book, requestDate, onCancelRequest }) => {
   if (!book) {
     return (
       <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden p-4">
@@ -24,7 +24,7 @@ const RequestedBookCard = ({ book, requestDate }) => {
         {/* Book Cover */}
         <div className="flex-shrink-0 w-24 bg-gray-200 overflow-hidden">
           <img
-            src={book.coverImage || '/placeholder-book.jpg'}
+            src= "https://placehold.co/150x200"
             alt={book.title || 'Book cover'}
             className="w-full h-full object-cover"
           />
@@ -62,6 +62,21 @@ const RequestedBookCard = ({ book, requestDate }) => {
           We'll notify you as soon as we find a match!
         </p>
       </div>
+      
+      {/* Cancel Request Button */}
+      {onCancelRequest && (
+        <div className="border-t border-gray-100">
+          <button
+            onClick={() => onCancelRequest()}
+            className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+            Cancel Request
+          </button>
+        </div>
+      )}
     </div>
   );
 };
