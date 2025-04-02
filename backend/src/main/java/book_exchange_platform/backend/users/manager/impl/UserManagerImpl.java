@@ -37,9 +37,13 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public UserDto updateUser(UserDto user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.updateUser(user);
+    public UserDto updateUser(UserDto userToUpdate) {
+        if (userToUpdate.getPassword() == null || userToUpdate.getPassword().isEmpty()) {
+            userToUpdate.setPassword(getUser(userToUpdate.getId()).getPassword());
+        } else {
+            userToUpdate.setPassword(passwordEncoder.encode(userToUpdate.getPassword()));
+        }
+        return userService.updateUser(userToUpdate);
     }
 
     @Override

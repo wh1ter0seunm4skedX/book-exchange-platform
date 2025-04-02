@@ -13,7 +13,7 @@ public interface UserManager {
 
     public UserDto addUser(UserDto user);
 
-    public UserDto updateUser(UserDto user);
+    public UserDto updateUser(UserDto userToUpdate);
 
     public void deleteUser(Long userId);
 
