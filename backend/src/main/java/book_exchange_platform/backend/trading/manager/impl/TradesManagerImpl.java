@@ -104,7 +104,8 @@ public class TradesManagerImpl implements TradesManager {
     }
 
     @Override
-    public void deleteRequest(RequestDto requestDto) {
+    public void deleteRequest(Long requestId) {
+        RequestDto requestDto = tradesService.getRequest(requestId);
         userTradingService.deleteRequest(requestDto);
     }
 
@@ -121,7 +122,8 @@ public class TradesManagerImpl implements TradesManager {
     }
 
     @Override
-    public void deletePublication(PublicationDto publicationDto) {
+    public void deletePublication(Long publicationId) {
+        PublicationDto publicationDto = tradesService.getPublication(publicationId);
         userTradingService.deletePublication(publicationDto);
     }
 

@@ -57,6 +57,13 @@ public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
         return entityManager.createQuery(query, RequestEntity.class).getResultList();
     }
 
+    public RequestEntity getRequestById(Long requestId) {
+        String query = "SELECT r FROM RequestEntity r WHERE r.id = :requestId";
+        return entityManager.createQuery(query, RequestEntity.class)
+                .setParameter("requestId", requestId)
+                .getSingleResult();
+    }
+
     public List<RequestEntity> getAllUserRequests(Long userId) {
         String query = "SELECT r FROM RequestEntity r WHERE r.user.id = :userId";
         return entityManager.createQuery(query, RequestEntity.class)
@@ -93,6 +100,13 @@ public class TradesRepository extends SimpleJpaRepository<MatchEntity, Long> {
     public List<PublicationEntity> getAllPublications() {
         String query = "SELECT r FROM PublicationEntity r";
         return entityManager.createQuery(query, PublicationEntity.class).getResultList();
+    }
+
+    public PublicationEntity getPublicationById(Long publicationId) {
+        String query = "SELECT r FROM PublicationEntity r WHERE r.id = :publicationId";
+        return entityManager.createQuery(query, PublicationEntity.class)
+                .setParameter("publicationId", publicationId)
+                .getSingleResult();
     }
 
     public List<PublicationEntity> getAllUserPublications(Long userId) {

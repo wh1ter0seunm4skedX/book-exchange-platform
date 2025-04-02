@@ -14,7 +14,11 @@ public interface TradesService {
 
     public List<RequestDto> getAllRequests();
 
+    public RequestDto getRequest(Long requestId);
+
     public List<PublicationDto> getAllPublications();
+
+    public PublicationDto getPublication(Long publicationId);
 
     public List<MatchDto> getAllMatches();
 

@@ -27,13 +27,13 @@ public interface TradesManager {
 
     public MatchDto requestBook(BookDto book, Long userId);
 
-    public void deleteRequest(RequestDto requestDto);
+    public void deleteRequest(Long requestId);
 
     public List<PublicationDto> getUserPublications(Long userId);
 
     public MatchDto publishBook(BookDto bookDto, Long userId);
 
-    public void deletePublication(PublicationDto publicationDto);
+    public void deletePublication(Long publicationId);
 
 }
 

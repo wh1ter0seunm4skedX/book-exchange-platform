@@ -27,8 +27,18 @@ public class TradesServiceImpl implements TradesService {
     }
 
     @Override
+    public RequestDto getRequest(Long requestId){
+        return TradesEntityToDtoConverter.toRequestDto(tradesRepository.getRequestById(requestId));
+    }
+
+    @Override
     public List<PublicationDto> getAllPublications() {
         return tradesRepository.getAllPublications().stream().map(TradesEntityToDtoConverter::toPublicationDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public PublicationDto getPublication(Long publicationId){
+        return TradesEntityToDtoConverter.toPublicationDto(tradesRepository.getPublicationById(publicationId));
     }
 
     @Override

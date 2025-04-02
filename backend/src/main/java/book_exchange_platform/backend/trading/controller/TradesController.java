@@ -50,9 +50,9 @@ public class TradesController {
         return tradesManager.requestBook(book, userId);
     }
 
-    @DeleteMapping("/request")
-    public void deleteRequest(@RequestBody RequestDto requestDto){
-        tradesManager.deleteRequest(requestDto);
+    @DeleteMapping("/{requestId}/request")
+    public void deleteRequest(@PathVariable Long requestId){
+        tradesManager.deleteRequest(requestId);
     }
 
     @GetMapping("/{userId}/publication")
@@ -66,8 +66,8 @@ public class TradesController {
         return tradesManager.publishBook(book, userId);
     }
 
-    @DeleteMapping("/publication")
-    public void deletePublication(@RequestBody PublicationDto publicationDto){
-        tradesManager.deletePublication(publicationDto);
+    @DeleteMapping("/{publicationId}/publication")
+    public void deletePublication(@PathVariable Long publicationId){
+        tradesManager.deletePublication(publicationId);
     }
 }
