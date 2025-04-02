@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+// Import icons from react-icons
+import { 
+  HiPhone, 
+  HiLocationMarker, 
+  HiPencil, 
+  HiPlus, 
+  HiOutlineDocumentText, // Icon for empty published state
+  HiTrash,             // Icon for removing publication
+  HiOutlineBookOpen    // Icon for empty requested state
+} from 'react-icons/hi'; 
+
 import BookCard from '../components/BookCard';
-import RequestedBookCard from '../components/RequestedBookCard';
 import EditProfileModal from '../modals/EditProfileModal';
-import PublishBookModal from '../modals/PublishBookModal';
-import RequestBookModal from '../modals/RequestBookModal';
+import BookActionModal from '../modals/BookActionModal';
+import { matchesApi } from '../api/matches';
 import { booksApi } from '../api/books';
 import { usersApi } from '../api/users';
-import { matchesApi } from '../api/matches';
 import { getCurrentUserId } from '../api/apiUtils';
 
-// Define a custom spring transition with reduced stiffness
 const gentleSpring = {
   type: "spring",
-  stiffness: 200,  // Reduced from default (more gentle)
-  damping: 25,     // Increased damping for less oscillation
-  mass: 1.2        // Slight increase in mass for smoother feel
+  stiffness: 200,
+  damping: 25,
+  mass: 1.2
 };
 
 const Profile = () => {
@@ -23,17 +31,14 @@ const Profile = () => {
   const [publishedBooks, setPublishedBooks] = useState([]);
   const [requestedBooks, setRequestedBooks] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
-  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [isBookActionOpen, setIsBookActionOpen] = useState(false);
+  const [actionMode, setActionMode] = useState('publish'); // 'publish' or 'request'
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('published');
 
-  // Get the user ID from the JWT token
   const userId = getCurrentUserId();
 
   useEffect(() => {
-    console.log('Profile component mounted');
     fetchProfileData();
   }, []);
 
@@ -41,76 +46,58 @@ const Profile = () => {
     try {
       setLoading(true);
       setError(null);
-      
-      console.log('Fetching profile data for user:', userId);
-      
-      // Get user profile data
       const userData = await usersApi.getUserProfile(userId);
-      console.log('User data received:', userData);
       setUser(userData);
       
-      // Get user's published books
       try {
         const userPublications = await matchesApi.getUserPublications(userId);
-        console.log('User publications:', userPublications);
         setPublishedBooks(userPublications || []);
       } catch (pubError) {
-        console.error('Error fetching user publications:', pubError);
         setPublishedBooks([]);
       }
       
-      // Get user's requested books
       try {
         const userRequests = await matchesApi.getUserRequests(userId);
-        console.log('User requests:', userRequests);
         setRequestedBooks(userRequests || []);
       } catch (reqError) {
-        console.error('Error fetching user requests:', reqError);
         setRequestedBooks([]);
       }
     } catch (error) {
-      console.error('Error fetching profile data:', error);
       setError('Failed to load profile data. Please try again later.');
     } finally {
       setLoading(false);
-      console.log('Profile data loading completed');
     }
   };
 
   const handleUpdateProfile = async (userData) => {
-    // userData contains: fullName, email, phoneNumber, preferredExchangeLocation
-    // We need to add id and the existing password from the user state
     try {
       const payload = {
-        ...userData, // Spread the form data
-        id: userId, // Add the user ID
-        password: user?.password // Add the existing password hash from state
+        ...userData,
+        id: userId,
+        password: user?.password // Be cautious about sending passwords like this
       };
-      console.log("Updating profile with payload:", payload); // Log the payload for debugging
       const updatedUser = await usersApi.updateUserProfile(payload);
       setUser(updatedUser);
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating profile:', error);
+      // Add user feedback here, e.g., setError('Failed to update profile')
     }
   };
 
   const handlePublishBook = async (bookData) => {
-    // bookData from modal: { bookId, title, courseNumber, author, coverImage, condition, notes }
-    // booksApi.publishBook expects: { bookId, title, courseNumber, coverImage }
-    // It will structure the payload correctly as BookDto for the backend.
     try {
-      // Call the corrected API function from booksApi
       await booksApi.publishBook({
         bookId: bookData.bookId,
         title: bookData.title,
         courseNumber: bookData.courseNumber,
-        coverImage: bookData.coverImage // booksApi handles renaming to coverImageUrl
+        coverImage: bookData.coverImage
       });
       fetchProfileData(); // Refresh data after publishing
-      setIsPublishModalOpen(false);
+      setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error publishing book:', error);
+       // Add user feedback here
     }
   };
 
@@ -118,34 +105,50 @@ const Profile = () => {
     try {
       await matchesApi.addBookRequest(bookData, userId);
       fetchProfileData(); // Refresh data after requesting
-      setIsRequestModalOpen(false);
+      setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error requesting book:', error);
+       // Add user feedback here
     }
   };
 
   const handleRemoveRequest = async (request) => {
     try {
+      // Keep the confirmation dialog
       if (window.confirm(`Are you sure you want to cancel your request for "${request.book.title}"?`)) {
         await matchesApi.deleteRequest(request);
-        fetchProfileData(); // Refresh data after removing request
+        fetchProfileData(); // Refresh data after removal
       }
     } catch (error) {
       console.error('Error removing book request:', error);
+      // Add user feedback here
     }
   };
 
   const handleRemovePublication = async (publication) => {
-    try {
-      await matchesApi.deletePublication(publication);
-      fetchProfileData(); // Refresh data after removing publication
+     try {
+      // Keep the confirmation dialog if needed, or remove if handled elsewhere
+      if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) { 
+        await matchesApi.deletePublication(publication);
+        fetchProfileData(); // Refresh data after removal
+      }
     } catch (error) {
       console.error('Error removing book publication:', error);
+       // Add user feedback here
     }
   };
 
+  const openPublishModal = () => {
+    setActionMode('publish');
+    setIsBookActionOpen(true);
+  };
+
+  const openRequestModal = () => {
+    setActionMode('request');
+    setIsBookActionOpen(true);
+  };
+
   if (loading) {
-    console.log('Profile is in loading state');
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -154,7 +157,6 @@ const Profile = () => {
   }
 
   if (error) {
-    console.log('Profile has error:', error);
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -171,140 +173,126 @@ const Profile = () => {
   }
 
   if (!user) {
-    console.log('No user data available');
-    return null;
+    // Optional: Add a message or redirect if user data is critical and not loaded
+    return <div className="flex items-center justify-center min-h-screen text-gray-500">User data could not be loaded.</div>; 
   }
 
-  console.log('Rendering profile with user:', user);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-lg shadow-sm">
+      <div className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10"> {/* Added sticky header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <motion.div 
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* User Info and Edit Button */}
+            <div className="flex items-center space-x-4 flex-grow"> {/* Added flex-grow */}
+              <motion.div
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={gentleSpring}
-                className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg"
+                className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg flex-shrink-0" // Added flex-shrink-0
               >
                 <span className="text-white text-2xl font-bold">
-                  {user?.fullName?.[0] || '?'}
+                  {user?.fullName?.[0]?.toUpperCase() || '?'} 
                 </span>
               </motion.div>
-              <div>
-                <motion.h1 
+              <div className="flex-1 min-w-0"> 
+                <motion.h1
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ ...gentleSpring, delay: 0.1 }}
-                  className="text-2xl font-bold text-gray-900"
+                  className="text-2xl font-bold text-gray-900 truncate" 
                 >
                   {user?.fullName}
                 </motion.h1>
-                <p className="text-gray-600">{user?.email}</p>
-                <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
+                <p className="text-gray-600 truncate">{user?.email}</p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
                   {user?.phoneNumber && (
                     <span className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      {user?.phoneNumber}
+                      <HiPhone className="h-4 w-4 mr-1 flex-shrink-0" /> 
+                      {user.phoneNumber}
                     </span>
                   )}
                   {user?.preferredExchangeLocation && (
                     <span className="flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {user?.preferredExchangeLocation}
+                      <HiLocationMarker className="h-4 w-4 mr-1 flex-shrink-0" />
+                      {user.preferredExchangeLocation}
                     </span>
                   )}
                 </div>
               </div>
+              {/* Edit Profile Button */}
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={gentleSpring}
+                onClick={() => setIsEditModalOpen(true)}
+                className="ml-auto sm:ml-4 flex-shrink-0 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-md"
+              >
+                <HiPencil className="h-4 w-4 mr-1" aria-hidden="true" /> 
+                Edit Profile
+              </motion.button>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              transition={gentleSpring}
-              onClick={() => setIsEditModalOpen(true)}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-md"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-              Edit Profile
-            </motion.button>
+            
+            {/* Publish and Request Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center sm:justify-end flex-shrink-0"> {/* Added justify-center/end */}
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={gentleSpring}
+                onClick={openPublishModal}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
+              >
+                <HiPlus className="w-5 h-5 mr-2" aria-hidden="true" />
+                Publish Book
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={gentleSpring}
+                onClick={openRequestModal}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
+              >
+                <HiPlus className="h-5 w-5 mr-2" aria-hidden="true" />
+                Request Book
+              </motion.button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action Buttons - For all screen sizes */}
-        <div className="flex flex-wrap gap-3 mb-6 justify-center sm:justify-end">
-          <motion.button
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            transition={gentleSpring}
-            onClick={() => setIsPublishModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Publish Book
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            transition={gentleSpring}
-            onClick={() => setIsRequestModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Request Book
-          </motion.button>
-        </div>
-
-        {/* Remove the mobile-only buttons */}
-
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
           {/* Published Books Section */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...gentleSpring, delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6"
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col" // Added flex flex-col
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-shrink-0"> {/* Added flex-shrink-0 */}
               <h2 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 Published Books
               </h2>
-              <span className="text-sm text-gray-500">{publishedBooks.length} books</span>
+              <span className="text-sm text-gray-500">{publishedBooks.length} book{publishedBooks.length !== 1 ? 's' : ''}</span>
             </div>
-            
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+
+            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
               {publishedBooks.length === 0 ? (
-                <div className="text-center py-12">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+                <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
+                   {/* Replaced SVG with React Icon */}
+                  <HiOutlineDocumentText className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No published books</h3>
                   <p className="mt-1 text-sm text-gray-500">Start by publishing your first book.</p>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     transition={gentleSpring}
-                    onClick={() => setIsPublishModalOpen(true)}
+                    onClick={openPublishModal}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
+                    <HiPlus className="h-4 w-4 mr-1" aria-hidden="true" />
                     Publish Book
                   </motion.button>
                 </div>
@@ -312,10 +300,12 @@ const Profile = () => {
                 publishedBooks.map(publication => (
                   <motion.div
                     key={publication.id}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+                    layout 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                     transition={gentleSpring}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200"
+                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
                   >
                     <BookCard
                       book={publication.book}
@@ -324,19 +314,13 @@ const Profile = () => {
                       date={publication.publicationDate}
                       actionButton={
                         <motion.button
-                          whileHover={{ scale: 1.02 }}
+                          whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }} // Enhanced hover feedback
                           whileTap={{ scale: 0.98 }}
                           transition={gentleSpring}
-                          onClick={() => {
-                            if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) {
-                              handleRemovePublication(publication);
-                            }
-                          }}
-                          className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2"
+                          onClick={() => handleRemovePublication(publication)} // Moved confirmation logic to handler
+                          className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2 transition-colors duration-150" // Added transition
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
+                          <HiTrash className="h-4 w-4 mr-1" aria-hidden="true" />
                           Remove Publication
                         </motion.button>
                       }
@@ -352,52 +336,56 @@ const Profile = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...gentleSpring, delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6"
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col" // Added flex flex-col
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 flex-shrink-0"> {/* Added flex-shrink-0 */}
               <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Requested Books
               </h2>
-              <span className="text-sm text-gray-500">{requestedBooks.length} books</span>
+              <span className="text-sm text-gray-500">{requestedBooks.length} book{requestedBooks.length !== 1 ? 's' : ''}</span>
             </div>
             
-            <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
               {requestedBooks.length === 0 ? (
-                <div className="text-center py-12">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+                <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
+                  {/* Replaced SVG with React Icon */}
+                  <HiOutlineBookOpen className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No requested books</h3>
-                  <p className="mt-1 text-sm text-gray-500">Start by requesting your first book.</p>
+                  <p className="mt-1 text-sm text-gray-500">Search for a book to request it.</p>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     transition={gentleSpring}
-                    onClick={() => setIsRequestModalOpen(true)}
+                    onClick={openRequestModal}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
+                    {/* Replaced SVG with React Icon */}
+                    <HiPlus className="h-4 w-4 mr-1" aria-hidden="true" />
                     Request Book
                   </motion.button>
                 </div>
               ) : (
-                requestedBooks.map(request => (
-                  <motion.div
-                    key={request.id}
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={gentleSpring}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all duration-200"
-                  >
-                    <RequestedBookCard
-                      book={request.book}
-                      requestDate={request.requestDate}
-                      onCancelRequest={() => handleRemoveRequest(request)}
-                    />
-                  </motion.div>
-                ))
+                 <AnimatePresence initial={false}> {/* Wrap list items for exit animations */}
+                   {requestedBooks.map(request => (
+                     <motion.div
+                       key={request.id}
+                       layout // Added layout prop
+                       initial={{ opacity: 0, y: 20 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       exit={{ opacity: 0, x: -20 }} // Different exit animation
+                       transition={gentleSpring}
+                       className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
+                     >
+                       <BookCard
+                         book={request.book}
+                         isRequested={true}
+                         requestDate={request.requestDate}
+                         // Pass the handler directly, confirmation is now inside the handler
+                         onCancelRequest={() => handleRemoveRequest(request)} 
+                       />
+                     </motion.div>
+                   ))}
+                 </AnimatePresence>
               )}
             </div>
           </motion.div>
@@ -408,28 +396,21 @@ const Profile = () => {
       <AnimatePresence>
         {isEditModalOpen && (
           <EditProfileModal
+            key="edit-profile-modal"
             isOpen={isEditModalOpen}
             user={user}
-            onSave={handleUpdateProfile} 
+            onSave={handleUpdateProfile}
             onClose={() => setIsEditModalOpen(false)}
           />
         )}
         
-        {isPublishModalOpen && (
-          <PublishBookModal
-            key="publish-book-modal"
-            isOpen={isPublishModalOpen} 
-            onPublish={handlePublishBook}
-            onClose={() => setIsPublishModalOpen(false)}
-          />
-        )}
-        
-        {isRequestModalOpen && (
-          <RequestBookModal
-            key="request-book-modal"
-            isOpen={isRequestModalOpen}
-            onRequest={handleRequestBook}
-            onClose={() => setIsRequestModalOpen(false)}
+        {isBookActionOpen && (
+          <BookActionModal
+            key={`book-action-${actionMode}`}
+            isOpen={isBookActionOpen}
+            mode={actionMode}
+            onSubmit={actionMode === 'publish' ? handlePublishBook : handleRequestBook}
+            onClose={() => setIsBookActionOpen(false)}
           />
         )}
       </AnimatePresence>
