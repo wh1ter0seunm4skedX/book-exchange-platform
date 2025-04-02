@@ -47,8 +47,21 @@ CREATE TABLE IF NOT EXISTS trading (
     book_id BIGINT NOT NULL,
     status ENUM('NEW','PENDING', 'COMPLETED', 'CANCELLED', 'EXPIRED') DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-    expiration_date TIMESTAMP DEFAULT DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL 14 DAY),
+    expiration_date TIMESTAMP,
     FOREIGN KEY (provider_id) REFERENCES users(id),
     FOREIGN KEY (requester_id) REFERENCES users(id),
     FOREIGN KEY (book_id) REFERENCES books(id)
 );
+
+DELIMITER //
+
+CREATE TRIGGER set_expiration_date
+    BEFORE INSERT ON trading
+    FOR EACH ROW
+BEGIN
+    IF NEW.expiration_date IS NULL THEN
+        SET NEW.expiration_date = CURRENT_TIMESTAMP() + INTERVAL 14 DAY;
+    END IF;
+END //
+
+DELIMITER ;
