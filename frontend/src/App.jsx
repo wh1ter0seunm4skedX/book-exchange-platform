@@ -19,7 +19,6 @@ function App() {
       setIsLoggedIn(isAuthenticated());
     };
 
-    // Check auth on mount
     checkAuth();
 
     // Set up event listener for storage changes (for when user logs in/out in another tab)

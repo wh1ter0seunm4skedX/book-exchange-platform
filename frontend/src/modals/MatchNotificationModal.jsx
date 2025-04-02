@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Modal from '../components/Modal';
 import { matchesApi } from '../api/matches';
 import BookCard from '../components/BookCard';
+import Confetti from 'react-confetti'; // Import react-confetti
 
 const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   const [loading, setLoading] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false); // State to control confetti
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowConfetti(true);
+      const timer = setTimeout(() => setShowConfetti(false), 20000);
+      return () => clearTimeout(timer); 
+    }
+  }, [isOpen]);
 
   if (!match) return null;
 
@@ -30,11 +40,21 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
     }
   };
 
-  // Default image if no cover image is available
   const defaultCoverImage = '/images/default-book-cover.png';
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
+      {/* Confetti effect */}
+      {showConfetti && (
+        <Confetti
+          width={window.innerWidth}
+          height={window.innerHeight}
+          numberOfPieces={200} // Adjust number of confetti pieces
+          recycle={false} // Stop confetti after initial burst
+          colors={['#3B82F6', '#10B981', '#F59E0B', '#EF4444']} // Custom colors
+        />
+      )}
+
       <div className="bg-white px-6 pt-6 pb-6 sm:pb-6">
         <div className="sm:flex sm:items-start">
           <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
@@ -66,7 +86,8 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
               book={{
                 ...match.book,
                 coverImage: match.book.coverImage ? `/coursesImages/${match.book.coverImage}` : '/coursesImages/default-book-cover.png'
-              }}              showRequestButton={false}
+              }}
+              showRequestButton={false}
               status={match.status}
               date={match.matchDate}
             />
@@ -141,7 +162,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
             type="button"
             onClick={() => handleAction('decline')}
             disabled={loading}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-red-500 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Decline
           </button>
@@ -149,7 +170,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
             type="button"
             onClick={() => handleAction('accept')}
             disabled={loading}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-sm hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-green-500 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             {loading ? (
               <>
