@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Import icons from react-icons
 import {
-  HiPlus,                // Used in header and action button
-  HiXCircle,             // For error message
-  HiClock,               // For match item timestamp/status
-  HiOutlineDocumentText, // For empty matches state
-  HiOutlineBookOpen      // For empty wanted books state
-// Assuming HiXCircle, HiClock, HiOutlineDocumentText, HiOutlineBookOpen are needed from 'hi'
-// If BookActionModal uses icons from hi2, ensure those are imported there or here if passed as props.
+  HiUpload,
+  HiDocumentAdd,                
+  HiXCircle,             
+  HiClock,               
+  HiOutlineDocumentText, 
+  HiOutlineBookOpen      
 } from 'react-icons/hi';
 
 // Import Components and Modals
@@ -250,14 +248,14 @@ const Dashboard = () => {
                 onClick={openPublishModal} // Use correct handler
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
               >
-                <HiPlus className="-ml-1 w-5 h-5 mr-2" aria-hidden="true" /> Publish
+                <HiUpload className="-ml-1 w-5 h-5 mr-2" aria-hidden="true" /> Publish Book
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} transition={gentleSpring}
                 onClick={openRequestModal} // Use correct handler
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
               >
-                <HiPlus className="-ml-1 h-5 w-5 mr-2" aria-hidden="true" /> Request
+                <HiDocumentAdd className="-ml-1 h-5 w-5 mr-2" aria-hidden="true" /> Request Book
               </motion.button>
             </div>
           </div>
@@ -569,11 +567,9 @@ const Dashboard = () => {
                               onClick={() => handleInitiatePublish(book)} // Use correct handler
                               className="w-full inline-flex justify-center items-center px-4 py-2.5 text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition-colors duration-150 ease-in-out shadow-sm"
                             >
-                              <HiPlus className="w-4 h-4 mr-1.5" aria-hidden="true" /> I have this!
+                              <HiUpload className="w-4 h-4 mr-1.5" aria-hidden="true" /> I have this!
                             </motion.button>
                           }
-                          // Optional: Display request count if available
-                          // requestCount={book.requestCount}
                         />
                       </motion.div>
                     ))}

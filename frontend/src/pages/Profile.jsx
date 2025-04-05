@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Import icons from react-icons
-import { 
+import {
+  HiUpload,
+  HiDocumentAdd,
   HiPhone, 
   HiLocationMarker, 
   HiPencil, 
-  HiPlus, 
-  HiOutlineDocumentText, // Icon for empty published state
-  HiTrash,             // Icon for removing publication
-  HiOutlineBookOpen    // Icon for empty requested state
+  HiOutlineDocumentText, 
+  HiTrash,             
+  HiOutlineBookOpen   
 } from 'react-icons/hi'; 
 
 import BookCard from '../components/BookCard';
@@ -74,14 +75,13 @@ const Profile = () => {
       const payload = {
         ...userData,
         id: userId,
-        password: user?.password // Be cautious about sending passwords like this
+        password: user?.password
       };
       const updatedUser = await usersApi.updateUserProfile(payload);
       setUser(updatedUser);
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating profile:', error);
-      // Add user feedback here, e.g., setError('Failed to update profile')
     }
   };
 
@@ -97,7 +97,6 @@ const Profile = () => {
       setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error publishing book:', error);
-       // Add user feedback here
     }
   };
 
@@ -108,7 +107,6 @@ const Profile = () => {
       setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error requesting book:', error);
-       // Add user feedback here
     }
   };
 
@@ -121,20 +119,17 @@ const Profile = () => {
       }
     } catch (error) {
       console.error('Error removing book request:', error);
-      // Add user feedback here
     }
   };
 
   const handleRemovePublication = async (publication) => {
      try {
-      // Keep the confirmation dialog if needed, or remove if handled elsewhere
       if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) { 
         await matchesApi.deletePublication(publication);
         fetchProfileData(); // Refresh data after removal
       }
     } catch (error) {
       console.error('Error removing book publication:', error);
-       // Add user feedback here
     }
   };
 
@@ -173,7 +168,6 @@ const Profile = () => {
   }
 
   if (!user) {
-    // Optional: Add a message or redirect if user data is critical and not loaded
     return <div className="flex items-center justify-center min-h-screen text-gray-500">User data could not be loaded.</div>; 
   }
 
@@ -241,7 +235,7 @@ const Profile = () => {
                 onClick={openPublishModal}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
               >
-                <HiPlus className="w-5 h-5 mr-2" aria-hidden="true" />
+                <HiUpload className="w-5 h-5 mr-2" aria-hidden="true" />
                 Publish Book
               </motion.button>
               <motion.button
@@ -251,7 +245,7 @@ const Profile = () => {
                 onClick={openRequestModal}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
               >
-                <HiPlus className="h-5 w-5 mr-2" aria-hidden="true" />
+                <HiDocumentAdd className="h-5 w-5 mr-2" aria-hidden="true" />
                 Request Book
               </motion.button>
             </div>
@@ -281,7 +275,6 @@ const Profile = () => {
             <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
               {publishedBooks.length === 0 ? (
                 <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
-                   {/* Replaced SVG with React Icon */}
                   <HiOutlineDocumentText className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No published books</h3>
                   <p className="mt-1 text-sm text-gray-500">Start by publishing your first book.</p>
@@ -292,7 +285,7 @@ const Profile = () => {
                     onClick={openPublishModal}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
-                    <HiPlus className="h-4 w-4 mr-1" aria-hidden="true" />
+                    <HiUpload className="h-4 w-4 mr-1" aria-hidden="true" />
                     Publish Book
                   </motion.button>
                 </div>
@@ -314,11 +307,11 @@ const Profile = () => {
                       date={publication.publicationDate}
                       actionButton={
                         <motion.button
-                          whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }} // Enhanced hover feedback
+                          whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                           whileTap={{ scale: 0.98 }}
                           transition={gentleSpring}
-                          onClick={() => handleRemovePublication(publication)} // Moved confirmation logic to handler
-                          className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2 transition-colors duration-150" // Added transition
+                          onClick={() => handleRemovePublication(publication)}
+                          className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2 transition-colors duration-150"
                         >
                           <HiTrash className="h-4 w-4 mr-1" aria-hidden="true" />
                           Remove Publication
@@ -348,7 +341,6 @@ const Profile = () => {
             <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
               {requestedBooks.length === 0 ? (
                 <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
-                  {/* Replaced SVG with React Icon */}
                   <HiOutlineBookOpen className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No requested books</h3>
                   <p className="mt-1 text-sm text-gray-500">Search for a book to request it.</p>
@@ -359,8 +351,7 @@ const Profile = () => {
                     onClick={openRequestModal}
                     className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    {/* Replaced SVG with React Icon */}
-                    <HiPlus className="h-4 w-4 mr-1" aria-hidden="true" />
+                    <HiDocumentAdd className="h-4 w-4 mr-1" aria-hidden="true" />
                     Request Book
                   </motion.button>
                 </div>
