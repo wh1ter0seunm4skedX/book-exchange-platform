@@ -2,5 +2,5 @@
 .misc/
 # Don’t even think about it 🤫
 *.env
-
-.vscode/settings.json
+.idea/
+.vscode
