@@ -54,6 +54,18 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []); // Empty dependency array means run once on mount
 
+  // Auto display NEW matches when they're loaded
+  useEffect(() => {
+    if (matches && matches.length > 0) {
+      // Find the first match with NEW status, if any
+      const newMatch = matches.find(match => match.status === 'NEW');
+      if (newMatch) {
+        setSelectedMatch(newMatch);
+        setShowMatchModal(true);
+      }
+    }
+  }, [matches]);
+
   // --- Data Fetching ---
   const fetchDashboardData = async () => {
     setError(null); // Reset error before fetching
@@ -195,6 +207,13 @@ const Dashboard = () => {
     );
   }
 
+  // Helper function to format status from uppercase to title case
+  const formatStatus = (status) => {
+    if (!status) return '';
+    // Convert status like "NEW" to "New"
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50 pb-16">
       {/* Sticky Header Section within Dashboard */}
@@ -303,10 +322,9 @@ const Dashboard = () => {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
-                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
-                            {match.status}
+                            {formatStatus(match.status)}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
@@ -373,10 +391,9 @@ const Dashboard = () => {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
-                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
-                            {match.status}
+                            {formatStatus(match.status)}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
@@ -421,10 +438,9 @@ const Dashboard = () => {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
-                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
-                            {match.status}
+                            {formatStatus(match.status)}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
@@ -455,10 +471,9 @@ const Dashboard = () => {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
-                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
-                            {match.status}
+                            {formatStatus(match.status)}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
@@ -489,10 +504,9 @@ const Dashboard = () => {
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
-                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
-                            {match.status}
+                            {formatStatus(match.status)}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
