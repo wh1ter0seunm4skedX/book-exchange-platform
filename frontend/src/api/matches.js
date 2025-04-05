@@ -114,28 +114,35 @@ export const matchesApi = {
   },
 
   /**
-   * Accept a match
-   * @param {string} matchId ID of the match to accept
+   * Confirm a match (transitions from NEW to PENDING)
+   * @param {string} matchId ID of the match to confirm
    * @returns {Promise<Object>} Updated match
    */
-  acceptMatch: async (matchId) => {
+  confirmMatch: async (matchId) => {
     return apiRequest(`/book_exchange_platform/trades/${matchId}/confirm_match`, {
       method: 'POST'
     });
   },
 
   /**
-   * Decline a match
-   * @param {string} matchId ID of the match to decline
-   * @returns {Promise<Object>} Updated match
+   * Cancel a match (transitions to CANCELLED)
+   * @param {string} matchId ID of the match to cancel
+   * @returns {Promise<void>}
    */
-  declineMatch: async (matchId) => {
-    return apiRequest(`/book_exchange_platform/trades/cancel_match`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: matchId,
-        status: 'DECLINED'
-      })
+  cancelMatch: async (matchId) => {
+    return apiRequest(`/book_exchange_platform/trades/${matchId}/cancel_match`, {
+      method: 'POST'
+    });
+  },
+
+  /**
+   * Complete a match (transitions from PENDING to COMPLETED)
+   * @param {string} matchId ID of the match to complete
+   * @returns {Promise<Object>} Updated match with COMPLETED status
+   */
+  completeMatch: async (matchId) => {
+    return apiRequest(`/book_exchange_platform/trades/${matchId}/complete_match`, {
+      method: 'POST'
     });
   },
 

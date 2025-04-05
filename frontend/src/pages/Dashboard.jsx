@@ -159,22 +159,30 @@ const Dashboard = () => {
   };
 
   const handleMatchUpdate = async (matchId, action) => {
+    setError(null);
+    setLoading(true);
     try {
-      setError(null); // Clear previous errors
-      if (action === 'accept') {
-        await matchesApi.acceptMatch(matchId);
-      } else if (action === 'decline') {
-        await matchesApi.declineMatch(matchId);
+      // Execute the appropriate API call based on the action
+      if (action === 'confirm') {
+        await matchesApi.confirmMatch(matchId);
+      } else if (action === 'cancel') {
+        await matchesApi.cancelMatch(matchId);
+      } else if (action === 'complete') {
+        await matchesApi.completeMatch(matchId);
+      } else {
+        throw new Error(`Unknown action: ${action}`);
       }
-      // No need to close modal here, MatchNotificationModal handles its own close
-      fetchDashboardData(); // Refresh data after action
-      // Close modal after successful action (or let MatchNotificationModal handle it)
-      setShowMatchModal(false); 
-      setSelectedMatch(null);
+      
+      // Refresh data after successful update
+      await fetchDashboardData();
+      
+      // Show success message (optional)
+      // setSuccessMessage(`Match ${action}ed successfully`);
     } catch (error) {
       console.error(`Error ${action}ing match:`, error);
       setError(`Failed to ${action} match. Please try again.`);
-       // Keep the Match modal open on error? Optional.
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -282,10 +290,10 @@ const Dashboard = () => {
             <div className="space-y-3 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Ensure custom-scrollbar class is needed/styled globally */}
               {matches.length > 0 ? (
                  <AnimatePresence initial={false}>
-                    {matches.map((match) => (
+                    {matches.filter(m => m.status === 'NEW').map((match) => (
                       <motion.div
-                        key={match.id} layout initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }}
+                        key={match.id} layout initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                         transition={springTransition}
                         className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200"
                         onClick={() => handleViewMatch(match)}
@@ -297,13 +305,208 @@ const Dashboard = () => {
                             <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
                             <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
                           </div>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'pending' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'accepted' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : 'bg-red-100 text-red-800 ring-1 ring-red-200'}`}>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
                             {match.status}
                           </span>
                         </div>
                         <div className="mt-3 flex items-center text-sm text-gray-500">
                           <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
                           <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => handleViewMatch(match)}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          >
+                            View Details
+                          </button>
+                          {match.status === 'NEW' && (
+                            <button
+                              type="button"
+                              onClick={() => handleMatchUpdate(match.id, 'confirm')}
+                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition-colors duration-150"
+                            >
+                              Confirm
+                            </button>
+                          )}
+                          {match.status === 'NEW' && (
+                            <button
+                              type="button"
+                              onClick={() => handleMatchUpdate(match.id, 'cancel')}
+                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                          {match.status === 'PENDING' && (
+                            <button
+                              type="button"
+                              onClick={() => handleMatchUpdate(match.id, 'complete')}
+                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-150"
+                            >
+                              Complete
+                            </button>
+                          )}
+                          {match.status === 'PENDING' && (
+                            <button
+                              type="button"
+                              onClick={() => handleMatchUpdate(match.id, 'cancel')}
+                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                    {matches.filter(m => m.status === 'PENDING').map((match) => (
+                      <motion.div
+                        key={match.id} layout initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                        transition={springTransition}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200"
+                        onClick={() => handleViewMatch(match)}
+                        role="button" tabIndex={0}
+                        onKeyPress={(e) => e.key === 'Enter' && handleViewMatch(match)}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
+                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
+                          </div>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
+                            {match.status}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
+                          <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => handleViewMatch(match)}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          >
+                            View Details
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMatchUpdate(match.id, 'complete')}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-150"
+                          >
+                            Complete
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleMatchUpdate(match.id, 'cancel')}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {matches.filter(m => m.status === 'COMPLETED').map((match) => (
+                      <motion.div
+                        key={match.id} layout initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                        transition={springTransition}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200"
+                        onClick={() => handleViewMatch(match)}
+                        role="button" tabIndex={0}
+                        onKeyPress={(e) => e.key === 'Enter' && handleViewMatch(match)}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
+                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
+                          </div>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
+                            {match.status}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
+                          <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => handleViewMatch(match)}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          >
+                            View Details
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {matches.filter(m => m.status === 'CANCELLED').map((match) => (
+                      <motion.div
+                        key={match.id} layout initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                        transition={springTransition}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200"
+                        onClick={() => handleViewMatch(match)}
+                        role="button" tabIndex={0}
+                        onKeyPress={(e) => e.key === 'Enter' && handleViewMatch(match)}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
+                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
+                          </div>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
+                            {match.status}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
+                          <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => handleViewMatch(match)}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          >
+                            View Details
+                          </button>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {matches.filter(m => m.status === 'EXPIRED').map((match) => (
+                      <motion.div
+                        key={match.id} layout initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                        transition={springTransition}
+                        className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 cursor-pointer hover:shadow-md hover:border-gray-200 transition-all duration-200"
+                        onClick={() => handleViewMatch(match)}
+                        role="button" tabIndex={0}
+                        onKeyPress={(e) => e.key === 'Enter' && handleViewMatch(match)}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="min-w-0">
+                            <h3 className="text-base font-medium text-gray-800 truncate">{match.book?.title || 'Unknown Book'}</h3>
+                            <p className="text-xs text-gray-500">With: {match.matchedUser?.name || 'Another User'}</p>
+                          </div>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap flex-shrink-0 ${ match.status === 'NEW' ? 'bg-indigo-100 text-indigo-800 ring-1 ring-indigo-200' : match.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800 ring-1 ring-yellow-200' : match.status === 'COMPLETED' ? 'bg-green-100 text-green-800 ring-1 ring-green-200' : match.status === 'CANCELLED' ? 'bg-red-100 text-red-800 ring-1 ring-red-200' : 'bg-gray-100 text-gray-800 ring-1 ring-gray-200'}`}>
+                            {match.status}
+                          </span>
+                        </div>
+                        <div className="mt-3 flex items-center text-sm text-gray-500">
+                          <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
+                          <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex-shrink-0 flex space-x-2 mt-4">
+                          <button
+                            type="button"
+                            onClick={() => handleViewMatch(match)}
+                            className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          >
+                            View Details
+                          </button>
                         </div>
                       </motion.div>
                     ))}
