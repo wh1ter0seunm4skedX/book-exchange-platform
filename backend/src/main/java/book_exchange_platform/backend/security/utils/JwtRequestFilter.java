@@ -33,6 +33,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
+        final String requestURI = request.getRequestURI();
+
+        // Skip JWT processing for login and register endpoints
+        if (requestURI.equals("/book_exchange_platform/auth/login") || requestURI.equals("/book_exchange_platform/auth/register")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         final String requestTokenHeader = request.getHeader("Authorization");
 
         String username = null;
@@ -48,7 +56,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("JWT Token has expired");
             }
         } else {
-            logger.warn("JWT Token does not begin with Bearer String");
+            throw new ServletException("JWT Token does not begin with Bearer String");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
