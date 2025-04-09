@@ -77,13 +77,27 @@ const Profile = () => {
 
   const handleUpdateProfile = async (userData) => {
     try {
+      // Start with user ID and data from the modal *except* password
+      const { password, ...otherUserData } = userData; 
       const payload = {
-        ...userData,
-        id: userId,
-        password: user?.password
+        ...otherUserData,
+        id: userId, 
       };
+
+      // Only add the password to the payload if it was provided by the modal
+      if (password !== undefined && password !== null && password !== '') {
+        payload.password = password;
+      } else {
+        // Explicitly set password to null if not provided, so the backend will take a nice care of it :)
+        payload.password = null;
+      }
+
       const updatedUser = await usersApi.updateUserProfile(payload);
-      setUser(updatedUser);
+      
+      // Update local state *without* the password hash
+      const { password: _, ...userToSet } = updatedUser;
+      setUser(userToSet);
+      
       setIsEditModalOpen(false);
     } catch (error) {
       console.error('Error updating profile:', error);
