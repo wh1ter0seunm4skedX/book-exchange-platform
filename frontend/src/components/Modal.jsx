@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-const Modal = ({ isOpen, onClose, title, children }) => {
+const Modal = ({ isOpen, onClose, title, children, size = 'default' }) => {
   // Handle Escape key press and lock scrolling when modal is open
   useEffect(() => {
     const handleEscape = (e) => {
@@ -22,6 +22,13 @@ const Modal = ({ isOpen, onClose, title, children }) => {
   // Don't render anything if the modal isn't open
   if (!isOpen) return null;
 
+  const sizeClasses = {
+    default: 'sm:max-w-lg',
+    large: 'sm:max-w-3xl',
+    medium: 'sm:max-w-2xl',
+    small: 'sm:max-w-md',
+  };
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
@@ -33,7 +40,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
         />
 
         {/* The actual modal window */}
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+        <div className={`inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full ${sizeClasses[size]} sm:p-6 sm:align-middle`}>
           {/* Close button for desktop */}
           <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
             <button

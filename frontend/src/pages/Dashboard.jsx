@@ -300,42 +300,6 @@ const Dashboard = () => {
                         >
                           View Details
                         </button>
-                        {match.status === 'NEW' && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleMatchUpdate(match.id, 'confirm')}
-                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-700 bg-green-50 hover:bg-green-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-green-500 transition-colors duration-150"
-                            >
-                              Confirm
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleMatchUpdate(match.id, 'cancel')}
-                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        {match.status === 'PENDING' && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleMatchUpdate(match.id, 'complete')}
-                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-150"
-                            >
-                              Complete
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleMatchUpdate(match.id, 'cancel')}
-                              className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
                       </div>
                     </motion.div>
                   ))}
@@ -369,20 +333,7 @@ const Dashboard = () => {
                         >
                           View Details
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleMatchUpdate(match.id, 'complete')}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 transition-colors duration-150"
-                        >
-                          Complete
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleMatchUpdate(match.id, 'cancel')}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 transition-colors duration-150"
-                        >
-                          Cancel
-                        </button>
+                    
                       </div>
                     </motion.div>
                   ))}

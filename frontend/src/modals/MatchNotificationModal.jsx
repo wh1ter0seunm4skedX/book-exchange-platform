@@ -19,28 +19,24 @@ import {
   HiUsers
 } from 'react-icons/hi';
 
-// Modal for handling book match notifications
 const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // Show confetti for new matches
   useEffect(() => {
     if (isOpen && match && match.status === 'NEW') {
       setShowConfetti(true);
       const timer = setTimeout(() => setShowConfetti(false), 10000);
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [isOpen, match]);
 
   if (!match) return null;
 
-  // Figure out who the exchange partner is
   const exchangePartner = match.requester?.id === getCurrentUserId() 
     ? match.provider 
     : match.requester;
 
-  // Handle confirm, cancel, or complete actions
   const handleAction = async (action) => {
     setLoading(true);
     try {
@@ -58,7 +54,6 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
     }
   };
 
-  // Pick colors based on match status
   const getStatusColors = (status) => {
     switch (status) {
       case 'NEW': return { bg: 'bg-indigo-100', text: 'text-indigo-800', ring: 'ring-1 ring-indigo-200' };
@@ -73,7 +68,6 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   const statusColors = getStatusColors(match.status);
   const isActive = match.status === 'NEW' || match.status === 'PENDING';
 
-  // Set the title based on status
   const getStatusTitle = () => {
     switch (match.status) {
       case 'NEW': return 'Book Match Found!';
@@ -86,19 +80,24 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      {/* Throw some confetti for new matches */}
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose}
+      size={match.status === 'PENDING' ? 'large' : 'default'}
+    >
       {showConfetti && match.status === 'NEW' && (
         <Confetti
           width={window.innerWidth}
           height={window.innerHeight}
-          numberOfPieces={200} 
-          recycle={false} 
-          colors={['#3B82F6', '#10B981', '#F59E0B', '#EF4444']} 
+          numberOfPieces={400}
+          recycle={false}
+          colors={['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899']}
+          gravity={0.2}
+          wind={0.01}
         />
       )}
 
-      <div className="bg-white px-6 pt-6 pb-6 sm:pb-6">
+      <div className="bg-white px-6 pt-6 pb-6 sm:pb-6 max-h-[80vh] overflow-y-auto">
         <div className="sm:flex sm:items-start">
           <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-blue-100 to-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
             <HiUsers className="h-6 w-6 text-blue-600" aria-hidden="true" />
@@ -119,91 +118,35 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
           </div>
         </div>
 
-        {/* Show the book details */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="mt-6"
-        >
-          <div className="flex items-start space-x-4">
-            <BookCard
-              book={{
-                ...match.book,
-                coverImage: match.book.coverImage ? `/coursesImages/${match.book.coverImage}` : '/coursesImages/default-book-cover.png'
-              }}
-              showRequestButton={false}
-              status={match.status}
-              date={match.expirationDate}
-            />
-          </div>
-        </motion.div>
+        {match.status === 'PENDING' ? (
+          <>
+            <div className="mt-6 flex gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex-shrink-0 w-[300px]"
+              >
+                <div className="flex items-start">
+                  <BookCard
+                    book={{
+                      ...match.book,
+                      coverImage: match.book.coverImage ? `/coursesImages/${match.book.coverImage}` : '/coursesImages/default-book-cover.png'
+                    }}
+                    showRequestButton={false}
+                    status={match.status}
+                    date={match.expirationDate}
+                  />
+                </div>
+              </motion.div>
 
-        {/* Exchange partner info and next steps */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-          className="mt-8 rounded-lg bg-blue-50 p-4 border border-blue-100"
-        >
-          <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex space-x-3 items-start">
-                <HiUser className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
-                  <p className="text-sm text-blue-700">
-                    {exchangePartner?.fullName || 'Unknown User'}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex space-x-3 items-start">
-                <HiMail className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="text-sm font-medium text-blue-900">Contact</p>
-                  <p className="text-sm text-blue-700">{exchangePartner?.email || 'Not available'}</p>
-                </div>
-              </div>
-              
-              <div className="flex space-x-3 items-start">
-                <HiPhone className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="text-sm font-medium text-blue-900">Phone</p>
-                  <p className="text-sm text-blue-700">{exchangePartner?.phoneNumber || 'Not available'}</p>
-                </div>
-              </div>
-              
-              <div className="flex space-x-3 items-start">
-                <HiLocationMarker className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
-                <div>
-                  <p className="text-sm font-medium text-blue-900">Location</p>
-                  <p className="text-sm text-blue-700">{exchangePartner?.preferredExchangeLocation || 'Not specified'}</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium text-blue-900">Next Steps:</p>
-              {match.status === 'NEW' && (
-                <ul className="text-sm text-blue-700 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <HiCheck className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Confirm the match to proceed</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <HiChat className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Contact info shared after confirmation</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <HiCalendar className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Arrange meeting details</span>
-                  </li>
-                </ul>
-              )}
-
-              {match.status === 'PENDING' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="flex-1 rounded-lg bg-blue-50 p-4 border border-blue-100"
+              >
+                <h4 className="text-sm font-medium text-blue-900 mb-3">Next Steps:</h4>
                 <ul className="text-sm text-blue-700 space-y-2">
                   <li className="flex items-center space-x-2">
                     <HiCheck className="h-4 w-4 text-blue-500" aria-hidden="true" />
@@ -218,39 +161,115 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
                     <span>Complete the exchange after meeting</span>
                   </li>
                 </ul>
-              )}
-
-              {match.status === 'COMPLETED' && (
-                <ul className="text-sm text-blue-700 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <HiCheckCircle className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Exchange completed successfully</span>
-                  </li>
-                </ul>
-              )}
-
-              {match.status === 'CANCELLED' && (
-                <ul className="text-sm text-blue-700 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <HiXCircle className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Exchange was cancelled</span>
-                  </li>
-                </ul>
-              )}
-
-              {match.status === 'EXPIRED' && (
-                <ul className="text-sm text-blue-700 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <HiClock className="h-4 w-4 text-blue-500" aria-hidden="true" />
-                    <span>Exchange time has expired</span>
-                  </li>
-                </ul>
-              )}
+              </motion.div>
             </div>
-          </div>
-        </motion.div>
 
-        {/* Buttons for actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
+              className="mt-6 rounded-lg bg-blue-50 p-4 border border-blue-100"
+            >
+              <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <HiUser className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                    <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
+                  </div>
+                  <p className="text-sm text-blue-700 pl-7">
+                    {exchangePartner?.fullName || 'Unknown User'}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <HiMail className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                    <p className="text-sm font-medium text-blue-900">Contact</p>
+                  </div>
+                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.email || 'Not available'}</p>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <HiPhone className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                    <p className="text-sm font-medium text-blue-900">Phone</p>
+                  </div>
+                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.phoneNumber || 'Not available'}</p>
+                </div>
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <HiLocationMarker className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                    <p className="text-sm font-medium text-blue-900">Location</p>
+                  </div>
+                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.preferredExchangeLocation || 'Not specified'}</p>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-6"
+          >
+            <div className="flex items-start space-x-4">
+              <BookCard
+                book={{
+                  ...match.book,
+                  coverImage: match.book.coverImage ? `/coursesImages/${match.book.coverImage}` : '/coursesImages/default-book-cover.png'
+                }}
+                showRequestButton={false}
+                status={match.status}
+                date={match.expirationDate}
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {(match.status === 'NEW' || match.status === 'PENDING') && !match.status === 'PENDING' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="mt-8 rounded-lg bg-blue-50 p-4 border border-blue-100"
+          >
+            <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
+            
+            <div className="space-y-4">
+              <div className="flex space-x-3 items-start">
+                <HiUser className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
+                  <p className="text-sm text-blue-700">
+                    {exchangePartner?.fullName || 'Unknown User'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex space-x-3 items-start">
+                <HiMail className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Contact</p>
+                  <p className="text-sm text-blue-700">{exchangePartner?.email || 'Not available'}</p>
+                </div>
+              </div>
+              <div className="flex space-x-3 items-start">
+                <HiPhone className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Phone</p>
+                  <p className="text-sm text-blue-700">{exchangePartner?.phoneNumber || 'Not available'}</p>
+                </div>
+              </div>
+              <div className="flex space-x-3 items-start">
+                <HiLocationMarker className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Location</p>
+                  <p className="text-sm text-blue-700">{exchangePartner?.preferredExchangeLocation || 'Not specified'}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         <div className="mt-6 flex justify-end space-x-3">
           <button
             type="button"
@@ -259,7 +278,6 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
           >
             Close
           </button>
-
           {match.status === 'NEW' && (
             <>
               <button
@@ -292,7 +310,6 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
               </button>
             </>
           )}
-
           {match.status === 'PENDING' && (
             <>
               <button
