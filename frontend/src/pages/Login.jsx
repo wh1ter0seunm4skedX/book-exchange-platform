@@ -72,7 +72,30 @@ const Login = () => {
       await authApi.login(formData);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Failed to login. Please check your credentials.');
+      // Log detailed error for developers
+      console.error('Login error:', err);
+      
+      // Parse the error response
+      let errorMessage = 'An unexpected error occurred. Please try again.';
+      try {
+        if (err.response?.status === 401) {
+          errorMessage = 'Invalid email or password. Please try again.';
+        } else if (err.response?.status === 429) {
+          errorMessage = 'Too many login attempts. Please try again later.';
+        } else if (err.response?.status === 500) {
+          errorMessage = 'Server error. Please try again later.';
+        } else if (err.message) {
+          // Try to parse the error message from the response
+          const errorData = JSON.parse(err.message);
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          }
+        }
+      } catch (parseError) {
+        console.error('Error parsing error message:', parseError);
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
