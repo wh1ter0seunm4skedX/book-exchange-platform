@@ -9,7 +9,8 @@ import {
   HiPencil, 
   HiOutlineDocumentText, 
   HiTrash,             
-  HiOutlineBookOpen   
+  HiOutlineBookOpen,   
+  HiX
 } from 'react-icons/hi'; 
 
 import BookCard from '../components/BookCard';
@@ -52,18 +53,23 @@ const Profile = () => {
       
       try {
         const userPublications = await matchesApi.getUserPublications(userId);
+        console.log('Fetched publications:', userPublications);
         setPublishedBooks(userPublications || []);
       } catch (pubError) {
+        console.error('Error fetching publications:', pubError);
         setPublishedBooks([]);
       }
       
       try {
         const userRequests = await matchesApi.getUserRequests(userId);
+        console.log('Fetched requests:', userRequests);
         setRequestedBooks(userRequests || []);
       } catch (reqError) {
+        console.error('Error fetching requests:', reqError);
         setRequestedBooks([]);
       }
     } catch (error) {
+      console.error('Error fetching profile data:', error);
       setError('Failed to load profile data. Please try again later.');
     } finally {
       setLoading(false);
@@ -112,6 +118,13 @@ const Profile = () => {
 
   const handleRemoveRequest = async (request) => {
     try {
+      // Check if the request is matched based on status instead of matchId
+      if (request.status?.toUpperCase() === 'MATCHED') {
+        // Show an error message that matched books cannot be removed
+        alert("This book request cannot be canceled because it's already matched with another user.");
+        return;
+      }
+      
       if (window.confirm(`Are you sure you want to cancel your request for "${request.book.title}"?`)) {
         await matchesApi.deleteUserRequest(request.id); 
         fetchProfileData(); 
@@ -123,6 +136,13 @@ const Profile = () => {
 
   const handleRemovePublication = async (publication) => {
      try {
+      // Check if the publication is matched based on status instead of matchId
+      if (publication.status?.toUpperCase() === 'MATCHED') {
+        // Show an error message that matched books cannot be removed
+        alert("This book publication cannot be removed because it's already matched with another user.");
+        return;
+      }
+      
       if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) { 
         await matchesApi.deleteUserPublication(publication.id); 
         fetchProfileData(); 
@@ -232,7 +252,7 @@ const Profile = () => {
                 whileTap={{ scale: 0.98 }}
                 transition={gentleSpring}
                 onClick={openPublishModal}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 <HiUpload className="w-5 h-5 mr-2" aria-hidden="true" />
                 Publish Book
@@ -242,7 +262,7 @@ const Profile = () => {
                 whileTap={{ scale: 0.98 }}
                 transition={gentleSpring}
                 onClick={openRequestModal}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <HiDocumentAdd className="h-5 w-5 mr-2" aria-hidden="true" />
                 Request Book
@@ -289,36 +309,61 @@ const Profile = () => {
                   </motion.button>
                 </div>
               ) : (
-                publishedBooks.map(publication => (
-                  <motion.div
-                    key={publication.id}
-                    layout 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={gentleSpring}
-                    className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
-                  >
-                    <BookCard
-                      book={publication.book}
-                      showRequestButton={false}
-                      status={publication.status}
-                      date={publication.publicationDate}
-                      actionButton={
-                        <motion.button
-                          whileHover={{ scale: 1.02, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                          whileTap={{ scale: 0.98 }}
-                          transition={gentleSpring}
-                          onClick={() => handleRemovePublication(publication)}
-                          className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2 transition-colors duration-150"
-                        >
-                          <HiTrash className="h-4 w-4 mr-1" aria-hidden="true" />
-                          Remove Publication
-                        </motion.button>
-                      }
-                    />
-                  </motion.div>
-                ))
+                publishedBooks.map(publication => {
+                  // Check if the publication is matched based on status instead of matchId
+                  const isMatched = publication.status?.toUpperCase() === 'MATCHED';
+                  
+                  // Debug log for publication
+                  console.log('Rendering publication:', {
+                    id: publication.id,
+                    title: publication.book?.title,
+                    matchId: publication.matchId,
+                    status: publication.status,
+                    isMatched
+                  });
+                  
+                  return (
+                    <motion.div
+                      key={publication.id}
+                      layout 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={gentleSpring}
+                      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
+                    >
+                      <BookCard
+                        book={publication.book}
+                        status={publication.status}
+                        date={publication.publicationDate}
+                        isMatched={isMatched}
+                        actionButton={
+                          isMatched ? (
+                            // Disabled button for matched publications
+                            <button
+                              disabled
+                              className="w-full text-sm text-gray-400 flex items-center justify-center py-2 focus:outline-none cursor-not-allowed bg-gray-50"
+                            >
+                              <HiX className="h-4 w-4 mr-1" aria-hidden="true" />
+                              Cannot Remove Matched Book
+                            </button>
+                          ) : (
+                            // Regular remove button for non-matched publications
+                            <motion.button
+                              whileHover={{ backgroundColor: 'rgba(239, 68, 68, 0.05)' }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => handleRemovePublication(publication)}
+                              className="w-full text-sm text-red-600 hover:text-red-700 flex items-center justify-center py-2 focus:outline-none focus:ring-1 focus:ring-red-500"
+                            >
+                              <HiTrash className="h-4 w-4 mr-1" aria-hidden="true" />
+                              Remove Publication
+                            </motion.button>
+                          )
+                        }
+                      />
+                    </motion.div>
+                  );
+                })
               )}
             </div>
           </motion.div>
@@ -356,25 +401,47 @@ const Profile = () => {
                 </div>
               ) : (
                  <AnimatePresence initial={false}> {/* Wrap list items for exit animations */}
-                   {requestedBooks.map(request => (
-                     <motion.div
-                       key={request.id}
-                       layout // Added layout prop
-                       initial={{ opacity: 0, y: 20 }}
-                       animate={{ opacity: 1, y: 0 }}
-                       exit={{ opacity: 0, x: -20 }} // Different exit animation
-                       transition={gentleSpring}
-                       className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
-                     >
-                       <BookCard
-                         book={request.book}
-                         isRequested={true}
-                         requestDate={request.requestDate}
-                         // Pass the handler directly, confirmation is now inside the handler
-                         onCancelRequest={() => handleRemoveRequest(request)} 
-                       />
-                     </motion.div>
-                   ))}
+                   {requestedBooks.map(request => {
+                     // Check if the request is matched based on status instead of matchId
+                     const isMatched = request.status?.toUpperCase() === 'MATCHED';
+                     
+                     // Debug log for request
+                     console.log('Rendering request:', {
+                       id: request.id,
+                       title: request.book?.title,
+                       matchId: request.matchId,
+                       status: request.status,
+                       isMatched
+                     });
+                     
+                     return (
+                       <motion.div
+                         key={request.id}
+                         layout // Added layout prop
+                         initial={{ opacity: 0, y: 20 }}
+                         animate={{ opacity: 1, y: 0 }}
+                         exit={{ opacity: 0, x: -20 }} // Different exit animation
+                         transition={gentleSpring}
+                         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
+                       >
+                         <BookCard
+                           book={request.book}
+                           isRequested={true}
+                           requestDate={request.requestDate}
+                           status={request.status} // Add status prop to show status tag
+                           isMatched={isMatched}
+                           onCancelRequest={
+                             isMatched 
+                               ? () => {
+                                   console.log('Attempting to cancel matched request:', request.id);
+                                   alert("This book request cannot be canceled because it's already matched with another user.");
+                                 }
+                               : () => handleRemoveRequest(request)
+                           }
+                         />
+                       </motion.div>
+                     );
+                   })}
                  </AnimatePresence>
               )}
             </div>
