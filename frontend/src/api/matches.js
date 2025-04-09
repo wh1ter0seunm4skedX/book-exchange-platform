@@ -114,6 +114,32 @@ export const matchesApi = {
   },
 
   /**
+   * Delete a user request
+   * @param {string} id ID of the request to delete
+   * @returns {Promise<void>}
+   */
+  deleteUserRequest: async (id) => {
+    // Pass endpoint string first, options object second
+    return apiRequest(
+      `/book_exchange_platform/trades/${id}/request`, 
+      { method: 'DELETE' } 
+    );
+  },
+
+  /**
+   * Delete a user publication
+   * @param {string} id ID of the publication to delete
+   * @returns {Promise<void>}
+   */
+  deleteUserPublication: async (id) => {
+    // Pass endpoint string first, options object second
+    return apiRequest(
+      `/book_exchange_platform/trades/${id}/publication`, 
+      { method: 'DELETE' }
+    );
+  },
+
+  /**
    * Confirm a match (transitions from NEW to PENDING)
    * @param {string} matchId ID of the match to confirm
    * @returns {Promise<Object>} Updated match

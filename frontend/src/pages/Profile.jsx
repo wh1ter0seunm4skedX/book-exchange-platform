@@ -93,7 +93,7 @@ const Profile = () => {
         courseNumber: bookData.courseNumber,
         coverImage: bookData.coverImage
       });
-      fetchProfileData(); // Refresh data after publishing
+      fetchProfileData(); 
       setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error publishing book:', error);
@@ -103,7 +103,7 @@ const Profile = () => {
   const handleRequestBook = async (bookData) => {
     try {
       await matchesApi.addBookRequest(bookData, userId);
-      fetchProfileData(); // Refresh data after requesting
+      fetchProfileData(); 
       setIsBookActionOpen(false);
     } catch (error) {
       console.error('Error requesting book:', error);
@@ -112,10 +112,9 @@ const Profile = () => {
 
   const handleRemoveRequest = async (request) => {
     try {
-      // Keep the confirmation dialog
       if (window.confirm(`Are you sure you want to cancel your request for "${request.book.title}"?`)) {
-        await matchesApi.deleteRequest(request);
-        fetchProfileData(); // Refresh data after removal
+        await matchesApi.deleteUserRequest(request.id); 
+        fetchProfileData(); 
       }
     } catch (error) {
       console.error('Error removing book request:', error);
@@ -125,8 +124,8 @@ const Profile = () => {
   const handleRemovePublication = async (publication) => {
      try {
       if (window.confirm(`Are you sure you want to remove the publication "${publication.book.title}"?`)) { 
-        await matchesApi.deletePublication(publication);
-        fetchProfileData(); // Refresh data after removal
+        await matchesApi.deleteUserPublication(publication.id); 
+        fetchProfileData(); 
       }
     } catch (error) {
       console.error('Error removing book publication:', error);
