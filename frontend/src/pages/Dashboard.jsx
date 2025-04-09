@@ -4,6 +4,7 @@ import {
   HiUpload,
   HiDocumentAdd,
   HiXCircle,
+  HiX,
   HiClock,
   HiOutlineDocumentText,
   HiOutlineBookOpen,
@@ -40,7 +41,6 @@ const Dashboard = () => {
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [initialBookForPublish, setInitialBookForPublish] = useState(null);
-  const [exchangePartner, setExchangePartner] = useState(null);
 
   const navigate = useNavigate();
   const userId = getCurrentUserId();
@@ -79,12 +79,6 @@ const Dashboard = () => {
 
       setMatches(userMatches || []);
       setMostWantedBooks(Array.isArray(wantedBooks) ? wantedBooks.slice(0, 5) : []);
-
-      const exchangePartnerData = await usersApi.getUserProfile(userData.exchangePartnerId).catch(err => {
-        console.error('Error fetching exchange partner profile:', err);
-        return null;
-      });
-      setExchangePartner(exchangePartnerData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       setError('Failed to load some data. Try refreshing.');
@@ -180,7 +174,7 @@ const Dashboard = () => {
   // Show a loading spinner while data loads
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
+      <div className="flex justify-center items-center min-h-screen bg-gradient-radial">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -193,7 +187,15 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50 pb-16">
+    <div className="min-h-screen bg-gradient-radial pb-16">
+      {/* Floating shapes in the background */}
+      <div className="floating-shapes">
+        <div className="shape"></div>
+        <div className="shape"></div>
+        <div className="shape"></div>
+        <div className="shape"></div>
+      </div>
+
       {/* Sticky user header */}
       <div className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -222,14 +224,18 @@ const Dashboard = () => {
             </div>
             <div className="flex flex-wrap gap-3 justify-center sm:justify-end flex-shrink-0">
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} transition={gentleSpring}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={gentleSpring}
                 onClick={openPublishModal}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 shadow-md"
               >
                 <HiUpload className="-ml-1 w-5 h-5 mr-2" aria-hidden="true" /> Publish Book
               </motion.button>
               <motion.button
-                whileHover={{ scale: 1.02, y: -2 }} whileTap={{ scale: 0.98 }} transition={gentleSpring}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                transition={gentleSpring}
                 onClick={openRequestModal}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-md"
               >
@@ -241,7 +247,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main dashboard content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         {/* Error popup */}
         <AnimatePresence>
           {error && (
@@ -256,14 +262,14 @@ const Dashboard = () => {
             >
               <HiXCircle className="h-5 w-5 mr-3 flex-shrink-0" aria-hidden="true" />
               <span className="text-sm">{error}</span>
-              <button onClick={() => setError(null)} className="ml-auto text-red-500 hover:text-red-700" aria-label="Dismiss error">
-                <HiXMark className="h-5 w-5" />
+              <button onClick={() => setError(null)} className="ml-auto text-red-500 hover:text-red-700">
+                <HiX className="h-5 w-5" />
               </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Matches and Most Wanted sections */}
+        {/* Grid Layout */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -272,8 +278,10 @@ const Dashboard = () => {
         >
           {/* Your Matches */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springTransition}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={springTransition}
+            className="glass-effect hover-lift rounded-2xl p-6 flex flex-col"
           >
             <div className="flex items-center justify-between mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
@@ -727,8 +735,10 @@ const Dashboard = () => {
 
           {/* Most Wanted Books */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={springTransition}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={springTransition}
+            className="glass-effect hover-lift rounded-2xl p-6 flex flex-col"
           >
             <div className="flex items-center justify-between mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -792,54 +802,6 @@ const Dashboard = () => {
               )}
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Exchange Details */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="mt-6 rounded-lg bg-blue-50 p-4 border border-blue-100"
-        >
-          <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-1">
-              <div className="flex items-center space-x-2">
-                <HiUser className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
-              </div>
-              <p className="text-sm text-blue-700 pl-7 break-words">
-                {exchangePartner?.fullName || 'Unknown User'}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center space-x-2">
-                <HiMail className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                <p className="text-sm font-medium text-blue-900">Contact</p>
-              </div>
-              <p className="text-sm text-blue-700 pl-7 break-all">
-                {exchangePartner?.email || 'Not available'}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center space-x-2">
-                <HiPhone className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                <p className="text-sm font-medium text-blue-900">Phone</p>
-              </div>
-              <p className="text-sm text-blue-700 pl-7 whitespace-nowrap">
-                {exchangePartner?.phoneNumber || 'Not available'}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center space-x-2">
-                <HiLocationMarker className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                <p className="text-sm font-medium text-blue-900">Location</p>
-              </div>
-              <p className="text-sm text-blue-700 pl-7 break-words">
-                {exchangePartner?.preferredExchangeLocation || 'Not specified'}
-              </p>
-            </div>
-          </div>
         </motion.div>
       </div>
 

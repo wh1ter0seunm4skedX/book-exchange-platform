@@ -205,16 +205,25 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-pink-50">
+      <div className="animated-gradient-background"></div>
+      <div className="radial-overlay"></div>
+      <div className="floating-shapes-container">
+        <div className="shape"></div>
+        <div className="shape"></div>
+        <div className="shape"></div>
+        <div className="shape"></div>
+      </div>
+
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10"> {/* Added sticky header */}
+      <div className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* User Info and Edit Button */}
-            <div className="flex items-center space-x-4 flex-grow"> {/* Added flex-grow */}
+            <div className="flex items-center space-x-4 flex-grow">
               <motion.div
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 transition={gentleSpring}
-                className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg flex-shrink-0" // Added flex-shrink-0
+                className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg flex-shrink-0"
               >
                 <span className="text-white text-2xl font-bold">
                   {user?.fullName?.[0]?.toUpperCase() || '?'} 
@@ -259,7 +268,7 @@ const Profile = () => {
             </div>
             
             {/* Publish and Request Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center sm:justify-end flex-shrink-0"> {/* Added justify-center/end */}
+            <div className="flex flex-wrap gap-3 justify-center sm:justify-end flex-shrink-0">
               <motion.button
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
@@ -295,18 +304,18 @@ const Profile = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...gentleSpring, delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col" // Added flex flex-col
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col"
           >
-            <div className="flex items-center justify-between mb-6 flex-shrink-0"> {/* Added flex-shrink-0 */}
+            <div className="flex items-center justify-between mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 Published Books
               </h2>
               <span className="text-sm text-gray-500">{publishedBooks.length} book{publishedBooks.length !== 1 ? 's' : ''}</span>
             </div>
 
-            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
+            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar">
               {publishedBooks.length === 0 ? (
-                <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
+                <div className="text-center py-12 flex flex-col items-center justify-center h-full">
                   <HiOutlineDocumentText className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No published books</h3>
                   <p className="mt-1 text-sm text-gray-500">Start by publishing your first book.</p>
@@ -334,7 +343,7 @@ const Profile = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={gentleSpring}
-                      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
+                      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md"
                     >
                       <BookCard
                         book={publication.book}
@@ -377,18 +386,18 @@ const Profile = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ ...gentleSpring, delay: 0.2 }}
-            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col" // Added flex flex-col
+            className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col"
           >
-            <div className="flex items-center justify-between mb-6 flex-shrink-0"> {/* Added flex-shrink-0 */}
+            <div className="flex items-center justify-between mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 Requested Books
               </h2>
               <span className="text-sm text-gray-500">{requestedBooks.length} book{requestedBooks.length !== 1 ? 's' : ''}</span>
             </div>
             
-            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar"> {/* Added flex-grow and custom-scrollbar */}
+            <div className="space-y-4 flex-grow overflow-y-auto pr-2 custom-scrollbar">
               {requestedBooks.length === 0 ? (
-                <div className="text-center py-12 flex flex-col items-center justify-center h-full"> {/* Centering content */}
+                <div className="text-center py-12 flex flex-col items-center justify-center h-full">
                   <HiOutlineBookOpen className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No requested books</h3>
                   <p className="mt-1 text-sm text-gray-500">Search for a book to request it.</p>
@@ -404,7 +413,7 @@ const Profile = () => {
                   </motion.button>
                 </div>
               ) : (
-                 <AnimatePresence initial={false}> {/* Wrap list items for exit animations */}
+                 <AnimatePresence initial={false}>
                    {requestedBooks.map(request => {
                      // Check if the request is matched based on status instead of matchId
                      const isMatched = request.status?.toUpperCase() === 'MATCHED';
@@ -412,18 +421,18 @@ const Profile = () => {
                      return (
                        <motion.div
                          key={request.id}
-                         layout // Added layout prop
+                         layout
                          initial={{ opacity: 0, y: 20 }}
                          animate={{ opacity: 1, y: 0 }}
-                         exit={{ opacity: 0, x: -20 }} // Different exit animation
+                         exit={{ opacity: 0, x: -20 }}
                          transition={gentleSpring}
-                         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md" // Slightly adjusted hover
+                         className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:bg-gray-50 hover:border-gray-200 hover:shadow-md"
                        >
                          <BookCard
                            book={request.book}
                            isRequested={true}
                            requestDate={request.requestDate}
-                           status={request.status} // Add status prop to show status tag
+                           status={request.status}
                            isMatched={isMatched}
                            onCancelRequest={
                              isMatched 
