@@ -1,7 +1,7 @@
 // Functions for handling trades and matches on the backend
 import { apiRequest, getCurrentUserId } from './apiUtils';
 
-export const tradesApi = {
+export const matchesApi = {
   // Grab matches for the current user
   getUserMatches: async (userId = null) => {
     const id = userId || getCurrentUserId();
