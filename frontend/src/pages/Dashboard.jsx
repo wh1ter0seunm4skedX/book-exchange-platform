@@ -6,7 +6,14 @@ import {
   HiXCircle,
   HiClock,
   HiOutlineDocumentText,
-  HiOutlineBookOpen
+  HiOutlineBookOpen,
+  HiArrowRight,
+  HiSparkles,
+  HiCheck,
+  HiUser,
+  HiMail,
+  HiPhone,
+  HiLocationMarker
 } from 'react-icons/hi';
 import BookCard from '../components/BookCard';
 import BookActionModal from '../modals/BookActionModal';
@@ -33,6 +40,7 @@ const Dashboard = () => {
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [initialBookForPublish, setInitialBookForPublish] = useState(null);
+  const [exchangePartner, setExchangePartner] = useState(null);
 
   const navigate = useNavigate();
   const userId = getCurrentUserId();
@@ -71,6 +79,12 @@ const Dashboard = () => {
 
       setMatches(userMatches || []);
       setMostWantedBooks(Array.isArray(wantedBooks) ? wantedBooks.slice(0, 5) : []);
+
+      const exchangePartnerData = await usersApi.getUserProfile(userData.exchangePartnerId).catch(err => {
+        console.error('Error fetching exchange partner profile:', err);
+        return null;
+      });
+      setExchangePartner(exchangePartnerData);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
       setError('Failed to load some data. Try refreshing.');
@@ -293,13 +307,66 @@ const Dashboard = () => {
                         <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={() => handleViewMatch(match)}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewMatch(match);
+                          }}
+                          whileHover={{ 
+                            scale: 1.02,
+                            backgroundColor: 'rgb(238, 242, 255)',
+                            boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          initial={{ boxShadow: '0 0 0 0 rgba(99, 102, 241, 0)' }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                            mass: 0.5
+                          }}
+                          className={`
+                            inline-flex items-center px-4 py-2 
+                            text-sm font-medium rounded-lg
+                            transition-all duration-200 ease-in-out
+                            ${match.status === 'NEW' ? 
+                              'text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:ring-indigo-500' :
+                              match.status === 'PENDING' ? 
+                              'text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500' :
+                              match.status === 'COMPLETED' ? 
+                              'text-green-700 bg-green-50 hover:bg-green-100 focus:ring-green-500' :
+                              match.status === 'CANCELLED' ? 
+                              'text-red-700 bg-red-50 hover:bg-red-100 focus:ring-red-500' :
+                              'text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500'
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-1
+                            group relative overflow-hidden
+                          `}
+                          aria-label={`View details for ${match.book?.title || 'book match'}`}
                         >
-                          View Details
-                        </button>
+                          <span className="relative z-10 flex items-center">
+                            <HiArrowRight 
+                              className={`mr-2 h-4 w-4 transform transition-transform duration-200 ease-in-out group-hover:translate-x-0.5
+                                ${match.status === 'NEW' ? 'text-indigo-600' :
+                                  match.status === 'PENDING' ? 'text-yellow-600' :
+                                  match.status === 'COMPLETED' ? 'text-green-600' :
+                                  match.status === 'CANCELLED' ? 'text-red-600' :
+                                  'text-gray-600'
+                                }`}
+                            />
+                            <span className="relative">View Details</span>
+                          </span>
+                          <motion.span
+                            className="absolute inset-0 transform origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              background: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                            }}
+                          />
+                        </motion.button>
                       </div>
                     </motion.div>
                   ))}
@@ -326,14 +393,66 @@ const Dashboard = () => {
                         <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={() => handleViewMatch(match)}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewMatch(match);
+                          }}
+                          whileHover={{ 
+                            scale: 1.02,
+                            backgroundColor: 'rgb(238, 242, 255)',
+                            boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          initial={{ boxShadow: '0 0 0 0 rgba(99, 102, 241, 0)' }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                            mass: 0.5
+                          }}
+                          className={`
+                            inline-flex items-center px-4 py-2 
+                            text-sm font-medium rounded-lg
+                            transition-all duration-200 ease-in-out
+                            ${match.status === 'NEW' ? 
+                              'text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:ring-indigo-500' :
+                              match.status === 'PENDING' ? 
+                              'text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500' :
+                              match.status === 'COMPLETED' ? 
+                              'text-green-700 bg-green-50 hover:bg-green-100 focus:ring-green-500' :
+                              match.status === 'CANCELLED' ? 
+                              'text-red-700 bg-red-50 hover:bg-red-100 focus:ring-red-500' :
+                              'text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500'
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-1
+                            group relative overflow-hidden
+                          `}
+                          aria-label={`View details for ${match.book?.title || 'book match'}`}
                         >
-                          View Details
-                        </button>
-                    
+                          <span className="relative z-10 flex items-center">
+                            <HiArrowRight 
+                              className={`mr-2 h-4 w-4 transform transition-transform duration-200 ease-in-out group-hover:translate-x-0.5
+                                ${match.status === 'NEW' ? 'text-indigo-600' :
+                                  match.status === 'PENDING' ? 'text-yellow-600' :
+                                  match.status === 'COMPLETED' ? 'text-green-600' :
+                                  match.status === 'CANCELLED' ? 'text-red-600' :
+                                  'text-gray-600'
+                                }`}
+                            />
+                            <span className="relative">View Details</span>
+                          </span>
+                          <motion.span
+                            className="absolute inset-0 transform origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              background: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                            }}
+                          />
+                        </motion.button>
                       </div>
                     </motion.div>
                   ))}
@@ -360,13 +479,66 @@ const Dashboard = () => {
                         <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={() => handleViewMatch(match)}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewMatch(match);
+                          }}
+                          whileHover={{ 
+                            scale: 1.02,
+                            backgroundColor: 'rgb(238, 242, 255)',
+                            boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          initial={{ boxShadow: '0 0 0 0 rgba(99, 102, 241, 0)' }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                            mass: 0.5
+                          }}
+                          className={`
+                            inline-flex items-center px-4 py-2 
+                            text-sm font-medium rounded-lg
+                            transition-all duration-200 ease-in-out
+                            ${match.status === 'NEW' ? 
+                              'text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:ring-indigo-500' :
+                              match.status === 'PENDING' ? 
+                              'text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500' :
+                              match.status === 'COMPLETED' ? 
+                              'text-green-700 bg-green-50 hover:bg-green-100 focus:ring-green-500' :
+                              match.status === 'CANCELLED' ? 
+                              'text-red-700 bg-red-50 hover:bg-red-100 focus:ring-red-500' :
+                              'text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500'
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-1
+                            group relative overflow-hidden
+                          `}
+                          aria-label={`View details for ${match.book?.title || 'book match'}`}
                         >
-                          View Details
-                        </button>
+                          <span className="relative z-10 flex items-center">
+                            <HiArrowRight 
+                              className={`mr-2 h-4 w-4 transform transition-transform duration-200 ease-in-out group-hover:translate-x-0.5
+                                ${match.status === 'NEW' ? 'text-indigo-600' :
+                                  match.status === 'PENDING' ? 'text-yellow-600' :
+                                  match.status === 'COMPLETED' ? 'text-green-600' :
+                                  match.status === 'CANCELLED' ? 'text-red-600' :
+                                  'text-gray-600'
+                                }`}
+                            />
+                            <span className="relative">View Details</span>
+                          </span>
+                          <motion.span
+                            className="absolute inset-0 transform origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              background: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                            }}
+                          />
+                        </motion.button>
                       </div>
                     </motion.div>
                   ))}
@@ -393,13 +565,66 @@ const Dashboard = () => {
                         <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={() => handleViewMatch(match)}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewMatch(match);
+                          }}
+                          whileHover={{ 
+                            scale: 1.02,
+                            backgroundColor: 'rgb(238, 242, 255)',
+                            boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          initial={{ boxShadow: '0 0 0 0 rgba(99, 102, 241, 0)' }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                            mass: 0.5
+                          }}
+                          className={`
+                            inline-flex items-center px-4 py-2 
+                            text-sm font-medium rounded-lg
+                            transition-all duration-200 ease-in-out
+                            ${match.status === 'NEW' ? 
+                              'text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:ring-indigo-500' :
+                              match.status === 'PENDING' ? 
+                              'text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500' :
+                              match.status === 'COMPLETED' ? 
+                              'text-green-700 bg-green-50 hover:bg-green-100 focus:ring-green-500' :
+                              match.status === 'CANCELLED' ? 
+                              'text-red-700 bg-red-50 hover:bg-red-100 focus:ring-red-500' :
+                              'text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500'
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-1
+                            group relative overflow-hidden
+                          `}
+                          aria-label={`View details for ${match.book?.title || 'book match'}`}
                         >
-                          View Details
-                        </button>
+                          <span className="relative z-10 flex items-center">
+                            <HiArrowRight 
+                              className={`mr-2 h-4 w-4 transform transition-transform duration-200 ease-in-out group-hover:translate-x-0.5
+                                ${match.status === 'NEW' ? 'text-indigo-600' :
+                                  match.status === 'PENDING' ? 'text-yellow-600' :
+                                  match.status === 'COMPLETED' ? 'text-green-600' :
+                                  match.status === 'CANCELLED' ? 'text-red-600' :
+                                  'text-gray-600'
+                                }`}
+                            />
+                            <span className="relative">View Details</span>
+                          </span>
+                          <motion.span
+                            className="absolute inset-0 transform origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              background: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                            }}
+                          />
+                        </motion.button>
                       </div>
                     </motion.div>
                   ))}
@@ -426,13 +651,66 @@ const Dashboard = () => {
                         <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
-                        <button
+                        <motion.button
                           type="button"
-                          onClick={() => handleViewMatch(match)}
-                          className="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 transition-colors duration-150"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewMatch(match);
+                          }}
+                          whileHover={{ 
+                            scale: 1.02,
+                            backgroundColor: 'rgb(238, 242, 255)',
+                            boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)'
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                          initial={{ boxShadow: '0 0 0 0 rgba(99, 102, 241, 0)' }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                            mass: 0.5
+                          }}
+                          className={`
+                            inline-flex items-center px-4 py-2 
+                            text-sm font-medium rounded-lg
+                            transition-all duration-200 ease-in-out
+                            ${match.status === 'NEW' ? 
+                              'text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:ring-indigo-500' :
+                              match.status === 'PENDING' ? 
+                              'text-yellow-700 bg-yellow-50 hover:bg-yellow-100 focus:ring-yellow-500' :
+                              match.status === 'COMPLETED' ? 
+                              'text-green-700 bg-green-50 hover:bg-green-100 focus:ring-green-500' :
+                              match.status === 'CANCELLED' ? 
+                              'text-red-700 bg-red-50 hover:bg-red-100 focus:ring-red-500' :
+                              'text-gray-700 bg-gray-50 hover:bg-gray-100 focus:ring-gray-500'
+                            }
+                            focus:outline-none focus:ring-2 focus:ring-offset-1
+                            group relative overflow-hidden
+                          `}
+                          aria-label={`View details for ${match.book?.title || 'book match'}`}
                         >
-                          View Details
-                        </button>
+                          <span className="relative z-10 flex items-center">
+                            <HiArrowRight 
+                              className={`mr-2 h-4 w-4 transform transition-transform duration-200 ease-in-out group-hover:translate-x-0.5
+                                ${match.status === 'NEW' ? 'text-indigo-600' :
+                                  match.status === 'PENDING' ? 'text-yellow-600' :
+                                  match.status === 'COMPLETED' ? 'text-green-600' :
+                                  match.status === 'CANCELLED' ? 'text-red-600' :
+                                  'text-gray-600'
+                                }`}
+                            />
+                            <span className="relative">View Details</span>
+                          </span>
+                          <motion.span
+                            className="absolute inset-0 transform origin-left"
+                            initial={{ scaleX: 0 }}
+                            whileHover={{ scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                            style={{
+                              background: 'linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0))',
+                            }}
+                          />
+                        </motion.button>
                       </div>
                     </motion.div>
                   ))}
@@ -473,12 +751,32 @@ const Dashboard = () => {
                         showRequestButton={false}
                         actionButton={
                           <motion.button
-                            whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                            whileHover={{ 
+                              scale: 1.02,
+                              boxShadow: '0 4px 15px rgba(16, 185, 129, 0.15)'
+                            }} 
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ 
+                              type: "spring", 
+                              stiffness: 400, 
+                              damping: 15, 
+                              mass: 0.8 
+                            }}
                             onClick={() => handleInitiatePublish(book)}
-                            className="w-full inline-flex justify-center items-center px-4 py-2.5 text-sm font-semibold text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition-colors duration-150 ease-in-out shadow-sm"
+                            className="w-full relative group overflow-hidden inline-flex justify-center items-center px-4 py-3 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400 transition-all duration-200 ease-in-out shadow-sm"
                           >
-                            <HiUpload className="w-4 h-4 mr-1.5" aria-hidden="true" /> I have this!
+                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-400 to-green-400 opacity-0 group-hover:opacity-20 transition-opacity duration-200 ease-in-out" />
+                            <span className="relative flex items-center">
+                              <HiSparkles className="w-4 h-4 mr-1.5 animate-pulse" aria-hidden="true" />
+                              <span className="mr-1">I have this!</span>
+                              <HiCheck className="w-4 h-4 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-1 transition-all duration-200 ease-in-out" />
+                            </span>
+                            <motion.span
+                              className="absolute bottom-0 left-0 w-full h-0.5 bg-white"
+                              initial={{ scaleX: 0 }}
+                              whileHover={{ scaleX: 1 }}
+                              transition={{ duration: 0.3 }}
+                            />
                           </motion.button>
                         }
                       />
@@ -494,6 +792,54 @@ const Dashboard = () => {
               )}
             </div>
           </motion.div>
+        </motion.div>
+
+        {/* Exchange Details */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="mt-6 rounded-lg bg-blue-50 p-4 border border-blue-100"
+        >
+          <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <HiUser className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
+              </div>
+              <p className="text-sm text-blue-700 pl-7 break-words">
+                {exchangePartner?.fullName || 'Unknown User'}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <HiMail className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                <p className="text-sm font-medium text-blue-900">Contact</p>
+              </div>
+              <p className="text-sm text-blue-700 pl-7 break-all">
+                {exchangePartner?.email || 'Not available'}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <HiPhone className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                <p className="text-sm font-medium text-blue-900">Phone</p>
+              </div>
+              <p className="text-sm text-blue-700 pl-7 whitespace-nowrap">
+                {exchangePartner?.phoneNumber || 'Not available'}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <HiLocationMarker className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                <p className="text-sm font-medium text-blue-900">Location</p>
+              </div>
+              <p className="text-sm text-blue-700 pl-7 break-words">
+                {exchangePartner?.preferredExchangeLocation || 'Not specified'}
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
 

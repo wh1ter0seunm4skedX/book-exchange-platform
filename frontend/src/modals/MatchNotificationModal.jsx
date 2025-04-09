@@ -170,37 +170,54 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
               transition={{ duration: 0.3, delay: 0.2 }}
               className="mt-6 rounded-lg bg-blue-50 p-4 border border-blue-100"
             >
-              <h4 className="text-sm font-medium text-blue-900 mb-3">Exchange Details</h4>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <HiUser className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                    <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
+              <h4 className="text-sm font-medium text-blue-900 mb-4">Exchange Details</h4>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-6">
+                <div className="flex-1 min-w-[200px]">
+                  <div className="flex items-start space-x-3">
+                    <HiUser className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Exchange Partner</p>
+                      <p className="text-sm text-blue-700 mt-1">
+                        {exchangePartner?.fullName || 'Unknown User'}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-blue-700 pl-7">
-                    {exchangePartner?.fullName || 'Unknown User'}
-                  </p>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <HiMail className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                    <p className="text-sm font-medium text-blue-900">Contact</p>
+
+                <div className="flex-1 min-w-[280px]">
+                  <div className="flex items-start space-x-3">
+                    <HiMail className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Contact</p>
+                      <p className="text-sm text-blue-700 mt-1 break-all">
+                        {exchangePartner?.email || 'Not available'}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.email || 'Not available'}</p>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <HiPhone className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                    <p className="text-sm font-medium text-blue-900">Phone</p>
+
+                <div className="flex-1 min-w-[180px]">
+                  <div className="flex items-start space-x-3">
+                    <HiPhone className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Phone</p>
+                      <p className="text-sm text-blue-700 mt-1">
+                        {exchangePartner?.phoneNumber || 'Not available'}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.phoneNumber || 'Not available'}</p>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <HiLocationMarker className="h-5 w-5 text-blue-500" aria-hidden="true" />
-                    <p className="text-sm font-medium text-blue-900">Location</p>
+
+                <div className="flex-1 min-w-[200px]">
+                  <div className="flex items-start space-x-3">
+                    <HiLocationMarker className="h-5 w-5 text-blue-500 mt-0.5" aria-hidden="true" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-900">Location</p>
+                      <p className="text-sm text-blue-700 mt-1">
+                        {exchangePartner?.preferredExchangeLocation || 'Not specified'}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-sm text-blue-700 pl-7">{exchangePartner?.preferredExchangeLocation || 'Not specified'}</p>
                 </div>
               </div>
             </motion.div>
