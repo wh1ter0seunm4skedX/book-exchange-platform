@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Modal from '../components/Modal';
 import { booksApi } from '../api/books';
-// Import React Icons
 import {
   HiOutlineBookOpen,
   HiArrowPath,
@@ -13,15 +12,7 @@ import {
   HiExclamationCircle,
 } from 'react-icons/hi2';
 
-/**
- * A unified modal component for both publishing and requesting books
- * @param {Object} props - Component props
- * @param {boolean} props.isOpen - Controls modal visibility
- * @param {Function} props.onClose - Called when modal is closed
- * @param {Function} props.onSubmit - Called when form is submitted with book data
- * @param {string} props.mode - Either 'publish' or 'request'
- * @param {Object} props.initialBookData - Optional pre-selected book data
- */
+// A modal for publishing or requesting books
 const BookActionModal = ({ 
   isOpen, 
   onClose, 
@@ -41,18 +32,16 @@ const BookActionModal = ({
   const [formData, setFormData] = useState({ bookId: '' });
   const [selectedBook, setSelectedBook] = useState(null);
 
-  // Fetch books when modal opens
+  // Grab books when the modal opens
   useEffect(() => {
-    if (isOpen && allBooks.length === 0) {
-      fetchBooks();
-    }
+    if (isOpen && allBooks.length === 0) fetchBooks();
     if (isOpen) {
       resetFormFields();
       setFetchError('');
     }
   }, [isOpen]);
 
-  // Handle pre-selection for publish mode
+  // Pre-fill the form if we’re publishing with initial data
   useEffect(() => {
     if (initialBookData && isPublishMode) {
       setFormData({ bookId: initialBookData.id });
@@ -60,7 +49,7 @@ const BookActionModal = ({
     }
   }, [initialBookData, isPublishMode]);
 
-  // Update book preview when selection changes
+  // Update the preview when a book is picked
   useEffect(() => {
     if (formData.bookId) {
       const selected = allBooks.find(book => book.id === parseInt(formData.bookId, 10)) ||
@@ -71,7 +60,7 @@ const BookActionModal = ({
     }
   }, [formData.bookId, allBooks, initialBookData]);
 
-  // Fetch books function
+  // Load the book list from the API
   const fetchBooks = async () => {
     setIsLoading(true);
     setFetchError('');
@@ -87,11 +76,9 @@ const BookActionModal = ({
     }
   };
 
-  // Memoized filtered books list
+  // Filter books based on search term
   const filteredBooks = useMemo(() => {
-    if (!searchTerm) {
-      return allBooks;
-    }
+    if (!searchTerm) return allBooks;
     const lowerCaseSearch = searchTerm.toLowerCase();
     return allBooks.filter(book =>
       book.title?.toLowerCase().includes(lowerCaseSearch) ||
@@ -99,25 +86,20 @@ const BookActionModal = ({
     );
   }, [searchTerm, allBooks]);
 
-  // Form submission handler
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedBook) return;
 
     setSubmitLoading(true);
     try {
-      // Common payload for both modes
       const payload = {
         bookId: parseInt(formData.bookId, 10),
         title: selectedBook.title,
         courseNumber: selectedBook.courseNumber,
         coverImage: selectedBook.coverImage,
       };
-      
-      // Add date for request mode
-      if (!isPublishMode) {
-        payload.date = new Date().toISOString();
-      }
+      if (!isPublishMode) payload.date = new Date().toISOString();
       
       await onSubmit(payload);
       handleClose();
@@ -128,18 +110,16 @@ const BookActionModal = ({
     }
   };
 
-  // Select change handler
+  // Update form when selection changes
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Search input change handler
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  // Update search term as user types
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
-  // Reset form fields
+  // Clear the form when needed
   const resetFormFields = () => {
     if (!initialBookData || !isPublishMode) {
       setFormData({ bookId: '' });
@@ -152,19 +132,18 @@ const BookActionModal = ({
     setSubmitLoading(false);
   };
 
-  // Close handler
+  // Close the modal and reset everything
   const handleClose = () => {
     resetFormFields();
     onClose();
   };
 
-  // ID prefix to ensure unique IDs
   const idPrefix = isPublishMode ? 'publish' : 'request';
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title={modalTitle}>
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Search Input */}
+        {/* Search bar for finding books */}
         <div>
           <label htmlFor={`${idPrefix}BookSearch`} className="block text-sm font-medium text-gray-700 mb-1.5">
             Search Book by Title or Course #
@@ -185,11 +164,9 @@ const BookActionModal = ({
           </div>
         </div>
 
-        {/* Book Selection Dropdown */}
+        {/* Dropdown to pick a book */}
         <div>
-          <label htmlFor={`${idPrefix}BookId`} className="sr-only">
-            Select Book
-          </label>
+          <label htmlFor={`${idPrefix}BookId`} className="sr-only">Select Book</label>
           {isLoading && (
             <div className="mt-2 flex items-center justify-center text-sm text-gray-500">
               <HiArrowPath className="animate-spin h-4 w-4 mr-2 text-blue-500" aria-hidden="true"/>
@@ -235,7 +212,7 @@ const BookActionModal = ({
           )}
         </div>
 
-        {/* Selected Book Preview */}
+        {/* Preview of the selected book */}
         <AnimatePresence>
           {selectedBook && (
             <motion.div
@@ -272,7 +249,7 @@ const BookActionModal = ({
           )}
         </AnimatePresence>
 
-        {/* Action Buttons */}
+        {/* Buttons to submit or cancel */}
         <div className={isPublishMode ? 
           "mt-5 pt-5 border-t border-gray-200 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3" :
           "mt-6 pt-5 border-t border-gray-200 flex justify-end space-x-3"

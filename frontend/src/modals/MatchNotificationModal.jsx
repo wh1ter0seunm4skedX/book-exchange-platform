@@ -19,10 +19,12 @@ import {
   HiUsers
 } from 'react-icons/hi';
 
+// Modal for handling book match notifications
 const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
   const [loading, setLoading] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
+  // Show confetti for new matches
   useEffect(() => {
     if (isOpen && match && match.status === 'NEW') {
       setShowConfetti(true);
@@ -33,28 +35,21 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
 
   if (!match) return null;
 
-  // Extract user information for display
+  // Figure out who the exchange partner is
   const exchangePartner = match.requester?.id === getCurrentUserId() 
     ? match.provider 
     : match.requester;
 
+  // Handle confirm, cancel, or complete actions
   const handleAction = async (action) => {
     setLoading(true);
     try {
-      if (action === 'confirm') {
-        await matchesApi.confirmMatch(match.id);
-      } else if (action === 'cancel') {
-        await matchesApi.cancelMatch(match.id);
-      } else if (action === 'complete') {
-        await matchesApi.completeMatch(match.id);
-      } else {
-        throw new Error(`Unknown action: ${action}`);
-      }
+      if (action === 'confirm') await matchesApi.confirmMatch(match.id);
+      else if (action === 'cancel') await matchesApi.cancelMatch(match.id);
+      else if (action === 'complete') await matchesApi.completeMatch(match.id);
+      else throw new Error(`Unknown action: ${action}`);
       
-      if (onMatchUpdate) {
-        onMatchUpdate(match.id, action);
-      }
-      
+      if (onMatchUpdate) onMatchUpdate(match.id, action);
       onClose();
     } catch (error) {
       console.error('Error handling match action:', error);
@@ -63,73 +58,36 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
     }
   };
 
-  // Get appropriate status colors
+  // Pick colors based on match status
   const getStatusColors = (status) => {
     switch (status) {
-      case 'NEW':
-        return {
-          bg: 'bg-indigo-100',
-          text: 'text-indigo-800',
-          ring: 'ring-1 ring-indigo-200'
-        };
-      case 'PENDING':
-        return {
-          bg: 'bg-yellow-100',
-          text: 'text-yellow-800',
-          ring: 'ring-1 ring-yellow-200'
-        };
-      case 'COMPLETED':
-        return {
-          bg: 'bg-green-100',
-          text: 'text-green-800',
-          ring: 'ring-1 ring-green-200'
-        };
-      case 'CANCELLED':
-        return {
-          bg: 'bg-red-100',
-          text: 'text-red-800',
-          ring: 'ring-1 ring-red-200'
-        };
-      case 'EXPIRED':
-        return {
-          bg: 'bg-gray-100',
-          text: 'text-gray-800',
-          ring: 'ring-1 ring-gray-200'
-        };
-      default:
-        return {
-          bg: 'bg-gray-100',
-          text: 'text-gray-800',
-          ring: 'ring-1 ring-gray-200'
-        };
+      case 'NEW': return { bg: 'bg-indigo-100', text: 'text-indigo-800', ring: 'ring-1 ring-indigo-200' };
+      case 'PENDING': return { bg: 'bg-yellow-100', text: 'text-yellow-800', ring: 'ring-1 ring-yellow-200' };
+      case 'COMPLETED': return { bg: 'bg-green-100', text: 'text-green-800', ring: 'ring-1 ring-green-200' };
+      case 'CANCELLED': return { bg: 'bg-red-100', text: 'text-red-800', ring: 'ring-1 ring-red-200' };
+      case 'EXPIRED': return { bg: 'bg-gray-100', text: 'text-gray-800', ring: 'ring-1 ring-gray-200' };
+      default: return { bg: 'bg-gray-100', text: 'text-gray-800', ring: 'ring-1 ring-gray-200' };
     }
   };
 
   const statusColors = getStatusColors(match.status);
   const isActive = match.status === 'NEW' || match.status === 'PENDING';
-  const defaultCoverImage = '/images/default-book-cover.png';
 
-  // Get title based on status
+  // Set the title based on status
   const getStatusTitle = () => {
     switch (match.status) {
-      case 'NEW':
-        return 'Book Match Found!';
-      case 'PENDING':
-        return 'Pending Exchange';
-      case 'COMPLETED':
-        return 'Completed Exchange';
-      case 'CANCELLED':
-        return 'Cancelled Exchange';
-      case 'EXPIRED':
-        return 'Expired Exchange';
-      default:
-        return 'Book Exchange';
+      case 'NEW': return 'Book Match Found!';
+      case 'PENDING': return 'Pending Exchange';
+      case 'COMPLETED': return 'Completed Exchange';
+      case 'CANCELLED': return 'Cancelled Exchange';
+      case 'EXPIRED': return 'Expired Exchange';
+      default: return 'Book Exchange';
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      {/* Confetti effect for new matches only */}
+      {/* Throw some confetti for new matches */}
       {showConfetti && match.status === 'NEW' && (
         <Confetti
           width={window.innerWidth}
@@ -161,7 +119,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
           </div>
         </div>
 
-        {/* Book Details */}
+        {/* Show the book details */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -181,7 +139,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
           </div>
         </motion.div>
 
-        {/* Match Information */}
+        {/* Exchange partner info and next steps */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -292,7 +250,7 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
           </div>
         </motion.div>
 
-        {/* Action Buttons */}
+        {/* Buttons for actions */}
         <div className="mt-6 flex justify-end space-x-3">
           <button
             type="button"

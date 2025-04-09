@@ -1,6 +1,7 @@
 import React from 'react';
 import { version } from '../../package.json';
 
+// Footer with a shoutout for us :) and version number
 const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200">

@@ -1,33 +1,16 @@
-/**
- * API utilities for making authenticated requests to the backend
- */
-
-// Base URL for all API requests
+// Base URL for talking to the backend
 const API_BASE_URL = 'http://localhost:8080';
 
-/**
- * Get the authentication token from local storage
- * @returns {string|null} The authentication token or null if not found
- */
+// Grab the auth token from local storage
 export const getAuthToken = () => localStorage.getItem('token');
 
-/**
- * Get the current user ID from local storage
- * @returns {string|null} The user ID or null if not found
- */
+// Get the current user’s ID
 export const getCurrentUserId = () => localStorage.getItem('userId');
 
-/**
- * Check if the user is authenticated
- * @returns {boolean} True if the user is authenticated, false otherwise
- */
+// Check if the user’s logged in
 export const isAuthenticated = () => !!getAuthToken();
 
-/**
- * Parse JWT token to get user information
- * @param {string} token JWT token
- * @returns {Object} Decoded token payload
- */
+// Decode a JWT token to see what’s inside
 const parseJwt = (token) => {
   try {
     const base64Url = token.split('.')[1];
@@ -40,61 +23,32 @@ const parseJwt = (token) => {
     );
     return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('Error parsing JWT token:', error);
+    console.error('Trouble decoding JWT:', error);
     return null;
   }
 };
 
-/**
- * Get the user ID from the JWT token
- * @returns {number|null} User ID from token or null if not found
- */
+// Pull the user ID from the token
 export const getUserIdFromToken = () => {
   const token = getAuthToken();
   if (!token) return null;
-  
   const decodedToken = parseJwt(token);
   return decodedToken?.userId || null;
 };
 
-/**
- * Create headers for API requests including authentication
- * @param {boolean} includeContentType Whether to include Content-Type header
- * @returns {Headers} Headers object with authentication
- */
+// Set up headers for API calls
 export const createHeaders = (includeContentType = true) => {
   const headers = new Headers();
-  
-  // Add authentication header if token exists
   const token = getAuthToken();
-  if (token) {
-    // Ensure token is sent with 'Bearer ' prefix as required by backend
-    headers.append('Authorization', `Bearer ${token}`);
-  }
-  
-  // Add content type for JSON requests
-  if (includeContentType) {
-    headers.append('Content-Type', 'application/json');
-  }
-  
+  if (token) headers.append('Authorization', `Bearer ${token}`);
+  if (includeContentType) headers.append('Content-Type', 'application/json');
   return headers;
 };
 
-/**
- * Make an authenticated API request
- * @param {string} endpoint The API endpoint
- * @param {Object} options Request options
- * @returns {Promise<any>} The response data
- */
+// Make a request to the API
 export const apiRequest = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
-  
-  // Set up default options with authentication
-  const defaultOptions = {
-    headers: createHeaders(options.body !== undefined),
-  };
-  
-  // Merge default options with provided options
+  const defaultOptions = { headers: createHeaders(options.body !== undefined) };
   const fetchOptions = {
     ...defaultOptions,
     ...options,
@@ -102,43 +56,32 @@ export const apiRequest = async (endpoint, options = {}) => {
       ? new Headers({...Object.fromEntries(defaultOptions.headers), ...options.headers})
       : defaultOptions.headers
   };
-  
-  // Convert body to JSON string if it's an object
+
   if (fetchOptions.body && typeof fetchOptions.body === 'object') {
     fetchOptions.body = JSON.stringify(fetchOptions.body);
   }
-  
+
   try {
     const response = await fetch(url, fetchOptions);
-    
-    // Handle HTTP errors
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(errorText || `HTTP error ${response.status}: ${response.statusText}`);
     }
-    
-    // Handle empty responses
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
       return response.text();
     }
-    
-    // Parse JSON response
     return await response.json();
   } catch (error) {
-    console.error(`API request failed for ${endpoint}:`, error);
+    console.error(`API call to ${endpoint} failed:`, error);
     throw error;
   }
 };
 
-/**
- * Logout the current user
- */
+// Log the user out
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('userId');
   localStorage.removeItem('email');
-  
-  // Redirect to login page
   window.location.href = '/login';
 };

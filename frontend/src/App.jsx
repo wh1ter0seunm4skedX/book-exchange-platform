@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+// Main app setup with routing
+import { useState, useEffect } from 'react';
+import './App.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -13,30 +14,22 @@ import { isAuthenticated } from './api/apiUtils';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
 
-  // Update login state when authentication changes
+  // Keep login state in sync
   useEffect(() => {
-    const checkAuth = () => {
-      setIsLoggedIn(isAuthenticated());
-    };
-
+    const checkAuth = () => setIsLoggedIn(isAuthenticated());
     checkAuth();
-
-    // Set up event listener for storage changes (for when user logs in/out in another tab)
     window.addEventListener('storage', checkAuth);
-    
-    return () => {
-      window.removeEventListener('storage', checkAuth);
-    };
+    return () => window.removeEventListener('storage', checkAuth);
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        {/* Public routes */}
+        {/* Anyone can enter these */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
-        {/* Protected routes*/}
+        {/* Logged-in users only */}
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <>
@@ -60,12 +53,12 @@ function App() {
           </ProtectedRoute>
         } />
         
-        {/* Default redirect */}
+        {/* Redirect based on login status */}
         <Route path="/" element={<Navigate to={isLoggedIn ? "/dashboard" : "/register"} />} />
         <Route path="*" element={<Navigate to={isLoggedIn ? "/dashboard" : "/register"} />} />
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

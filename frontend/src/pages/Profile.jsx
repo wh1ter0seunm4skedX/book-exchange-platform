@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Import icons from react-icons
 import {
   HiUpload,
   HiDocumentAdd,
@@ -34,7 +33,7 @@ const Profile = () => {
   const [requestedBooks, setRequestedBooks] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isBookActionOpen, setIsBookActionOpen] = useState(false);
-  const [actionMode, setActionMode] = useState('publish'); // 'publish' or 'request'
+  const [actionMode, setActionMode] = useState('publish');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
