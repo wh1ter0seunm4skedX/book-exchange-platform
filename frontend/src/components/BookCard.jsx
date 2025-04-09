@@ -34,8 +34,21 @@ const formatDate = (dateString) => {
       year: 'numeric'
     });
   } catch (e) {
-    console.error("Error formatting date:", dateString, e);
     return 'Invalid Date';
+  }
+};
+
+const getStatusInfo = (currentStatus) => {
+  switch (currentStatus?.toUpperCase()) {
+    case 'AVAILABLE':
+    case 'ACCEPTED':
+      return { bgColor: 'bg-green-100', textColor: 'text-green-800', Icon: HiCheckCircle };
+    case 'PENDING':
+      return { bgColor: 'bg-yellow-100', textColor: 'text-yellow-800', Icon: HiClock };
+    case 'MATCHED':
+      return { bgColor: 'bg-purple-100', textColor: 'text-purple-800', Icon: HiLink };
+    default:
+      return { bgColor: 'bg-gray-100', textColor: 'text-gray-800', Icon: HiExclamationCircle };
   }
 };
 
@@ -53,16 +66,6 @@ const BookCard = ({
 }) => {
   const [showPlaceholder, setShowPlaceholder] = React.useState(!book?.courseNumber);
 
-  // Debug logs for props
-  console.log('BookCard Props:', {
-    bookTitle: book?.title,
-    status,
-    isRequested,
-    isMatched,
-    hasActionButton: !!actionButton,
-    hasOnCancelRequest: !!onCancelRequest
-  });
-
   React.useEffect(() => {
     setShowPlaceholder(!book?.courseNumber);
   }, [book?.courseNumber]);
@@ -76,33 +79,10 @@ const BookCard = ({
     );
   }
 
-  const getStatusInfo = (currentStatus) => {
-    switch (currentStatus?.toUpperCase()) {
-      case 'AVAILABLE':
-      case 'ACCEPTED':
-        return { bgColor: 'bg-green-100', textColor: 'text-green-800', Icon: HiCheckCircle };
-      case 'PENDING':
-        return { bgColor: 'bg-yellow-100', textColor: 'text-yellow-800', Icon: HiClock };
-      case 'MATCHED':
-        return { bgColor: 'bg-purple-100', textColor: 'text-purple-800', Icon: HiLink };
-      default:
-        return { bgColor: 'bg-gray-100', textColor: 'text-gray-800', Icon: HiExclamationCircle };
-    }
-  };
   const statusInfo = getStatusInfo(status);
 
   // Determine if the card should be grayed out
   const isGrayedOut = status?.toUpperCase() === 'MATCHED' || isMatched;
-  
-  // Debug log for grayed out status
-  console.log('Card Grayed Out Status:', {
-    bookTitle: book?.title,
-    isGrayedOut,
-    statusUpperCase: status?.toUpperCase(),
-    isMatched,
-    statusCondition: status?.toUpperCase() === 'MATCHED',
-    finalCondition: isGrayedOut
-  });
   
   return (
     <motion.div
@@ -158,13 +138,6 @@ const BookCard = ({
                     {status.charAt(0).toUpperCase() + status.slice(1).toLowerCase()}
                   </span>
                 )}
-                {/* Display matched status badge if matched but no status is provided */}
-                {isMatched && !status && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-2 bg-purple-100 text-purple-800">
-                    <HiLink className="w-3.5 h-3.5 mr-1" aria-hidden="true"/>
-                    Matched
-                  </span>
-                )}
               </>
             ) : (
               <>
@@ -180,22 +153,7 @@ const BookCard = ({
                     Published: {formatDate(date)}
                   </div>
                 )}
-                {/* Display matched status badge if matched but no status is provided */}
-                {isMatched && !status && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-2 bg-purple-100 text-purple-800">
-                    <HiLink className="w-3.5 h-3.5 mr-1" aria-hidden="true"/>
-                    Matched
-                  </span>
-                )}
               </>
-            )}
-            
-            {/* Display matched status badge if matched */}
-            {isMatched && !isRequested && status && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium mt-2 bg-purple-100 text-purple-800">
-                <HiLink className="w-3.5 h-3.5 mr-1" aria-hidden="true"/>
-                Matched
-              </span>
             )}
           </div>
 
@@ -249,14 +207,6 @@ const BookCard = ({
       {/* Cancel Request Button for Requested Books */}
       {isRequested && onCancelRequest && (
         <div className="border-t border-gray-200">
-           {/* Debug log for cancel button rendering */}
-           {console.log('Rendering cancel button:', {
-             bookTitle: book?.title,
-             isMatched,
-             showingDisabledButton: isMatched,
-             showingActiveButton: !isMatched
-           })}
-           
            {isMatched ? (
              // Disabled button for matched requests
              <button
@@ -287,13 +237,6 @@ const BookCard = ({
       {/* Custom Action Button Slot */}
       {!isRequested && actionButton && (
         <div className="border-t border-gray-200 rounded-b-lg overflow-hidden">
-          {/* Debug log for action button rendering */}
-          {console.log('Rendering action button:', {
-            bookTitle: book?.title,
-            isMatched,
-            actionButtonType: typeof actionButton
-          })}
-          
           {actionButton}
         </div>
       )}

@@ -45,31 +45,31 @@ const Profile = () => {
   }, []);
 
   const fetchProfileData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setError(null);
       const userData = await usersApi.getUserProfile(userId);
       setUser(userData);
       
-      try {
-        const userPublications = await matchesApi.getUserPublications(userId);
-        console.log('Fetched publications:', userPublications);
-        setPublishedBooks(userPublications || []);
-      } catch (pubError) {
-        console.error('Error fetching publications:', pubError);
-        setPublishedBooks([]);
-      }
+      const publicationsResponse = await matchesApi.getUserPublications(userId);
+      const requestsResponse = await matchesApi.getUserRequests(userId);
       
-      try {
-        const userRequests = await matchesApi.getUserRequests(userId);
-        console.log('Fetched requests:', userRequests);
-        setRequestedBooks(userRequests || []);
-      } catch (reqError) {
-        console.error('Error fetching requests:', reqError);
-        setRequestedBooks([]);
-      }
+      // Sort publications: available first, then matched
+      const sortedPublications = publicationsResponse.sort((a, b) => {
+        const aIsMatched = a.status?.toUpperCase() === 'MATCHED';
+        const bIsMatched = b.status?.toUpperCase() === 'MATCHED';
+        return aIsMatched - bIsMatched; // false (0) comes before true (1)
+      });
+      
+      // Sort requests: available first, then matched
+      const sortedRequests = requestsResponse.sort((a, b) => {
+        const aIsMatched = a.status?.toUpperCase() === 'MATCHED';
+        const bIsMatched = b.status?.toUpperCase() === 'MATCHED';
+        return aIsMatched - bIsMatched; // false (0) comes before true (1)
+      });
+      
+      setPublishedBooks(sortedPublications);
+      setRequestedBooks(sortedRequests);
     } catch (error) {
-      console.error('Error fetching profile data:', error);
       setError('Failed to load profile data. Please try again later.');
     } finally {
       setLoading(false);
@@ -313,15 +313,6 @@ const Profile = () => {
                   // Check if the publication is matched based on status instead of matchId
                   const isMatched = publication.status?.toUpperCase() === 'MATCHED';
                   
-                  // Debug log for publication
-                  console.log('Rendering publication:', {
-                    id: publication.id,
-                    title: publication.book?.title,
-                    matchId: publication.matchId,
-                    status: publication.status,
-                    isMatched
-                  });
-                  
                   return (
                     <motion.div
                       key={publication.id}
@@ -405,15 +396,6 @@ const Profile = () => {
                      // Check if the request is matched based on status instead of matchId
                      const isMatched = request.status?.toUpperCase() === 'MATCHED';
                      
-                     // Debug log for request
-                     console.log('Rendering request:', {
-                       id: request.id,
-                       title: request.book?.title,
-                       matchId: request.matchId,
-                       status: request.status,
-                       isMatched
-                     });
-                     
                      return (
                        <motion.div
                          key={request.id}
@@ -433,7 +415,6 @@ const Profile = () => {
                            onCancelRequest={
                              isMatched 
                                ? () => {
-                                   console.log('Attempting to cancel matched request:', request.id);
                                    alert("This book request cannot be canceled because it's already matched with another user.");
                                  }
                                : () => handleRemoveRequest(request)
