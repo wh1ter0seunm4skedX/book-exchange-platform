@@ -13,6 +13,7 @@ import {
 } from 'react-icons/hi';
 import { motion } from 'framer-motion';
 
+// Modal for editing user profile details
 const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
   const [formData, setFormData] = useState({
     fullName: '',
@@ -26,6 +27,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
   const [changePassword, setChangePassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Load user data into the form when it changes
   useEffect(() => {
     if (user) {
       setFormData({
@@ -38,6 +40,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
     }
   }, [user]);
 
+  // Save the updated profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -63,6 +66,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
     }
   };
 
+  // Update form fields as the user types
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -82,7 +86,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Profile">
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Name Field */}
+        {/* Name input */}
         <div>
           <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 flex items-center">
             <HiUser className="h-5 w-5 mr-2 text-blue-500" />
@@ -99,7 +103,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
           />
         </div>
 
-        {/* Email Field */}
+        {/* Email input (locked) */}
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700 flex items-center">
             <HiMail className="h-5 w-5 mr-2 text-blue-500" />
@@ -113,11 +117,11 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
             value={formData.email}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm bg-gray-50"
-            disabled // Email cannot be changed
+            disabled
           />
         </div>
 
-        {/* Phone Number Field */}
+        {/* Phone number input */}
         <div>
           <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 flex items-center">
             <HiPhone className="h-5 w-5 mr-2 text-blue-500" />
@@ -136,7 +140,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
           <p className="mt-1 text-xs text-gray-500">Format: 972 followed by phone number without leading 0</p>
         </div>
 
-        {/* Preferred Location Field */}
+        {/* Campus location picker */}
         <div>
           <label htmlFor="preferredExchangeLocation" className="block text-sm font-medium text-gray-700 flex items-center">
             <HiLocationMarker className="h-5 w-5 mr-2 text-blue-500" />
@@ -159,7 +163,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
           </select>
         </div>
 
-        {/* Change Password Checkbox */}
+        {/* Toggle for changing password */}
         <div className="flex items-center">
           <input
             id="changePassword"
@@ -175,7 +179,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
           </label>
         </div>
 
-        {/* Password Field - Only shown when changePassword is true */}
+        {/* Password input (shows if toggled) */}
         {changePassword && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -216,7 +220,7 @@ const EditProfileModal = ({ isOpen, onClose, onSave, user }) => {
           </motion.div>
         )}
 
-        {/* Action Buttons */}
+        {/* Buttons to save or cancel */}
         <motion.div 
           className="mt-5 sm:mt-6 flex justify-end space-x-3"
           whileHover={{ scale: 1.01 }}

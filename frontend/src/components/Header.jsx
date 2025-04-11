@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../api/apiUtils';
 import { HiOutlineBookOpen, HiOutlineLogout, HiMenu, HiX } from 'react-icons/hi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,13 +7,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  // const navigate = useNavigate(); // Keep if needed
 
+  // Close mobile menu when the page changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-
+  // Check if a nav link is active
   const isActive = (path) => location.pathname === path;
 
   const navigation = [
@@ -21,11 +21,13 @@ const Header = () => {
     { name: 'Profile', href: '/profile' },
   ];
 
+  // Handle logout and close the menu
   const handleLogout = () => {
     logout();
     setIsMobileMenuOpen(false);
   };
 
+  // Animation settings for the mobile menu
   const mobileMenuVariants = {
     closed: {
       opacity: 0,
@@ -44,7 +46,7 @@ const Header = () => {
       <header className="bg-white shadow-sm sticky top-0 z-50 w-full">
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
           <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
+            {/* Logo with a little hover animation */}
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center group" aria-label="BookExchange Home">
                 <HiOutlineBookOpen
@@ -57,9 +59,8 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
+            {/* Navigation for desktop */}
             <div className="hidden sm:ml-6 sm:flex sm:items-center">
-              {/* THIS IS THE CORRECTED LINE: changed items-baseline to items-center */}
               <div className="flex items-center space-x-4">
                 {navigation.map((item) => (
                   <Link
@@ -75,7 +76,7 @@ const Header = () => {
                     {item.name}
                   </Link>
                 ))}
-                {/* Logout Button - Desktop */}
+                {/* Logout button for desktop */}
                 <button
                   onClick={handleLogout}
                   className="ml-4 flex items-center rounded-md bg-red-500 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out"
@@ -86,7 +87,7 @@ const Header = () => {
               </div>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Button to toggle mobile menu */}
             <div className="-mr-2 flex items-center sm:hidden">
               <button
                 type="button"
@@ -105,7 +106,7 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Panel */}
+          {/* Mobile menu with animation */}
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.div
@@ -131,7 +132,7 @@ const Header = () => {
                       {item.name}
                     </Link>
                   ))}
-                  {/* Logout Button - Mobile */}
+                  {/* Logout button for mobile */}
                   <button
                     onClick={handleLogout}
                     className="mt-2 flex w-full items-center rounded-md px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:text-red-700 focus:outline-none transition-colors duration-150 ease-in-out"

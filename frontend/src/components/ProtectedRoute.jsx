@@ -1,12 +1,10 @@
 import { Navigate } from 'react-router-dom';
 import { isAuthenticated } from '../api/apiUtils';
 
-/**
- * A wrapper component that redirects to the login page if the user is not authenticated
- */
+// Locks a route behind authentication, sends unauthenticated users to login
 const ProtectedRoute = ({ children }) => {
   if (!isAuthenticated()) {
-    // Redirect to login if not authenticated
+    // Kick them to the login page if they're not signed in
     return <Navigate to="/login" replace />;
   }
 

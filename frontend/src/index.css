@@ -21,6 +21,147 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Define subtle color variables for purple and black */
+  --gradient-start: rgba(0, 0, 0, 0.1);         /* Subtle black */
+  --gradient-mid: rgba(107, 33, 168, 0.1);      /* Subtle dark purple */
+  --gradient-end: rgba(0, 0, 0, 0.1);           /* Back to subtle black */
+  --shape-gradient-start: rgba(0, 0, 0, 0.15);  /* Subtle black for shapes */
+  --shape-gradient-end: rgba(107, 33, 168, 0.15); /* Subtle purple for shapes */
+  --radial-gradient-color: rgba(107, 33, 168, 0.05); /* Very faint purple overlay */
+}
+
+/* Modern background with animated gradient */
+.animated-gradient-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: linear-gradient(
+    160deg,
+    var(--gradient-start),
+    var(--gradient-mid),
+    var(--gradient-end)
+  );
+  background-size: 400% 400%;
+  animation: gradient-flow 18s ease infinite;
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Optional Radial Overlay (Subtle) */
+.radial-overlay {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 0%, var(--radial-gradient-color) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Floating shapes animation */
+.floating-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Base Shape Styles */
+.shape {
+  position: absolute;
+  background: linear-gradient(45deg, var(--shape-gradient-start), var(--shape-gradient-end));
+  animation: float 40s infinite ease-in-out;
+  opacity: 0.3;
+  filter: blur(2px);
+}
+
+/* Unique Shapes with Varied Border-Radius */
+.shape:nth-child(1) {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  animation-delay: -2s;
+  border-radius: 50%;
+  opacity: 0.2;
+}
+
+.shape:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  top: 20%;
+  right: -50px;
+  animation-delay: -15s;
+  border-radius: 60% 40% 30% 70%;
+  opacity: 0.15;
+}
+
+.shape:nth-child(3) {
+  width: 200px;
+  height: 200px;
+  bottom: 10%;
+  left: 15%;
+  animation-delay: -27s;
+  border-radius: 40% 60% 70% 30%;
+  opacity: 0.25;
+}
+
+.shape:nth-child(4) {
+  width: 250px;
+  height: 250px;
+  bottom: -50px;
+  right: 15%;
+  animation-delay: -35s;
+  border-radius: 50% 30% 60% 40%;
+  opacity: 0.2;
+}
+
+/* Float Animation */
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(15px, 15px) rotate(60deg);
+  }
+  66% {
+    transform: translate(-10px, 10px) rotate(120deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(180deg);
+  }
+}
+
+/* Glass effect for cards */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+}
+
+/* Subtle hover effect for cards */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px -4px rgba(0, 0, 0, 0.12);
 }
 
 a {
@@ -34,11 +175,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #ffffff;
 }
 
 h1 {
@@ -88,15 +226,24 @@ button:focus-visible {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.5); /* gray-400 with opacity */
+  background-color: rgba(156, 163, 175, 0.5);
   border-radius: 20px;
   border: 3px solid transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(107, 114, 128, 0.6); /* gray-500 with opacity */
+  background-color: rgba(107, 114, 128, 0.6);
 }
 
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+/* Add styles for modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 40;
 }

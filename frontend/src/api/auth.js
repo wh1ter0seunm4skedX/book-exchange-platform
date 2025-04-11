@@ -1,15 +1,8 @@
-/**
- * Authentication API functions
- */
-
+// Handy functions for user auth
 import { apiRequest } from './apiUtils';
 
 export const authApi = {
-  /**
-   * Register a new user
-   * @param {Object} userData User registration data
-   * @returns {Promise<Object>} The registered user data
-   */
+  // Sign up a new user
   register: async (userData) => {
     return apiRequest('/book_exchange_platform/auth/register', {
       method: 'POST',
@@ -17,18 +10,14 @@ export const authApi = {
     });
   },
 
-  /**
-   * Login a user
-   * @param {Object} credentials User login credentials
-   * @returns {Promise<Object>} The login response with token and user info
-   */
+  // Log in a user
   login: async (credentials) => {
     const response = await apiRequest('/book_exchange_platform/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials)
     });
     
-    // Store authentication data in localStorage
+    // Save login info to local storage
     if (response.token) {
       localStorage.setItem('token', response.token);
       localStorage.setItem('userId', response.userId);

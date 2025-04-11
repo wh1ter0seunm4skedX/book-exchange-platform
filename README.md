@@ -1,146 +1,139 @@
-```
-                  ___                   _____          ___                  
-    ___          /__/\                 /  /::\        /  /\          ___    
-   /  /\         \  \:\               /  /:/\:\      /  /:/_        /__/\   
-  /  /:/          \  \:\             /  /:/  \:\    /  /:/ /\       \  \:\  
- /__/::\      _____\__\:\           /__/:/ \__\:|  /  /:/ /:/_       \  \:\ 
- \__\/\:\__  /__/::::::::\          \  \:\ /  /:/ /__/:/ /:/ /\  ___  \__\:\
-    \  \:\/\ \  \:\~~\~~\/           \  \:\  /:/  \  \:\/:/ /:/ /__/\ |  |:|
-     \__\::/  \  \:\  ~~~             \  \:\/:/    \  \::/ /:/  \  \:\|  |:|
-     /__/:/    \  \:\                  \  \::/      \  \:\/:/    \  \:\__|:|
-     \__\/      \  \:\                  \__\/        \  \::/      \__\::::/ 
-                 \__\/                                \__\/           ~~~~
-```
+# 📚 Hey, Welcome to BookXChange!
 
-# 📚 BookXChange
+Hey there! BookXChange is a chill little platform we've built for University students to swap textbooks. It's got this neat system that matches people who've got books to give with folks who need them—no fuss, just quick, real-time magic. Think of it as your study buddy who's always got your back.
 
-BookXChange is a **smart textbook exchange platform** designed for students at the Open University (Of Israel). The platform automates the matching process between users who want to **give away books** and those looking to **receive books**, streamlining the process with **real-time matching algorithms**.
+## 🚀 What's It Got?
+- **Sign Up & Log In**: Easy, secure way to join the party.
+- **List Your Books**: Got extras? Pop 'em up for exchange.
+- **Auto-Matching**: Our algorithm plays matchmaker for books—super fast.
+- **Ping! Notifications**: Get a nudge when a match pops up.
+- **Your Profile**: Tweak your book list or how people can reach you.
 
-## 🚀 Features
-- **User Authentication**: Register and log in securely.
-- **Book Listings**: Users can list books for exchange.
-- **Matching Algorithm**: Automatically finds matches between book publishers and seekers (and vice versa).
-- **Notifications**: Alerts users when a match is found.
-- **Profile Management**: Users can update their book lists and contact preferences.
-
-## 🛠️ Tech Stack
-**Frontend**:
-- React (Vite)
+## 🛠️ How's It Made?
+**Frontend** (the pretty part):
+- React (Vite for speed)
 - TailwindCSS
 - React Router
 
-**Backend**:
-- Java (Spring Boot)
-- RESTful API
-- MariaDB (JDBC for database connection)
-- JWT Authentication
+**Backend** (the brains):
+- Java with Spring Boot
+- RESTful API (talks to the frontend)
+- MariaDB
+- JWT 
 
-**Tools & Infrastructure**:
-- Docker & Docker Compose
-- Postman (API Testing)
-- GitHub (Version Control & CI/CD)
+**Extras**:
+- Docker & Docker Compose (runs everything in a snap)
+- Postman 
 
-## 🐳 Docker Setup and Configuration
+## 🐳 Getting It Running with Docker
+### What You'll Need
+- [Docker](https://www.docker.com/products/docker-desktop/) installed. That's it!
 
-### Prerequisites
-- [Docker](https://www.docker.com/products/docker-desktop/)
-
-### Running the Application
-
-1. **Clone this repo**
-   ```powershell
+### Let's Roll
+1. **Grab the Code**
+   ```bash
    git clone https://github.com/wh1ter0seunm4skedX/book-exchange-platform.git
    cd book-exchange-platform
    ```
 
-2. **Start the containers**
-   ```powershell
+2. **Fire It Up**
+   ```bash
    docker-compose up -d
    ```
-   This command starts **all services**:
-   - **MariaDB database**
-   - **Spring Boot backend**
-   - **React frontend**
+   This spins up:
+   - MariaDB (the database)
+   - Spring Boot (the backend)
+   - React (the frontend)
 
-3. **Check container status**
-   ```powershell
+3. **Check It's Alive**
+   ```bash
    docker-compose ps
    ```
-   Confirm that the following services are running:
+   Look for these running smoothly:
    - `book-exchange-frontend`
    - `book-exchange-backend`
    - `book-exchange-mariadb`
 
-4. **Access the application**
-   - **Frontend**: [http://localhost:5173](http://localhost:5173)  
-   - **Backend API**: [http://localhost:8080](http://localhost:8080)  
-   - **DB**: `localhost:3307` (username: `root`, password: `root`)
+4. **Hop In**
+   - Frontend: [http://localhost:5173](http://localhost:5173)
+   - Backend API: [http://localhost:8080](http://localhost:8080)
+   - Database: `localhost:3307` (user: `root`, pass: `root`)
 
-### Stopping the Application
+### Shutting It Down
+- Stop everything:
+  ```bash
+  docker-compose down
+  ```
+- Wipe the slate clean (⚠️ this zaps the database!):
+  ```bash
+  docker-compose down -v
+  ```
 
-To stop all running containers:
-```powershell
-docker-compose down
-```
-To remove volumes as well (🧨this **deletes all database data**🧨):
-```powershell
-docker-compose down -v
-```
-
-### Rebuilding After Changes
-
-If you make changes to the code:
-```powershell
+### Made Changes?
+Rebuild and restart:
+```bash
 docker-compose build --no-cache
 docker-compose up -d
 ```
 
-## 🔒 API Authentication
+## 🔒 How the API Locks Down
+We use JWT (fancy tokens) for security:
+- **Sign Up**: POST `/book_exchange_platform/auth/register`
+- **Log In**: POST `/book_exchange_platform/auth/login`
 
-The backend uses JWT (JSON Web Token) authentication:
-
-- **Register**: POST /book_exchange_platform/auth/register
-- **Login**: POST /book_exchange_platform/auth/login
-
-After login, include the JWT token in the Authorization header for all authenticated requests:
+Once you're in, slap this on your requests:
 ```
-Authorization: Bearer [token]
+Authorization: Bearer [your-token-here]
 ```
 
-## 📂 Project Structure
+### 🧪 Testing the API
+We've got you covered with a full Postman collection! Check out the `api-tests` folder for:
+- Complete API documentation
+- Ready-to-use test scenarios
+- Authentication flows
+- Book management endpoints
+- Trade management endpoints
+
+## 📂 What's Where
 ```
 📁 book-exchange-platform/
- ├── 📁 frontend/         # React frontend application
- ├── 📁 backend/          # Spring Boot backend application
- ├── 📄 docker-compose.yml # Docker Compose configuration
- ├── 📄 README.md         # Project documentation
- └── 📄 .gitignore        # Git ignore configuration
+ ├── 📁 frontend/         # Where the React magic happens
+ ├── 📁 backend/          # Spring Boot's home
+ ├── 📁 api-tests/        # Postman collection & API tests
+ ├── 📄 docker-compose.yml # Ties it all together
+ ├── 📄 README.md         # You're reading it!
+ └── 📄 .gitignore        # Keeps the junk out
 ```
 
-## 🗄️ Database Schema
+## 🗄️ Database Lowdown
+We've got a MariaDB setup with these tables:
+- **books**: All the books up for grabs
+- **users**: Who's who
+- **user_books_published**: What you're offering
+- **user_books_requested**: What you're after
+- **trading**: Where the swaps get planned
 
-The application uses a MariaDB database with the following tables:
-- **books**: Stores information about available books
-- **users**: User accounts and profiles
-- **user_books_shared**: Books that users are offering
-- **user_books_requested**: Books that users are seeking
-- **matches**: Potential matches between shared and requested books
+### 🔄 Trade Expiration
+Trades automatically expire after 14 days if not completed. This keeps the platform fresh and ensures books don't get stuck in limbo!
 
+### 🏫 Campus Locations
+We support multiple campus locations for book exchanges:
+- Raanana Campus
+- Tel Aviv Campus
+- Jerusalem Campus
+- Haifa Campus
+- Beer Sheva Campus
 
-## 📅 Roadmap
-- ✅ **Completion of Design Document** (January 2025)
-- ✅ **Initial Backend Setup** (February 2025)
-  - Implement foundational backend structure
-  - Setup database schema and basic queries
-- ✅ **Initial Frontend Setup** (February 2025)
-  - Create basic UI components
-  - Implement routing and basic state management
-- 🚀 **MVP Development** (March 2025)
-  - Implement book listing functionality
-  - Develop initial matching algorithm
-- 🔄 **Feature Expansion** (March-April 2025)
-  - Improve UX/UI
-  - Add more things that we will think about along the way
-- 🎯 **Final Testing & Deployment** (April 2025)
-  - Perform system-wide testing
-  - Prepare for deployment and documentation finalization
+### 📚 Sample Data
+The platform comes pre-loaded with:
+- 32 popular Computer Science textbooks
+- 5 sample user accounts
+- Various book listings and requests
+
+## 📅 Where We're At
+- ✅ **Design Done** (January 2025) – Nailed the blueprint.
+- ✅ **Backend Basics** (February 2025) – Got the guts working.
+- ✅ **Frontend Kickoff** (February 2025) – Built the face of it.
+- ✅ **MVP Ready** (March 2025) – Listings and matching? Check!
+- 🔄 **Polishing Up** (March-April 2025) – Smoother UI, extra tweaks.
+- 🎯 **Testing & Launch** (April 2025) – We're live, baby! Just tidying up docs now.
