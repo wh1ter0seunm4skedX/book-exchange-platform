@@ -18,12 +18,6 @@ public class BooksController {
     }
 
 
-    @GetMapping("/")
-    @ResponseBody
-    public String home() {
-        return "Welcome to the Books API!";
-    }
-
     @GetMapping("/all")
     public List<BookDto> getAllBooks() {
         return booksManager.getAllBooks();

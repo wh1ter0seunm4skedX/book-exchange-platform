@@ -127,8 +127,8 @@ public class TradesManagerImpl implements TradesManager {
         userTradingService.deletePublication(publicationDto);
     }
 
-    private <T extends TradeDto> MatchDto match(TradeDto tradeDto, List<T> allRequests) {
-        List<TradeDto> optionalTrades = tradesService.searchAvailableTrades(tradeDto.getBook().getId(), allRequests);
+    private <T extends TradeDto> MatchDto match(TradeDto tradeDto, List<T> allTrades) {
+        List<TradeDto> optionalTrades = tradesService.searchAvailableTrades(tradeDto.getBook().getId(), allTrades);
         Optional<MatchDto> optionalFoundMatch = tradesService.findMatch(tradeDto, optionalTrades);
         if(optionalFoundMatch.isPresent()){
             MatchDto match = optionalFoundMatch.get();

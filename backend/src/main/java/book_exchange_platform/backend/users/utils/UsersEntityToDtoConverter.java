@@ -1,6 +1,5 @@
 package book_exchange_platform.backend.users.utils;
 
-import book_exchange_platform.backend.users.data.UserBookDto;
 import book_exchange_platform.backend.users.data.UserDto;
 import book_exchange_platform.backend.users.data.UserEntity;
 
@@ -16,16 +15,7 @@ public class UsersEntityToDtoConverter {
                 .preferredExchangeLocation(userEntity.getPreferredExchangeLocation())
                 .build();
     }
-    
-    public static UserBookDto toUserBookDto(UserEntity userEntity){
-        return UserBookDto.builder()
-                .id(userEntity.getId())
-                .fullName(userEntity.getFullName())
-                .email(userEntity.getEmail())
-                .phoneNumber(userEntity.getPhoneNumber()) // Using Long type now
-                .preferredExchangeLocation(userEntity.getPreferredExchangeLocation())
-                .build();
-    }
+
 
     public static UserEntity toUserEntity(UserDto userDto){
         return UserEntity.builder()
