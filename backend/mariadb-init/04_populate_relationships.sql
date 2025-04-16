@@ -61,45 +61,58 @@ INSERT INTO user_books_requested (user_id, book_id, status, requested_at) VALUES
 
 -- 3. Trading matches with different statuses
 
--- NEW matches (just created, not confirmed yet)
-INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
-  -- User 1 provides book 1 to User 3
-  (1, 3, 1, 'NEW', NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY)),
-  
-  -- User 2 provides book 9 to User 5
-  (2, 5, 9, 'NEW', NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY));
-
--- PENDING matches (confirmed but not completed yet)
-INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
-  -- User 1 provides book 3 to User 2
-  (1, 2, 3, 'PENDING', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(NOW(), INTERVAL 12 DAY)),
-  
-  -- User 2 provides book 7 to User 1
-  (2, 1, 7, 'PENDING', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_ADD(NOW(), INTERVAL 11 DAY));
 
 -- COMPLETED matches (exchange has been completed)
 INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
+  -- User 1 provides book 20 to User 3
+  (1, 3, 20, 'COMPLETED', NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY)),
+  
+  -- User 2 provides book 15 to User 5
+  (2, 5, 15, 'COMPLETED', NOW(), DATE_ADD(NOW(), INTERVAL 14 DAY));
+
+
+-- NEW matches (just created, not confirmed yet)
+INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
+  -- User 1 provides book 3 to User 2
+  (1, 2, 3, 'NEW', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(NOW(), INTERVAL 12 DAY)),
+  
+  -- User 2 provides book 7 to User 1
+  (2, 1, 7, 'NEW', DATE_SUB(NOW(), INTERVAL 3 DAY), DATE_ADD(NOW(), INTERVAL 11 DAY)),
+
+  -- User 3 provides book 12 to User 4
+  (3, 4, 12, 'NEW', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_ADD(NOW(), INTERVAL 9 DAY));
+
+
+-- PENDING matches (confirmed but not completed yet)
+INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
   -- User 3 provides book 11 to User 1
-  (3, 1, 11, 'COMPLETED', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 4 DAY)),
+  (3, 1, 11, 'PENDING', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_ADD(NOW(), INTERVAL 4 DAY)),
   
   -- User 4 provides book 18 to User 3
-  (4, 3, 18, 'COMPLETED', DATE_SUB(NOW(), INTERVAL 15 DAY), DATE_SUB(NOW(), INTERVAL 1 DAY));
+  (4, 3, 18, 'PENDING', DATE_SUB(NOW(), INTERVAL 11 DAY), DATE_ADD(NOW(), INTERVAL 3 DAY)),
 
--- CANCELLED matches (exchange was cancelled)
-INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
-  -- User 3 provides book 12 to User 4 (cancelled)
-  (3, 4, 12, 'CANCELLED', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_ADD(NOW(), INTERVAL 9 DAY)),
-  
-  -- User 4 provides book 19 to User 2 (cancelled)
-  (4, 2, 19, 'CANCELLED', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_ADD(NOW(), INTERVAL 8 DAY));
+  -- User 2 provides book 8 to User 4
+  (2, 4, 8, 'PENDING', DATE_SUB(NOW(), INTERVAL 2 DAY), DATE_ADD(NOW(), INTERVAL 12 DAY)),
+
+  -- User 4 provides book 19 to User 2
+  (4, 2, 19, 'PENDING', DATE_SUB(NOW(), INTERVAL 6 DAY), DATE_ADD(NOW(), INTERVAL 8 DAY));
+
 
 -- EXPIRED matches (exchange expired without completion)
 INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
-  -- User 2 provides book 8 to User 4 (expired)
-  (2, 4, 8, 'EXPIRED', DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 6 DAY)),
-  
   -- User 5 provides book 25 to User 3 (expired)
-  (5, 3, 25, 'EXPIRED', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
+  (5, 3, 25, 'PENDING', DATE_SUB(NOW(), INTERVAL 21 DAY), DATE_SUB(NOW(), INTERVAL 7 DAY)),
   
   -- User 5 provides book 26 to User 1 (expired)
-  (5, 1, 26, 'EXPIRED', DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY));
+  (5, 1, 26, 'PENDING', DATE_SUB(NOW(), INTERVAL 22 DAY), DATE_SUB(NOW(), INTERVAL 8 DAY));
+
+
+-- CANCELLED matches (exchange was cancelled)
+INSERT INTO trading (provider_id, requester_id, book_id, status, created_at, expiration_date) VALUES
+-- User 2 provides book 2 to User 5 (canceled)
+(2, 5, 2, 'CANCELLED', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_ADD(NOW(), INTERVAL 9 DAY)),
+
+-- User 4 provides book 17 to User 1 (canceled)
+(4, 1, 17, 'CANCELLED', DATE_SUB(NOW(), INTERVAL 5 DAY), DATE_ADD(NOW(), INTERVAL 9 DAY));
+
+
