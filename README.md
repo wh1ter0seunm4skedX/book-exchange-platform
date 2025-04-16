@@ -135,5 +135,5 @@ The platform comes pre-loaded with:
 - ✅ **Backend Basics** (February 2025) – Got the guts working.
 - ✅ **Frontend Kickoff** (February 2025) – Built the face of it.
 - ✅ **MVP Ready** (March 2025) – Listings and matching? Check!
-- 🔄 **Polishing Up** (March-April 2025) – Smoother UI, extra tweaks.
-- 🎯 **Testing & Launch** (April 2025) – We're live, baby! Just tidying up docs now.
+- ✅ **Polishing Up** (March-April 2025) – Smoother UI, extra tweaks.
+- ✅ **Testing & Launch** (April 2025) – We're live, baby! Just tidying up docs now.
