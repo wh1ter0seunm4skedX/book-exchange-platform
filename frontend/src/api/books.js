@@ -33,14 +33,15 @@ export const booksApi = {
   },
 
   // Ask for a book to exchange
-  requestBook: async (requestData) => {
+  requestBook: async (bookData) => {
     const userId = getCurrentUserId();
     return apiRequest(`/book_exchange_platform/trades/${userId}/request`, {
       method: 'POST',
       body: JSON.stringify({
-        id: requestData.bookId,
-        title: requestData.title,
-        courseNumber: requestData.courseNumber
+        id: bookData.bookId,
+        title: bookData.title,
+        courseNumber: bookData.courseNumber,
+        coverImageUrl: bookData.coverImage
       })
     });
   }
