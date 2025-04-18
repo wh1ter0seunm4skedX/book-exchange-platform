@@ -33,9 +33,13 @@ const MatchNotificationModal = ({ isOpen, onClose, match, onMatchUpdate }) => {
 
   if (!match) return null;
 
-  const exchangePartner = match.requester?.id === getCurrentUserId() 
-    ? match.provider 
-    : match.requester;
+const toNumber = (v) => (v !== undefined && v !== null ? Number(v) : NaN);
+
+const currentUserId = toNumber(getCurrentUserId());
+const requesterId   = toNumber(match.requester?.id);
+
+const exchangePartner =
+  requesterId === currentUserId ? match.provider : match.requester;
 
   const handleAction = async (action) => {
     setLoading(true);
