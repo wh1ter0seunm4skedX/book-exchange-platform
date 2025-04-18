@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../api/auth';
 import { motion, AnimatePresence } from 'framer-motion';
+import Particles from 'react-tsparticles';
+import { loadFull } from 'tsparticles';
 import {
   HiOutlineBookOpen,
   HiXCircle,
@@ -10,11 +12,13 @@ import {
   HiOutlineEye,
   HiOutlineEyeSlash,
   HiArrowPath,
-  HiOutlineBolt
+  HiOutlineBolt,
+  HiOutlineUsers,
+  HiXMark
 } from 'react-icons/hi2';
 
 // Background animation stuff
-const blobKeyframes = { /* ... keyframes ... */ };
+const blobKeyframes = {};
 const styles = { '@keyframes blob': blobKeyframes };
 
 // Login page
@@ -23,9 +27,20 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showTestUsers, setShowTestUsers] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
 
-  // Update form fields as user types
+  // Track mouse position for blob interaction
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX / window.innerWidth - 0.5, y: e.clientY / window.innerHeight - 0.5 });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Update form fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
@@ -42,7 +57,7 @@ const Login = () => {
     password: { isValid: true, message: '' }
   });
 
-  // Check if the form looks good
+  // Validate form
   const validateForm = () => {
     const newValidationState = {
       email: { isValid: true, message: '' },
@@ -62,7 +77,7 @@ const Login = () => {
     return Object.values(newValidationState).every(field => field.isValid);
   };
 
-  // Try to log in
+  // Handle login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -72,10 +87,7 @@ const Login = () => {
       await authApi.login(formData);
       navigate('/dashboard');
     } catch (err) {
-      // Log detailed error for developers
       console.error('Login error:', err);
-      
-      // Parse the error response
       let errorMessage = 'An unexpected error occurred. Please try again.';
       try {
         if (err.response?.status === 401) {
@@ -85,7 +97,6 @@ const Login = () => {
         } else if (err.response?.status === 500) {
           errorMessage = 'Server error. Please try again later.';
         } else if (err.message) {
-          // Try to parse the error message from the response
           const errorData = JSON.parse(err.message);
           if (errorData.error) {
             errorMessage = errorData.error;
@@ -94,22 +105,68 @@ const Login = () => {
       } catch (parseError) {
         console.error('Error parsing error message:', parseError);
       }
-      
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Initialize particles
+  const particlesInit = async (main) => {
+    await loadFull(main);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-purple-100 flex items-center justify-center px-4 sm:px-6 py-12 relative overflow-hidden">
-      {/* Cool background blobs */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-200 via-cyan-100 to-purple-200 flex items-center justify-center px-4 sm:px-6 py-12 relative overflow-hidden">
+      {/* Gradient Pulse Overlay */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-blue-300/20 to-purple-300/20"
+        animate={{ opacity: [0.5, 0.7, 0.5] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      {/* Particle Background */}
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        options={{
+          particles: {
+            number: { value: 60, density: { enable: true, value_area: 800 } },
+            color: { value: ['#3B82F6', '#8B5CF6', '#EC4899'] }, // Blue, purple, pink
+            shape: { type: 'circle' },
+            opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2 } },
+            size: { value: 3, random: true },
+            move: {
+              enable: true,
+              speed: 1,
+              direction: 'none',
+              random: true,
+              straight: false,
+              out_mode: 'out'
+            }
+          },
+          interactivity: {
+            events: {
+              onhover: { enable: true, mode: 'bubble' },
+              onclick: { enable: true, mode: 'push' }
+            },
+            modes: {
+              bubble: { distance: 150, size: 5, duration: 2, opacity: 0.8 },
+              push: { particles_nb: 5 }
+            }
+          },
+          retina_detect: true
+        }}
+        className="absolute inset-0 z-0"
+      />
+
+      {/* Interactive Blobs */}
+      <div className="absolute inset-0 z-1 overflow-hidden">
         <svg className="absolute w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{ stopColor: '#4F46E5', stopOpacity: 0.1 }} />
-              <stop offset="100%" style={{ stopColor: '#7C3AED', stopOpacity: 0.1 }} />
+              <stop offset="0%" style={{ stopColor: '#3B82F6', stopOpacity: 0.1 }} />
+              <stop offset="100%" style={{ stopColor: '#8B5CF6', stopOpacity: 0.1 }} />
             </linearGradient>
             <pattern id="pattern1" width="4" height="4" patternUnits="userSpaceOnUse">
               <circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.1)" />
@@ -118,34 +175,67 @@ const Login = () => {
           <rect width="100%" height="100%" fill="url(#grad1)" />
           <rect width="100%" height="100%" fill="url(#pattern1)" />
         </svg>
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
-        <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-4000"></div>
+        <motion.div
+          animate={{ x: mousePos.x * 60, y: mousePos.y * 60, scale: [1, 1.1, 1] }}
+          transition={{ scale: { duration: 2.5, repeat: Infinity }, x: { duration: 0.2 }, y: { duration: 0.2 } }}
+          className="absolute -top-24 -left-24 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
+          style={{ boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)' }}
+        ></motion.div>
+        <motion.div
+          animate={{ x: mousePos.x * -60, y: mousePos.y * -60, scale: [1, 1.1, 1] }}
+          transition={{ scale: { duration: 2.5, repeat: Infinity }, x: { duration: 0.2 }, y: { duration: 0.2 } }}
+          className="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
+          style={{ boxShadow: '0 0 30px rgba(139, 92, 246, 0.5)' }}
+        ></motion.div>
+        <motion.div
+          animate={{ x: mousePos.x * 30, y: mousePos.y * 30, scale: [1, 1.1, 1] }}
+          transition={{ scale: { duration: 2.5, repeat: Infinity }, x: { duration: 0.2 }, y: { duration: 0.2 } }}
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-2xl opacity-40"
+          style={{ boxShadow: '0 0 30px rgba(236, 72, 153, 0.5)' }}
+        ></motion.div>
       </div>
 
       {/* Login card */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 space-y-6 border border-white/20">
+        <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl p-6 sm:p-8 space-y-6 border border-white/30 ring-2 ring-blue-200/50">
           <div className="text-center">
-            {/* Logo animation */}
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.1, type: 'spring', stiffness: 200 }}
-              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1, rotate: [0, 5, -5, 0] }}
+              transition={{ scale: { duration: 0.5, type: 'spring', stiffness: 200 }, opacity: { duration: 0.5 }, rotate: { duration: 2, repeat: Infinity, ease: 'easeInOut' } }}
+              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg ring-4 ring-blue-300/50"
             >
               <HiOutlineBookOpen className="h-8 w-8 text-white" aria-hidden="true" />
             </motion.div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 pb-1">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="text-2xl sm:text-3xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 pb-1"
+            >
               Book Exchange Platform
-            </h1>
-            <h2 className="mt-2 text-lg sm:text-xl font-semibold text-gray-700">Welcome back!</h2>
-            <p className="mt-1 text-sm text-gray-600">Sign in to continue your journey</p>
+            </motion.h1>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="mt-2 text-lg sm:text-xl font-semibold text-gray-700"
+            >
+              Welcome back!
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="mt-1 text-sm text-gray-600"
+            >
+              Sign in to continue your journey
+            </motion.p>
           </div>
 
           {/* Error popup */}
@@ -156,19 +246,31 @@ const Login = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -5 }}
-                className="p-3 text-sm text-red-800 bg-red-100 rounded-lg border border-red-200 flex items-center gap-2"
+                className="p-3 text-sm flex items-center gap-2 rounded-lg border bg-red-100 text-red-800 border-red-200"
                 role="alert"
+                aria-live="assertive"
               >
                 <HiXCircle className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                 <span>{error}</span>
+                <button
+                  onClick={() => setError('')}
+                  className="ml-auto p-1 rounded-full text-red-600 hover:bg-red-200 hover:bg-opacity-80 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  aria-label="Dismiss error"
+                >
+                  <HiXMark className="h-4 w-4" aria-hidden="true" />
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Login form */}
+          {/* Login form with progressive animation */}
           <form className="space-y-5" onSubmit={handleSubmit}>
             {/* Email field */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.5, type: 'spring', stiffness: 120 }}
+            >
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Email address
               </label>
@@ -205,10 +307,14 @@ const Login = () => {
                   )}
                 </AnimatePresence>
               </div>
-            </div>
+            </motion.div>
 
             {/* Password field */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30, scale: 0.95 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.5, type: 'spring', stiffness: 120 }}
+            >
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
                 Password
               </label>
@@ -257,13 +363,17 @@ const Login = () => {
                   )}
                 </AnimatePresence>
               </div>
-            </div>
+            </motion.div>
 
             {/* Sign-in button */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -30, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.5, type: 'spring', stiffness: 150 }}
+            >
               <motion.button
-                whileHover={{ scale: 1.02, y: -1 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.03, y: -2, boxShadow: '0 4px 20px rgba(59, 130, 246, 0.5)' }}
+                whileTap={{ scale: 0.97 }}
                 type="submit"
                 disabled={isLoading}
                 className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ${isLoading ? 'opacity-75 cursor-wait' : ''}`}
@@ -271,52 +381,103 @@ const Login = () => {
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <HiArrowPath className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" aria-hidden="true"/>
+                    <HiArrowPath className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" aria-hidden="true" />
                     Signing in...
                   </div>
                 ) : (
                   'Sign in'
                 )}
               </motion.button>
-            </div>
+            </motion.div>
 
             {/* Register link */}
-            <div className="text-center pt-2">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.7, duration: 0.5, type: 'spring', stiffness: 120 }}
+              className="text-center pt-2"
+            >
               <p className="text-sm text-gray-600">
                 Don't have an account?{' '}
-                <Link to="/register" className="font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-150">
+                <Link to="/register" className="font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors duration-200">
                   Register here
                 </Link>
               </p>
-            </div>
+            </motion.div>
           </form>
-
-          {/* Test account info */}
-          <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50/80 backdrop-blur-sm">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Test Account:</h3>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <div>
-                <p className="text-xs text-gray-600">
-                  <span className="font-medium text-gray-700">Email:</span> tal.cohen@example.com
-                </p>
-                <p className="text-xs text-gray-600">
-                  <span className="font-medium text-gray-700">Password:</span> password123
-                </p>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                type="button"
-                onClick={() => setFormData({ email: 'tal.cohen@example.com', password: 'password123' })}
-                className="mt-2 sm:mt-0 text-xs px-3 py-1.5 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500 font-medium inline-flex items-center transition-colors duration-150"
-              >
-                <HiOutlineBolt className="h-4 w-4 mr-1" aria-hidden="true" />
-                Auto-fill
-              </motion.button>
-            </div>
-          </div>
         </div>
       </motion.div>
+
+      {/* Floating Test Users Button and Panel */}
+      <div className="fixed bottom-6 right-6 z-20 group">
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setShowTestUsers(!showTestUsers)}
+          className="p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ring-2 ring-blue-300/50"
+          aria-label={showTestUsers ? "Hide test accounts" : "Show test accounts"}
+        >
+          <HiOutlineUsers className="h-6 w-6" aria-hidden="true" />
+        </motion.button>
+        <div className="absolute bottom-16 right-0 px-3 py-2 text-sm font-medium text-white bg-gray-800 rounded-lg shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          View Test Accounts
+        </div>
+
+        <AnimatePresence>
+          {showTestUsers && (
+            <motion.div
+              initial={{ x: 300, opacity: 0, rotateY: 10 }}
+              animate={{ x: 0, opacity: 1, rotateY: 0 }}
+              exit={{ x: 300, opacity: 0, rotateY: 10 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+              className="fixed bottom-20 right-6 w-80 bg-white/95 backdrop-blur-xl rounded-xl shadow-2xl p-6 border border-gray-200 max-h-[70vh] overflow-y-auto ring-2 ring-blue-200/50"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <HiOutlineUsers className="h-5 w-5 text-blue-500" aria-hidden="true" />
+                  Test Accounts
+                </h3>
+                <button
+                  onClick={() => setShowTestUsers(false)}
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none"
+                  aria-label="Close test accounts panel"
+                >
+                  <HiXMark className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { name: "Tal Cohen", email: "tal.cohen@example.com", password: "password123" },
+                  { name: "Noa Levi", email: "noa.levi@example.com", password: "password123" },
+                  { name: "Amit Shapira", email: "amit.shapira@example.com", password: "password123" },
+                  { name: "Maya Golan", email: "maya.golan@example.com", password: "password123" },
+                  { name: "Yoav Stern", email: "yoav.stern@example.com", password: "password123" },
+                ].map((account, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between gap-3 p-3 rounded-lg bg-gray-50/50 hover:bg-gray-100/80 transition-colors duration-200"
+                  >
+                    <span className="text-sm font-medium text-gray-700">{account.name}</span>
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      type="button"
+                      onClick={() => {
+                        setFormData({ email: account.email, password: account.password });
+                        setShowTestUsers(false);
+                      }}
+                      className="flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    >
+                      <HiOutlineBolt className="h-4 w-4 mr-1.5" aria-hidden="true" />
+                      Auto-fill
+                    </motion.button>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
