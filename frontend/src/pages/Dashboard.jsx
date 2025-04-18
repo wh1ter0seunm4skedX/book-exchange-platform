@@ -179,7 +179,22 @@ const Dashboard = () => {
       </div>
     );
   }
-
+// Formats dates to DD/MM/YYYY
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'Invalid Date';
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  } catch (e) {
+    return 'Invalid Date';
+  }
+};
+  
   // Turn status like "NEW" into "New"
   const formatStatus = (status) => {
     if (!status) return '';
@@ -312,7 +327,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-3 flex items-center text-sm text-gray-500">
                         <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
-                        <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        <span>Status updated: {formatDate(match.lastUpdated || Date.now())}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
                         <motion.button
@@ -398,7 +413,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-3 flex items-center text-sm text-gray-500">
                         <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
-                        <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        <span>Status updated: {formatDate(match.lastUpdated || Date.now())}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
                         <motion.button
@@ -484,7 +499,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-3 flex items-center text-sm text-gray-500">
                         <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
-                        <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        <span>Status updated: {formatDate(match.lastUpdated || Date.now())}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
                         <motion.button
@@ -570,7 +585,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-3 flex items-center text-sm text-gray-500">
                         <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
-                        <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        <span>Status updated: {formatDate(match.lastUpdated || Date.now())}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
                         <motion.button
@@ -656,7 +671,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-3 flex items-center text-sm text-gray-500">
                         <HiClock className="h-4 w-4 mr-1.5 text-gray-400" aria-hidden="true" />
-                        <span>Status updated: {new Date(match.lastUpdated || Date.now()).toLocaleDateString()}</span>
+                        <span>Status updated: {formatDate(match.lastUpdated || Date.now())}</span>
                       </div>
                       <div className="flex-shrink-0 flex space-x-2 mt-4">
                         <motion.button
