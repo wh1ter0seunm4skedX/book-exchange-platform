@@ -163,9 +163,22 @@ const Dashboard = () => {
       else if (action === 'complete') await matchesApi.completeMatch(matchId);
       else throw new Error(`Unknown action: ${action}`);
       await fetchDashboardData();
+      handleModalClose();
     } catch (error) {
-      console.error(`Error ${action}ing match:`, error);
-      setError(`Failed to ${action} match. Try again.`);
+      // After error, check if the match is actually completed
+      try {
+        const updatedMatches = await matchesApi.getUserMatches(userId);
+        const updatedMatch = updatedMatches.find(m => m.id === matchId);
+        if (updatedMatch && updatedMatch.status === 'COMPLETED') {
+          await fetchDashboardData();
+          handleModalClose();
+          setError(null);
+        } else {
+          setError(`Failed to ${action} match. Try again.`);
+        }
+      } catch (e) {
+        setError(`Failed to ${action} match. Try again.`);
+      }
     } finally {
       setLoading(false);
     }

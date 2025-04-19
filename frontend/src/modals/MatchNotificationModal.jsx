@@ -50,7 +50,7 @@ const exchangePartner =
       else throw new Error(`Unknown action: ${action}`);
       
       if (onMatchUpdate) onMatchUpdate(match.id, action);
-      onClose();
+      // Removed onClose() here to let Dashboard handle closing after refresh
     } catch (error) {
       console.error('Error handling match action:', error);
     } finally {
