@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authApi } from '../api/auth';
 import { motion, AnimatePresence } from 'framer-motion';
-import Particles from 'react-tsparticles';
-import { loadFull } from 'tsparticles';
 import {
   HiOutlineBookOpen,
   HiXCircle,
@@ -16,10 +14,6 @@ import {
   HiOutlineUsers,
   HiXMark
 } from 'react-icons/hi2';
-
-// Background animation stuff
-const blobKeyframes = {};
-const styles = { '@keyframes blob': blobKeyframes };
 
 // Login page
 const Login = () => {
@@ -111,11 +105,6 @@ const Login = () => {
     }
   };
 
-  // Initialize particles
-  const particlesInit = async (main) => {
-    await loadFull(main);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 via-cyan-100 to-purple-200 flex items-center justify-center px-4 sm:px-6 py-12 relative overflow-hidden">
       {/* Gradient Pulse Overlay */}
@@ -123,41 +112,6 @@ const Login = () => {
         className="absolute inset-0 bg-gradient-to-br from-blue-300/20 to-purple-300/20"
         animate={{ opacity: [0.5, 0.7, 0.5] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* Particle Background */}
-      <Particles
-        id="tsparticles"
-        init={particlesInit}
-        options={{
-          particles: {
-            number: { value: 60, density: { enable: true, value_area: 800 } },
-            color: { value: ['#3B82F6', '#8B5CF6', '#EC4899'] }, // Blue, purple, pink
-            shape: { type: 'circle' },
-            opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2 } },
-            size: { value: 3, random: true },
-            move: {
-              enable: true,
-              speed: 1,
-              direction: 'none',
-              random: true,
-              straight: false,
-              out_mode: 'out'
-            }
-          },
-          interactivity: {
-            events: {
-              onhover: { enable: true, mode: 'bubble' },
-              onclick: { enable: true, mode: 'push' }
-            },
-            modes: {
-              bubble: { distance: 150, size: 5, duration: 2, opacity: 0.8 },
-              push: { particles_nb: 5 }
-            }
-          },
-          retina_detect: true
-        }}
-        className="absolute inset-0 z-0"
       />
 
       {/* Interactive Blobs */}
